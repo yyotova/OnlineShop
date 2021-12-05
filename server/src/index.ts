@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import mongoose from 'mongoose';
 
 dotenv.config();
 
@@ -17,4 +18,9 @@ app.use('/', (req, res) => {
 
 app.listen(serverPort,() =>{
   console.log(`Listening on port ${serverPort}`);
+});
+
+// mongooseDB connection
+mongoose.connect('mongodb+srv://user:user@cluster.j5mdo.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', ()=>{
+  console.log("Connection to DB established!");
 });
