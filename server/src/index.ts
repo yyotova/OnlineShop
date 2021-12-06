@@ -11,6 +11,7 @@ app.use(express.json());
 app.use(cors());
 
 const serverPort = process.env.SERVER_PORT;
+const dbConection = process.env.DB_CONNECTION as string;
 
 app.use('/', (req, res) => {
   res.json('Welcome to your online paradise!');
@@ -21,6 +22,6 @@ app.listen(serverPort,() =>{
 });
 
 // mongooseDB connection
-mongoose.connect('mongodb+srv://user:user@cluster.j5mdo.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', ()=>{
+mongoose.connect(dbConection, ()=>{
   console.log("Connection to DB established!");
 });
