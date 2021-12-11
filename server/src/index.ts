@@ -1,7 +1,7 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import mongoose from 'mongoose';
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import mongoose from "mongoose";
 
 dotenv.config();
 
@@ -11,17 +11,17 @@ app.use(express.json());
 app.use(cors());
 
 const serverPort = process.env.SERVER_PORT;
-const dbConection = process.env.DB_CONNECTION as string;
+const dbConnection = process.env.DB_CONNECTION as string;
 
-app.use('/', (req, res) => {
-  res.json('Welcome to your online paradise!');
+app.use("/", (req, res) => {
+  res.json("Welcome to your online paradise!");
 });
 
-app.listen(serverPort,() =>{
+app.listen(serverPort, () => {
   console.log(`Listening on port ${serverPort}`);
 });
 
 // mongooseDB connection
-mongoose.connect(dbConection, ()=>{
+mongoose.connect(dbConnection, () => {
   console.log("Connection to DB established!");
 });
