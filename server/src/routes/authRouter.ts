@@ -37,10 +37,10 @@ router.post('/login', async (req, res, next) => {
 });
 
 router.post('/register', async (req, res, next) => {
-  const { firstName, lastName, email, password } = req.body as IUser;
+  const { firstName, lastName, email, password, isAdmin } = req.body as IUser;
 
   try {
-    let user = new User({ firstName, lastName, email, password });
+    let user = new User({ firstName, lastName, email, password, isAdmin });
     
     await user.validate();
 

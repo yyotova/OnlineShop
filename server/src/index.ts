@@ -2,7 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import authRouter from './routes/authRouter'
+import authRouter from './routes/authRouter';
+import userRouter from './routes/userRouter';
+
 dotenv.config();
 
 const app = express();
@@ -18,6 +20,7 @@ const dbConection = process.env.DB_CONNECTION as string;
 // });
 
 app.use('/auth',authRouter);
+app.use('/users',userRouter);
 
 app.listen(serverPort,() =>{
   console.log(`Listening on port ${serverPort}`);
