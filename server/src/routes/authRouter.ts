@@ -1,20 +1,62 @@
 import express from 'express';
-import User from '../models/user';
+import User, { IUser } from '../models/user';
 
 const router = express.Router();
 
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res, next) => {
   const { email, password } = req.body;
 
-  if (!email || !password) {
-    res.status(400).json({ message: 'All fields are required.' });
+  try {
+    if (!email || !password) {
+      return res.status(400).json({ message: 'All fields are required.' });
+    }
+  
+    const user = await User.findByEmail(email);
+  
+    if(!user) {
+      return res.status(400).json({ message: 'There is no user registered with this email.' });
+    }
+  
+    const isPasswordValid = user.validatePassword(password);
+    
+    if(!isPasswordValid) {
+      return res.status(400).json({ message: 'Invalid login credentials.' });
+    }
+  
+    const token = await user.generateAuthToken();
+  
+    return res
+    .header("x-auth", token)
+    .status(200)
+    .send({
+      _id: user._id
+    });
+  } catch (error) {
+    next(error)
   }
-
-  const user = User.findByEmail(email);
-
-  if(!user) {
-    res.status(400).json({ message: 'There is no user registered with this email.' });
-  }
-
-  const isPasswordValid = user.validatePassword(password);
 });
+
+router.post('/register', async (req, res, next) => {
+  const { firstName, lastName, email, password } = req.body as IUser;
+
+  try {
+    let user = new User({ firstName, lastName, email, password });
+    
+    await user.validate();
+
+    user = await user.save();
+    const token = await user.generateAuthToken();
+
+    return res
+      .header("x-auth", token)
+      .status(201)
+      .send({
+        _id: user._id
+      })
+
+  } catch (error) {
+    next(error);
+  }
+});
+
+export default router;

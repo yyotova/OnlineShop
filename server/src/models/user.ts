@@ -2,10 +2,11 @@ import mongoose, { Schema, Model } from 'mongoose';
 import validator from 'validator';
 import { userConstants } from '../utilities/constants/userConstants'
 import { required, minLength, maxLength } from '../utilities/validations/messages';
-import { hashPassword, validatePassword } from 'src/utilities/encription';
-import { createToken } from 'src/utilities/authentication';
+import { hashPassword, validatePassword } from '../utilities/encription';
+import { createToken } from '../utilities/authentication';
 
 export interface IUser {
+  _id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -71,7 +72,7 @@ const UserSchema = new Schema<IUser, UserModel>({
   }
 });
 
-UserSchema.pre("save", async function(next) {
+UserSchema.pre("save", async function(this: any, next) {
   const user = this;
 
   if (user.isModified("password")) {
@@ -83,13 +84,17 @@ UserSchema.pre("save", async function(next) {
 });
 
 UserSchema.statics.findByEmail = async function(email: string) {
-  const User = this;
-  const user = await User.findOne({ email });
+  try {
+    const User = this;
+    const user = await User.findOne({ email });
 
-  return user;
+    return user;
+  }catch (e) {
+    console.error(e);
+  }
 };
 
-UserSchema.methods.validatePassword = async function(password: string) {
+UserSchema.methods.validatePassword = function(password: string) {
   const user = this;
   const hashedPassword = user.password;
 

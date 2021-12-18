@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 
 const validatePassword = (pass: string, hash: string) => {
-  bcrypt.compare(pass, hash);
+  return bcrypt.compare(pass, hash);
 };
 
 const hashPassword = async (password: string) => {
