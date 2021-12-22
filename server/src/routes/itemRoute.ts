@@ -3,29 +3,43 @@ import Item from "../models/itemModel";
 import type { IItem } from "../types/Item";
 import type { IResponse } from "../types/Response";
 
-// Router object
 const router = express.Router();
 
-// Get all items
 router.get("/", async (req, res) => {
-  const items = await Item.find({});
+  const qCategory = req.query.category;
+  let items;
+
+  if (qCategory) {
+    items = await Item.find({
+      categories: {
+        $in: [qCategory],
+      },
+    });
+  } else {
+    items = await Item.find();
+  }
+
   const returnedData: IResponse = {
     data: items,
   };
-
-  res.json(returnedData);
+  return res.json(returnedData);
 });
 
-// Get item by id
 router.get("/:id", async (req, res) => {
   try {
-    const item = await Item.findOne({ _id: req.params.id });
+    const id = req.params.id;
+    const item = await Item.findOne({ _id: id });
 
     if (item) {
       const returnedData: IResponse = {
         data: item,
       };
-      res.json(returnedData);
+      return res.json(returnedData);
+    } else {
+      const returnedData: IResponse = {
+        errorMessage: `Item with id '${id}' does not exist!`,
+      };
+      return res.status(404).json(returnedData);
     }
   } catch (err: any) {
     const returnedData: IResponse = {
@@ -35,10 +49,19 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// Create item
 // TODO:: authentication
 router.post("/manage-items", async (req, res) => {
   const reqData = req.body as IItem;
+  const existingItem = await Item.findOne({ name: reqData.name });
+
+  if (existingItem) {
+    const returnedData: IResponse = {
+      errorMessage: "The provided item name already exists!",
+    };
+    // 409 - Conflict
+    return res.status(409).json(returnedData);
+  }
+
   const item = new Item({
     name: reqData.name,
     description: reqData.description,
@@ -47,13 +70,12 @@ router.post("/manage-items", async (req, res) => {
     imageUrl: reqData.imageUrl,
     itemsInStock: reqData.itemsInStock,
     category: reqData.category,
-    numReviews: reqData.numReviews,
   });
-  const newItem = await item.save();
+  const savedItem = await item.save();
 
-  if (newItem) {
+  if (savedItem) {
     const returnedData: IResponse = {
-      data: newItem,
+      data: savedItem,
       message: "Item added successfully!",
     };
     return res.status(201).json(returnedData);
@@ -65,14 +87,23 @@ router.post("/manage-items", async (req, res) => {
   return res.status(500).json(returnedData);
 });
 
-// Update item by id
 // TODO:: authentication
-router.put("/edit-item/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
   const itemId = req.params.id;
   const itemToUpdate = await Item.findOne({ _id: itemId });
   const reqData = req.body as IItem;
 
   if (itemToUpdate) {
+    const existingItemWithName = await Item.findOne({ name: reqData.name });
+    if (
+      existingItemWithName &&
+      existingItemWithName._id.toString() !== itemId
+    ) {
+      return res.status(500).json({
+        errorMessage: `Item with name '${reqData.name}' already exists!`,
+      });
+    }
+
     itemToUpdate.name = reqData.name;
     itemToUpdate.description = reqData.description;
     itemToUpdate.price = reqData.price;
@@ -90,29 +121,41 @@ router.put("/edit-item/:id", async (req, res) => {
       };
       return res.status(200).json(returnedData);
     }
+
+    return res
+      .status(500)
+      .json({ errorMessage: "Error while updating the item!" });
   }
 
-  return res.status(500).json({ error: "Error while updating the item!" });
+  return res
+    .status(404)
+    .json({ errorMessage: `Item with id '${itemId}' does not exist!` });
 });
 
-// Delete item by id
 // TODO:: authentication
 router.delete("/:id", async (req, res) => {
   const itemId = req.params.id;
   const itemToDelete = await Item.findById(itemId);
 
   if (itemToDelete) {
-    await itemToDelete.remove();
-    const returnedData: IResponse = {
-      message: "Item deleted successfully!",
-    };
-    res.json(returnedData);
-  } else {
+    const deletedItem = await itemToDelete.remove();
+
+    if (deletedItem) {
+      const returnedData: IResponse = {
+        message: "Item deleted successfully!",
+      };
+      return res.json(returnedData);
+    }
+
     const returnedData: IResponse = {
       errorMessage: "Error while trying to delete item",
     };
-    res.json(returnedData);
+    return res.json(returnedData);
   }
+
+  return res
+    .status(404)
+    .json({ errorMessage: `Item with id '${itemId}' does not exist!` });
 });
 
 export default router;

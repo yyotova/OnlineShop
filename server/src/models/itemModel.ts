@@ -7,8 +7,7 @@ const itemSchema = new mongoose.Schema({
   size: { type: Array, required: true, default: false },
   imageUrl: { type: String, required: true, default: false },
   itemsInStock: { type: String, required: true, default: 0 },
-  category: { type: String, required: true, default: "" },
-  numReviews: { type: String, required: true, default: 0 },
+  category: { type: Array, required: true, default: "" }
 });
 
 const itemModel = mongoose.model("Item", itemSchema);
