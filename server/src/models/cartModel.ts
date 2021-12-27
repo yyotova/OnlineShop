@@ -9,10 +9,15 @@ const cartItemSchema = new mongoose.Schema({
   quantity: { type: Number, default: 1 },
 });
 
-const cartSchema = new mongoose.Schema({
-  //  TODO userId: { type: String, required: true },
-  items: [cartItemSchema],
-});
+const cartSchema = new mongoose.Schema(
+  {
+    //  TODO  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false },
+    items: [cartItemSchema],
+  },
+  {
+    timestamps: true,
+  }
+);
 
 const cartModel = mongoose.model("Cart", cartSchema);
 

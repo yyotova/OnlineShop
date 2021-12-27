@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { StatusOrder } from "../enums/statusOrder";
+import { StatusOrder } from "../utilities/enums/statusOrder";
 
 const orderItemSchema = new mongoose.Schema({
   item: {
@@ -12,7 +12,7 @@ const orderItemSchema = new mongoose.Schema({
 
 const orderSchema = new mongoose.Schema(
   {
-    // TODO userId: { type: String, required: true },
+    // TODO  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false },
     items: [orderItemSchema],
     amount: { type: Number, required: true },
     address: { type: Object, required: true },

@@ -1,7 +1,19 @@
 import * as express from "express";
+import {
+  alreadyExist,
+  errorByCreating,
+  errorByDeleting,
+  errorByUpdating,
+  notExist,
+  successByCreating,
+  successByDeleting,
+  successByUpdating,
+} from "src/utilities/validations/messages";
+import { itemObjectName } from "src/utilities/constants/global";
 import Item from "../models/itemModel";
 import type { IItem } from "../types/Item";
 import type { IResponse } from "../types/Response";
+import { lowerCaseFirstLetter } from "src/utilities/helperUtil";
 
 const router = express.Router();
 
@@ -37,7 +49,7 @@ router.get("/:id", async (req, res) => {
       return res.json(returnedData);
     } else {
       const returnedData: IResponse = {
-        errorMessage: `Item with id '${id}' does not exist!`,
+        errorMessage: notExist(itemObjectName, "id", id),
       };
       return res.status(404).json(returnedData);
     }
@@ -56,7 +68,11 @@ router.post("/manage-items", async (req, res) => {
 
   if (existingItem) {
     const returnedData: IResponse = {
-      errorMessage: "The provided item name already exists!",
+      errorMessage: alreadyExist(
+        lowerCaseFirstLetter(itemObjectName),
+        "name",
+        reqData.name
+      ),
     };
     // 409 - Conflict
     return res.status(409).json(returnedData);
@@ -76,13 +92,13 @@ router.post("/manage-items", async (req, res) => {
   if (savedItem) {
     const returnedData: IResponse = {
       data: savedItem,
-      message: "Item added successfully!",
+      message: successByCreating(itemObjectName),
     };
     return res.status(201).json(returnedData);
   }
 
   const returnedData: IResponse = {
-    errorMessage: "Error while creating item!",
+    errorMessage: errorByCreating(lowerCaseFirstLetter(itemObjectName)),
   };
   return res.status(500).json(returnedData);
 });
@@ -100,7 +116,11 @@ router.put("/:id", async (req, res) => {
       existingItemWithName._id.toString() !== itemId
     ) {
       return res.status(500).json({
-        errorMessage: `Item with name '${reqData.name}' already exists!`,
+        errorMessage: alreadyExist(
+          lowerCaseFirstLetter(itemObjectName),
+          "name",
+          reqData.name
+        ),
       });
     }
 
@@ -117,19 +137,19 @@ router.put("/:id", async (req, res) => {
     if (updatedItem) {
       const returnedData: IResponse = {
         data: updatedItem,
-        message: "Item updated successfully!",
+        message: successByUpdating(itemObjectName),
       };
       return res.status(200).json(returnedData);
     }
 
-    return res
-      .status(500)
-      .json({ errorMessage: "Error while updating the item!" });
+    return res.status(500).json({
+      errorMessage: errorByUpdating(lowerCaseFirstLetter(itemObjectName)),
+    });
   }
 
   return res
     .status(404)
-    .json({ errorMessage: `Item with id '${itemId}' does not exist!` });
+    .json({ errorMessage: notExist(itemObjectName, "id", itemId) });
 });
 
 // TODO:: authentication
@@ -142,20 +162,20 @@ router.delete("/:id", async (req, res) => {
 
     if (deletedItem) {
       const returnedData: IResponse = {
-        message: "Item deleted successfully!",
+        message: successByDeleting(itemObjectName),
       };
       return res.json(returnedData);
     }
 
     const returnedData: IResponse = {
-      errorMessage: "Error while trying to delete item",
+      errorMessage: errorByDeleting(lowerCaseFirstLetter(itemObjectName)),
     };
     return res.json(returnedData);
   }
 
   return res
     .status(404)
-    .json({ errorMessage: `Item with id '${itemId}' does not exist!` });
+    .json({ errorMessage: notExist(itemObjectName, "id", itemId) });
 });
 
 export default router;

@@ -1,5 +1,5 @@
 import * as express from "express";
-import Order from "../models/orderModel";
+import Cart from "../models/cartModel";
 import Item from "../models/itemModel";
 import type { IResponse } from "src/types/Response";
 import {
@@ -8,10 +8,7 @@ import {
   successByDeleting,
   successByUpdating,
 } from "src/utilities/validations/messages";
-import {
-  itemObjectName,
-  orderObjectName,
-} from "src/utilities/constants/global";
+import { cartObjectName, itemObjectName } from "src/utilities/constants/global";
 
 const router = express.Router();
 
@@ -20,12 +17,10 @@ interface ItemOrder {
   quantity: Number;
 }
 
-// TODO get orders of a given user
-
 router.get("/", async (req, res) => {
   try {
-    const orders = await Order.find();
-    return res.status(200).json(orders);
+    const carts = await Cart.find();
+    return res.status(200).json(carts);
   } catch (err) {
     return res.status(500).json(err);
   }
@@ -33,22 +28,17 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const newOrder = new Order({
+    const newCart = new Cart({
       items: req.body.items,
-      amount: req.body.amount,
-      address: req.body.address,
-      status: req.body.status,
     });
 
-    checkItemIds(newOrder.items, res);
+    checkItemIds(newCart.items, res);
 
-    const newOrderCreated = await newOrder.save();
-    return res
-      .status(201)
-      .json({
-        message: successByCreating(orderObjectName),
-        data: newOrderCreated,
-      });
+    const newlyCreatedCart = await newCart.save();
+    return res.status(201).json({
+      message: successByCreating(cartObjectName),
+      data: newlyCreatedCart,
+    });
   } catch (err: any) {
     return res.status(500).json({ message: err.message });
   }
@@ -58,23 +48,23 @@ router.put("/:id", async (req, res) => {
   try {
     checkItemIds(req.body.items, res);
 
-    const orderId = req.params.id;
-    const updatedOrder = await Order.findByIdAndUpdate(
-      orderId,
+    const cartId = req.params.id;
+    const updatedCart = await Cart.findByIdAndUpdate(
+      cartId,
       { $set: req.body },
       { new: true }
     );
 
-    if (updatedOrder) {
+    if (updatedCart) {
       return res.status(200).json({
-        message: successByUpdating(orderObjectName),
-        data: updatedOrder,
+        message: successByUpdating(cartObjectName),
+        data: updatedCart,
       });
     }
 
     return res
       .status(404)
-      .json({ errorMessage: notExist(orderObjectName, "id", orderId) });
+      .json({ errorMessage: notExist(cartObjectName, "id", cartId) });
   } catch (err: any) {
     return res.status(500).json(err.message);
   }
@@ -82,18 +72,18 @@ router.put("/:id", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   try {
-    const orderId = req.params.id;
-    const deletedOrder = await Order.findByIdAndDelete(orderId);
+    const cartId = req.params.id;
+    const deletedCart = await Cart.findByIdAndDelete(cartId);
 
-    if (deletedOrder) {
+    if (deletedCart) {
       const returnedData: IResponse = {
-        message: successByDeleting(orderObjectName),
+        message: successByDeleting(cartObjectName),
       };
       return res.json(returnedData);
     }
 
     const returnedData: IResponse = {
-      errorMessage: notExist(orderObjectName, "id", orderId),
+      errorMessage: notExist(cartObjectName, "id", cartId),
     };
     return res.json(returnedData);
   } catch (err: any) {

@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import itemRoute from "./routes/itemRoute";
 import orderRoute from "./routes/orderRoute";
+import cartRoute from "./routes/cartRoute";
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ const dbConnection = process.env.DB_CONNECTION as string;
 
 app.use("/api/items", itemRoute);
 app.use("/api/orders", orderRoute);
+app.use("/api/carts", cartRoute);
 
 // mongooseDB connection
 mongoose
