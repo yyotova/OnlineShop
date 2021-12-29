@@ -1,8 +1,16 @@
-import React from 'react';
+import React from "react";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Products from "./components/products/Products";
 
 function App() {
   return (
-    <h1>HELLO WORLD</h1>
+    <BrowserRouter>
+      <Navbar />
+      <Switch>
+        <Route exact path="/"><Products/></Route>
+      </Switch>
+    </BrowserRouter>
   );
 }
 

@@ -22,5 +22,5 @@
   },
   "include": [
     "./src/**/*.ts"
-  ]
+, "src/pages/Home.tsx", "src/components/Navbar.tsx", "src/components/products/singleProduct/Product.tsx"  ]
 }

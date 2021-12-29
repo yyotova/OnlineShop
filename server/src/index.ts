@@ -4,6 +4,9 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import authRouter from './routes/authRouter';
 import userRouter from './routes/userRouter';
+import itemRoute from "./routes/itemRoute";
+import orderRoute from "./routes/orderRoute";
+import cartRoute from "./routes/cartRoute";
 
 dotenv.config();
 
@@ -12,22 +15,21 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const serverPort = process.env.SERVER_PORT;
-const dbConection = process.env.DB_CONNECTION as string;
-
-// app.use('/', (req, res) => {
-//   res.json('Welcome to your online paradise!');
-// });
+const serverPort = process.env.SERVER_PORT as any;
+const dbConnection = process.env.DB_CONNECTION as string;
 
 app.use('/auth',authRouter);
 app.use('/users',userRouter);
+app.use("/api/items", itemRoute);
+app.use("/api/orders", orderRoute);
+app.use("/api/carts", cartRoute);
 
-app.listen(serverPort,() =>{
+app.listen(serverPort, () => {
   console.log(`Listening on port ${serverPort}`);
 });
 
 // mongooseDB connection
-mongoose.connect(dbConection)
+mongoose.connect(dbConnection)
   .then(() => {
     console.log('DB connection established!');
   })
