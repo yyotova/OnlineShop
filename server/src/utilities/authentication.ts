@@ -15,7 +15,12 @@ const createToken = (userId: number) => {
 };
 
 const decodeToken = (token: string) => {
-  return jwt.verify(token, process.env.JWT_SECRET as Secret, {ignoreExpiration: true});
+  try {
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET as Secret, {ignoreExpiration: true});
+    return decodedToken;
+  } catch (error) {
+    return "Invlid Token!";
+  }
 };
 
 export { createToken, decodeToken };

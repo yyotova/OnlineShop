@@ -18,20 +18,22 @@ export const authenticate = async (req, res, next) => {
   const token = req.header("x-auth");
 
   if (!token) {
-    return res.boom.unathorized("Unauthorized");
+    res
+      .status(401)
+      .json({ message: 'No authentication token, authorization denied.' });
   }
 
   try {
     const { _id } = decodeToken(token) as IUser;
 
     if (!_id) {
-      return res.boom.unathorized("Unauthorized");
+      return res.status(401).send({ message: 'Invalid Token' });
     }
 
     const user = await User.findById(_id);
 
     if (!user) {
-      return res.boom.unauthorized("Unauthorized");
+      return res.status(401).send({ message: 'User not found' });
     }
 
     req.user = user;
