@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2019",
     "lib": [
       "dom",
       "dom.iterable",
@@ -21,6 +21,6 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "./src/**/*.ts"
-, "src/pages/Home.tsx", "src/components/Navbar.tsx", "src/components/products/singleProduct/Product.tsx", "src/components/productView/ProductView.tsx"  ]
+    "./src/**/*"
+  ]
 }
