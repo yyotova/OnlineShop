@@ -1,13 +1,42 @@
-import User from "../models/user";
+import mongoose from 'mongoose';
+import User, { IUser } from "../models/user";
+import { decodeToken } from '../utilities/authentication';
 
+export const isAdmin = async (req, res, next) => {
+  const userId = req.user.id as mongoose.Schema.Types.ObjectId;
 
-export const isAdmin = async (req: any, res: any, next: any) => {
+  const user: IUser | null = await User.findById(userId);
+
+  if (req.user && user?.isAdmin) {
+    return next();
+  }
+
+  return res.status(403).json({ message: "User is not an admin!" });
+};
+
+export const authenticate = async (req, res, next) => {
+  const token = req.header("x-auth");
+
+  if (!token) {
+    return res.boom.unathorized("Unauthorized");
+  }
+
   try {
-    const user: any = await User.findById(req.user.id);
-    if (req.user && user.isAdmin) {
-      return next();
+    const { _id } = decodeToken(token) as IUser;
+
+    if (!_id) {
+      return res.boom.unathorized("Unauthorized");
     }
-  } catch (err: any) {
-    return res.status(401).json({ error: err.message });
+
+    const user = await User.findById(_id);
+
+    if (!user) {
+      return res.boom.unauthorized("Unauthorized");
+    }
+
+    req.user = user;
+    next();
+  } catch (error) {
+    next(error);
   }
 };

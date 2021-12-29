@@ -41,7 +41,7 @@ router.post('/register', async (req, res, next) => {
 
   try {
     let user = new User({ firstName, lastName, email, password, isAdmin });
-    
+
     await user.validate();
 
     user = await user.save();

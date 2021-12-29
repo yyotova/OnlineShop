@@ -1,4 +1,4 @@
-import mongoose, { Schema, Model } from 'mongoose';
+import mongoose, { Schema, Model, ObjectId } from 'mongoose';
 import validator from 'validator';
 import { userConstants } from '../utilities/constants/userConstants'
 import { required, minLength, maxLength } from '../utilities/validations/messages';
@@ -6,7 +6,7 @@ import { hashPassword, validatePassword } from '../utilities/encription';
 import { createToken } from '../utilities/authentication';
 
 export interface IUser {
-  _id: string;
+  _id: string | ObjectId;
   firstName: string;
   lastName: string;
   email: string;
