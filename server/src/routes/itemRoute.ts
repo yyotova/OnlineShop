@@ -8,12 +8,12 @@ import {
   successByCreating,
   successByDeleting,
   successByUpdating,
-} from "src/utilities/validations/messages";
-import { itemObjectName } from "src/utilities/constants/global";
+} from "../utilities/validations/messages";
+import { itemObjectName } from "../utilities/constants/global";
 import Item from "../models/itemModel";
 import type { IItem } from "../types/Item";
 import type { IResponse } from "../types/Response";
-import { lowerCaseFirstLetter } from "src/utilities/helperUtil";
+import { lowerCaseFirstLetter } from "../utilities/helperUtil";
 
 const router = express.Router();
 
@@ -31,10 +31,7 @@ router.get("/", async (req, res) => {
     items = await Item.find();
   }
 
-  const returnedData: IResponse = {
-    data: items,
-  };
-  return res.json(returnedData);
+  return res.json(items);
 });
 
 router.get("/:id", async (req, res) => {

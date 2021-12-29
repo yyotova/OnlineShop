@@ -1,17 +1,17 @@
 import * as express from "express";
 import Order from "../models/orderModel";
 import Item from "../models/itemModel";
-import type { IResponse } from "src/types/Response";
+import type { IResponse } from "../types/Response";
 import {
   notExist,
   successByCreating,
   successByDeleting,
   successByUpdating,
-} from "src/utilities/validations/messages";
+} from "../utilities/validations/messages";
 import {
   itemObjectName,
   orderObjectName,
-} from "src/utilities/constants/global";
+} from "../utilities/constants/global";
 
 const router = express.Router();
 

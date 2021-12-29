@@ -24,7 +24,7 @@ app.use("/api/carts", cartRoute);
 mongoose
   .connect(dbConnection)
   .then(() => console.log("Connection to DB established!"))
-  .catch((err) => console.log(err));
+  .catch((err) => console.log("pav ", err));
 
 app.listen(serverPort, () => {
   console.log(`Listening on port ${serverPort}`);
