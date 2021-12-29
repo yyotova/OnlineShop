@@ -11,8 +11,11 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
+import { Link, useRouteMatch } from "react-router-dom";
 
 const Navbar = () => {
+  const match = useRouteMatch();
+
   return (
     <AppBar>
       <Toolbar>
@@ -30,7 +33,12 @@ const Navbar = () => {
 
           <Box sx={{ display: "flex" }}>
             <Tabs>
-              <Tab label="Products" />
+              <Tab
+                label="Products"
+                value="/products"
+                component={Link}
+                to="/products"
+              />
             </Tabs>
           </Box>
 

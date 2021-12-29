@@ -17,7 +17,6 @@ const Products = () => {
     await axios
       .get("http://localhost:3030/api/items")
       .then((response) => {
-        console.log(response.data);
         dispatch(setProducts(response.data));
       })
       .catch((err) => {
@@ -35,7 +34,7 @@ const Products = () => {
       <Grid container justifyContent="center" spacing={4}>
         {products &&
           products.map((product: ProductType) => (
-            <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
+            <Grid item key={product._id} xs={12} sm={6} md={4} lg={3}>
               <Product product={product} />
             </Grid>
           ))}

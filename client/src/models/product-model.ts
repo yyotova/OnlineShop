@@ -1,7 +1,7 @@
 import { IdType } from "./shared-types";
 
 export interface ProductType {
-  id: IdType;
+  _id: IdType;
   name: string;
   description: string;
   price: number;

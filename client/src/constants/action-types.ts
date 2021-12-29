@@ -17,7 +17,6 @@ export interface SelectedProductRequest {
 
 export interface RemoveSelectedProductRequest {
   type: typeof REMOVE_SELECTED_PRODUCT;
-  payload: ProductType;
 }
 
 export type ProductActionTypes =

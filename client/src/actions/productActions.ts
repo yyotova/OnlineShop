@@ -3,6 +3,8 @@ import {
   SELECTED_PRODUCT,
   SelectedProductRequest,
   SetProductsRequest,
+  REMOVE_SELECTED_PRODUCT,
+  RemoveSelectedProductRequest,
 } from "../constants/action-types";
 import { ProductType } from "../models/product-model";
 
@@ -20,4 +22,10 @@ const selectedProduct = (product: ProductType): SelectedProductRequest => {
   };
 };
 
-export { setProducts, selectedProduct };
+const removeSelectedProduct = (): RemoveSelectedProductRequest => {
+  return {
+    type: REMOVE_SELECTED_PRODUCT,
+  };
+};
+
+export { setProducts, selectedProduct, removeSelectedProduct };
