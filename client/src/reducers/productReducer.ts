@@ -1,6 +1,10 @@
 import { ProductActionTypes, SET_PRODUCTS } from "../constants/action-types";
 
-const initialState = {
+type ProductsState = {
+  products: any[]
+}
+
+const initialState: ProductsState = {
   products: [],
 };
 
