@@ -82,7 +82,7 @@ router.post("/manage-items", async (req, res) => {
     size: reqData.size,
     imageUrl: reqData.imageUrl,
     itemsInStock: reqData.itemsInStock,
-    category: reqData.category,
+    categories: reqData.categories,
   });
   const savedItem = await item.save();
 
@@ -127,7 +127,7 @@ router.put("/:id", async (req, res) => {
     itemToUpdate.size = reqData.size;
     itemToUpdate.imageUrl = reqData.imageUrl;
     itemToUpdate.itemsInStock = reqData.itemsInStock;
-    itemToUpdate.category = reqData.category;
+    itemToUpdate.categories = reqData.categories;
 
     const updatedItem = await itemToUpdate.save();
 

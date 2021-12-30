@@ -39,6 +39,12 @@ const Navbar = () => {
                 component={Link}
                 to="/products"
               />
+              <Tab
+                label="Add Product"
+                value="/manage-products"
+                component={Link}
+                to="/manage-products"
+              />
             </Tabs>
           </Box>
 

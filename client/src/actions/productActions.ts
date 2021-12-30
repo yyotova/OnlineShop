@@ -1,10 +1,10 @@
 import {
   SET_PRODUCTS,
-  SELECTED_PRODUCT,
-  SelectedProductRequest,
   SetProductsRequest,
-  REMOVE_SELECTED_PRODUCT,
-  RemoveSelectedProductRequest,
+  SAVE_PRODUCT,
+  SaveProductRequest,
+  UPDATE_PRODUCT,
+  UpdateProductRequest,
 } from "../constants/action-types";
 import { ProductType } from "../models/product-model";
 
@@ -15,17 +15,18 @@ const setProducts = (products: ProductType[]): SetProductsRequest => {
   };
 };
 
-const selectedProduct = (product: ProductType): SelectedProductRequest => {
+const addProduct = (product: ProductType): SaveProductRequest => {
   return {
-    type: SELECTED_PRODUCT,
+    type: SAVE_PRODUCT,
     payload: product,
   };
 };
 
-const removeSelectedProduct = (): RemoveSelectedProductRequest => {
+const editProduct = (product: ProductType): UpdateProductRequest => {
   return {
-    type: REMOVE_SELECTED_PRODUCT,
+    type: UPDATE_PRODUCT,
+    payload: product,
   };
 };
 
-export { setProducts, selectedProduct, removeSelectedProduct };
+export { setProducts, addProduct, editProduct };

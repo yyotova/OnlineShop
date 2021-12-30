@@ -8,8 +8,10 @@ import {
   Typography,
 } from "@material-ui/core";
 import { useHistory, useLocation } from "react-router-dom";
-import { ProductType } from "../../models/product-model";
+import { ProductType } from "../models/product-model";
 import Select from "react-select";
+import { useSelector } from "react-redux";
+import { AppState } from "../store";
 
 interface ProductView {
   selectedProduct: ProductType;
@@ -32,6 +34,20 @@ const ProductView = ({ p }: any) => {
   const { itemsInStock, size } = selectedProduct;
   const arrQty = [...Array(+itemsInStock).keys()];
 
+  const allCategories = useSelector(
+    (state: AppState) => state.allCategories.categories
+  );
+  const categoryIds = selectedProduct.categories;
+  const categories: string[] = [];
+  categoryIds.forEach((id) => {
+    const currentCategory = allCategories.find(
+      (cat) => cat._id === id.toString()
+    );
+    if (currentCategory) {
+      categories.push(currentCategory.name);
+    }
+  });
+
   const optionsQty = arrQty.map((qty) => ({
     label: qty + 1,
     value: qty + 1,
@@ -49,8 +65,8 @@ const ProductView = ({ p }: any) => {
           <Grid item sm={5}>
             <div>
               <img src={selectedProduct?.imageUrl} width="100%" alt="" />
-              {selectedProduct?.category &&
-                selectedProduct?.category.map((categoryValue: string) => (
+              {categories &&
+                categories.map((categoryValue: string) => (
                   <Chip
                     style={{ margin: "5px" }}
                     label={categoryValue}
@@ -79,13 +95,13 @@ const ProductView = ({ p }: any) => {
 
                   {itemsInStock && itemsInStock > 0 ? (
                     <Box m={1}>
-                      <Typography variant="h6">Qty:</Typography>
-                      <div style={{ width: "50%" }}>
-                        <Select options={optionsQty} />
-                      </div>
                       <Typography variant="h6">Size:</Typography>
                       <div style={{ width: "50%" }}>
                         <Select options={optionsSize} />
+                      </div>
+                      <Typography variant="h6">Qty:</Typography>
+                      <div style={{ width: "50%" }}>
+                        <Select options={optionsQty} />
                       </div>
                     </Box>
                   ) : (

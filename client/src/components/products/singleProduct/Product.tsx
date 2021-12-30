@@ -45,7 +45,19 @@ const Product = ({ product }: ProductProps) => {
             <AddShoppingCart />
           </IconButton>
 
-          <Box display="flex" justifyContent="flex-end">
+          <Box m={1} display="flex" justifyContent="flex-end">
+            <Link
+              to={{
+                pathname: `edit-products/${product._id}`,
+              }}
+            >
+              <Button type="submit" variant="contained" color="secondary">
+                Edit
+              </Button>
+            </Link>
+          </Box>
+
+          <Box m={1} display="flex" justifyContent="flex-end">
             <Link
               to={{
                 pathname: `${match.url}/${product._id}`,

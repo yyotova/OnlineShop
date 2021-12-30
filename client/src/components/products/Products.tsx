@@ -1,31 +1,19 @@
 import { Grid } from "@material-ui/core";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
-import { setProducts } from "../../actions/productActions";
 import { ProductType } from "../../models/product-model";
 import Product from "./singleProduct/Product";
 import { AppState } from "../../store";
 import useStyles from "./styles";
+import { fetchProducts } from "../../actions/requests";
 
 const Products = () => {
   const classes = useStyles();
   const products = useSelector((state: AppState) => state.allProducts.products);
   const dispatch = useDispatch();
 
-  const fetchProducts = async () => {
-    await axios
-      .get("http://localhost:3030/api/items")
-      .then((response) => {
-        dispatch(setProducts(response.data));
-      })
-      .catch((err) => {
-        console.log("Error ", err);
-      });
-  };
-
   useEffect(() => {
-    fetchProducts();
+    fetchProducts(dispatch);
   }, []);
 
   return (

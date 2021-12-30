@@ -1,27 +1,37 @@
+import { CategoryType } from "../models/category-model";
 import { ProductType } from "../models/product-model";
 
-export const LIST_PRODUCTS = "LIST_PRODUCTS";
 export const SET_PRODUCTS = "SET_PRODUCTS";
-export const SELECTED_PRODUCT = "SELECTED_PRODUCT";
-export const REMOVE_SELECTED_PRODUCT = "REMOVE_SELECTED_PRODUCT";
+export const SAVE_PRODUCT = "SAVE_PRODUCT";
+export const UPDATE_PRODUCT = "UPDATE_PRODUCT";
+
+export const SET_CATEGORIES = "SET_CATEGORIES";
+
+export interface SetCategoriesRequest {
+  type: typeof SET_CATEGORIES;
+  payload: CategoryType[];
+}
 
 export interface SetProductsRequest {
   type: typeof SET_PRODUCTS;
   payload: ProductType[];
 }
 
-export interface SelectedProductRequest {
-  type: typeof SELECTED_PRODUCT;
+export interface SaveProductRequest {
+  type: typeof SAVE_PRODUCT;
   payload: ProductType;
 }
 
-export interface RemoveSelectedProductRequest {
-  type: typeof REMOVE_SELECTED_PRODUCT;
+export interface UpdateProductRequest {
+  type: typeof UPDATE_PRODUCT;
+  payload: ProductType;
 }
 
 export type ProductActionTypes =
   | SetProductsRequest
-  | SelectedProductRequest
-  | RemoveSelectedProductRequest;
+  | SaveProductRequest
+  | UpdateProductRequest;
 
-export type AppActions = ProductActionTypes;
+export type CategoryActionTypes = SetCategoriesRequest;
+
+export type AppActions = ProductActionTypes | CategoryActionTypes;

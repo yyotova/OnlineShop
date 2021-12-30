@@ -1,7 +1,8 @@
 import {
   ProductActionTypes,
-  SELECTED_PRODUCT,
+  SAVE_PRODUCT,
   SET_PRODUCTS,
+  UPDATE_PRODUCT,
 } from "../constants/action-types";
 import { ProductType } from "../models/product-model";
 
@@ -13,23 +14,6 @@ const productsInitialState: ProductsState = {
   products: [],
 };
 
-type SelectedProductState = {
-  product: ProductType;
-};
-
-const selectedProductInitialState: SelectedProductState = {
-  product: {
-    _id: "",
-    name: "",
-    description: "",
-    price: 0,
-    imageUrl: "",
-    category: [],
-    itemsInStock: 0,
-    size: [],
-  },
-};
-
 export const productReducer = (
   state = productsInitialState,
   action: ProductActionTypes
@@ -37,18 +21,14 @@ export const productReducer = (
   switch (action.type) {
     case SET_PRODUCTS:
       return { ...state, products: action.payload };
-    default:
-      return state;
-  }
-};
-
-export const selectedProductReducer = (
-  state = selectedProductInitialState,
-  action: ProductActionTypes
-) => {
-  switch (action.type) {
-    case SELECTED_PRODUCT:
-      return { ...state, ...action.payload };
+    case SAVE_PRODUCT:
+      const items = state.products.concat(action.payload);
+      return { ...state, products: items };
+    case UPDATE_PRODUCT:
+      const products = state.products.filter(
+        (p) => p._id !== action.payload._id
+      );
+      return { ...state, products: products.concat(action.payload) };
     default:
       return state;
   }

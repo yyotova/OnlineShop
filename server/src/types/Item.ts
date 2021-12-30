@@ -5,6 +5,5 @@ export interface IItem {
   size: string[];
   imageUrl: string;
   itemsInStock: string;
-  category: string;
-  numReviews: string;
+  categories: string;
 }
