@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect } from 'react';
 import { Button, Box, SnackbarContent } from '@material-ui/core';
 import { TextField } from 'formik-material-ui';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginAction } from '../../actions/userActions';
 import { ReduxState } from '../../models/shared-types';
@@ -19,6 +19,9 @@ export default function Login(): ReactElement {
   );
   const { userInfo, error } = userLogging;
   const dispatch = useDispatch();
+
+  const location = useLocation();
+  const redirect = location.search ? location.search.split('=')[1] : '/';
 
   const handleClick = () => {
     window.location.reload(false);

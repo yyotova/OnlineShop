@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { registerUser, loginAction } from '../../actions/userActions';
 import { ReduxState } from '../../models/shared-types';
 import { string, object } from 'yup';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import { TextField } from 'formik-material-ui';
 import { RegisterAndUpdateActions } from '../../models/user-types';
 import useStyles from '../styles';
@@ -32,6 +32,9 @@ export default function Registration(): ReactElement {
 
   const history = useHistory();
   const dispatch = useDispatch();
+
+  const location = useLocation();
+  const redirect = location.search ? location.search.split('=')[1] : '/';
 
   const handleClick = () => {
     window.location.reload(false);
