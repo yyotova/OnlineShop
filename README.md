@@ -17,6 +17,6 @@ What did Yoanna?
 - Added auth and users routes.
 
 Yoanna's TODO:
-- Register page.
-- Login page.
-- AppBar
+- Register page. :heavy_check_mark:
+- Login page. :heavy_check_mark:
+- Modify Navbar for different type of users.

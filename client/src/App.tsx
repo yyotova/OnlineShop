@@ -4,6 +4,8 @@ import ManageProduct from "./components/ManageProduct";
 import Navbar from "./components/Navbar";
 import Products from "./components/products/Products";
 import ProductView from "./components/ProductView";
+import Register from "./components/forms/Register";
+import Login from "./components/forms/Login";
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
         <Route exact path="/products/:id" component={ProductView} />
         <Route exact path="/edit-products/:id" component={ManageProduct} />
         <Route exact path="/manage-products" component={ManageProduct} />
+        <Route exact path="/register" component={Register} />
+        <Route exact path="/login" component={Login} />
       </Switch>
     </BrowserRouter>
   );
