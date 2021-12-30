@@ -8,7 +8,7 @@ const itemSchema = new mongoose.Schema(
     size: { type: Array, required: true, default: false },
     imageUrl: { type: String, required: true, default: false },
     itemsInStock: { type: String, required: true, default: 0 },
-    category: { type: Array, required: true, default: "" },
+    categories: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }]
   },
   {
     timestamps: true,
