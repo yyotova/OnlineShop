@@ -9,10 +9,12 @@ import {
   Box,
   Button,
 } from "@material-ui/core";
-import { AddShoppingCart } from "@material-ui/icons";
+import { AddShoppingCart, Delete } from "@material-ui/icons";
 import { ProductType } from "../../../models/product-model";
 import useStyles from "./styles";
 import { useRouteMatch, Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { deleteProduct } from "../../../actions/requests";
 
 export interface ProductProps {
   product: ProductType;
@@ -21,6 +23,11 @@ export interface ProductProps {
 const Product = ({ product }: ProductProps) => {
   const classes = useStyles();
   const match = useRouteMatch();
+  const dispatch = useDispatch();
+
+  const handleDelete = () => {
+    deleteProduct(dispatch, product._id);
+  };
 
   return (
     <Card className={classes.root}>
@@ -48,6 +55,19 @@ const Product = ({ product }: ProductProps) => {
           <Box m={1} display="flex" justifyContent="flex-end">
             <Link
               to={{
+                pathname: `${match.url}/${product._id}`,
+                state: { selectedProduct: product },
+              }}
+            >
+              <Button type="submit" variant="contained" color="secondary">
+                Details
+              </Button>
+            </Link>
+          </Box>
+
+          <Box m={1} display="flex" justifyContent="flex-end">
+            <Link
+              to={{
                 pathname: `edit-products/${product._id}`,
               }}
             >
@@ -57,17 +77,8 @@ const Product = ({ product }: ProductProps) => {
             </Link>
           </Box>
 
-          <Box m={1} display="flex" justifyContent="flex-end">
-            <Link
-              to={{
-                pathname: `${match.url}/${product._id}`,
-                state: { selectedProduct: product },
-              }}
-            >
-              <Button type="submit" variant="contained" color="secondary">
-                Details
-              </Button>
-            </Link>
+          <Box>
+            <Delete onClick={handleDelete} style={{ color: "	#a70000" }} />
           </Box>
         </CardActions>
       </CardContent>

@@ -5,6 +5,8 @@ import {
   SaveProductRequest,
   UPDATE_PRODUCT,
   UpdateProductRequest,
+  DeleteProductRequest,
+  DELETE_PRODUCT,
 } from "../constants/action-types";
 import { ProductType } from "../models/product-model";
 
@@ -29,4 +31,11 @@ const editProduct = (product: ProductType): UpdateProductRequest => {
   };
 };
 
-export { setProducts, addProduct, editProduct };
+const removeProduct = (productId: string): DeleteProductRequest => {
+  return {
+    type: DELETE_PRODUCT,
+    payload: productId,
+  };
+};
+
+export { setProducts, addProduct, editProduct, removeProduct };

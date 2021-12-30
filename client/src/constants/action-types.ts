@@ -1,5 +1,6 @@
 import { CategoryType } from "../models/category-model";
 import { ProductType } from "../models/product-model";
+import { IdType } from "../models/shared-types";
 import {
   RegisterUserRequest,
   UserType,
@@ -9,6 +10,7 @@ import {
 export const SET_PRODUCTS = "SET_PRODUCTS";
 export const SAVE_PRODUCT = "SAVE_PRODUCT";
 export const UPDATE_PRODUCT = "UPDATE_PRODUCT";
+export const DELETE_PRODUCT = "DELETE_PRODUCT";
 
 export const SET_CATEGORIES = "SET_CATEGORIES";
 
@@ -37,6 +39,11 @@ export interface SaveProductRequest {
 export interface UpdateProductRequest {
   type: typeof UPDATE_PRODUCT;
   payload: ProductType;
+}
+
+export interface DeleteProductRequest {
+  type: typeof DELETE_PRODUCT;
+  payload: string;
 }
 
 export interface SetCategoriesRequest {
@@ -76,7 +83,7 @@ export interface UserLoginSuccess {
 
 export interface UserLoginFailure {
   type: typeof USER_LOGIN_FAILURE;
-  payload: string;
+  payload: IdType;
 }
 
 export interface UserLogoutRequest {
@@ -91,7 +98,8 @@ export interface UserLogoutSuccess {
 export type ProductActionTypes =
   | SetProductsRequest
   | SaveProductRequest
-  | UpdateProductRequest;
+  | UpdateProductRequest
+  | DeleteProductRequest;
 
 export type CategoryActionTypes = SetCategoriesRequest;
 
