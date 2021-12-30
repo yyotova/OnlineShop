@@ -14,5 +14,9 @@ export default makeStyles((theme: Theme) =>
         backgroundColor: "#800089",
       }
     },
+    link: {
+      textDecoration: 'none',
+      color: theme.palette.text.primary,
+    },
   })
 );

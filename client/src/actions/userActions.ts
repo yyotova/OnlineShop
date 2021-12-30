@@ -10,8 +10,57 @@ import {
   USER_LOGOUT_REQUEST,
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
-  USER_LOGIN_FAILURE
+  USER_LOGIN_FAILURE,
+  USER_LIST_REQUEST,
+  USER_LIST_SUCCESS,
+  USER_LIST_FAILURE,
+  USER_DELETE_REQUEST,
+  USER_DELETE_SUCCESS,
+  USER_DELETE_FAILURE
 } from '../constants/action-types';
+import { getStateType } from '../models/shared-types';
+import { UserType } from '../models/user-types';
+
+export const listUsers = () => async (
+  dispatch: Dispatch<AppActions>,
+  getState: getStateType
+) => {
+  try {
+    dispatch({ type: USER_LIST_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    if (userInfo) {
+      const { data } = await axios.get('http://localhost:3030/users/');
+      const result = data.filter((user: any) => {
+        return user.isAdmin === false;
+      }) as UserType[];
+      dispatch({ type: USER_LIST_SUCCESS, payload: result });
+    }
+  } catch (err: any) {
+    dispatch({ type: USER_LIST_FAILURE, payload: err.message });
+  }
+};
+
+export const deleteUser = (userId: string) => async (
+  dispatch: Dispatch<AppActions>,
+  getState: getStateType
+) => {
+  try {
+    dispatch({ type: USER_DELETE_REQUEST, payload: userId });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    if (userInfo) {
+      const {
+        data: { data: newOrder },
+      } = await axios.delete(`http://localhost:3030/users/delete/${userId}`);
+      dispatch({ type: USER_DELETE_SUCCESS, payload: newOrder });
+    }
+  } catch (err: any) {
+    dispatch({ type: USER_DELETE_FAILURE, payload: err.message });
+  }
+};
 
 export const loginAction = (email: string, password: string) => async (
   dispatch: Dispatch<AppActions>

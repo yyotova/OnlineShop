@@ -1,3 +1,10 @@
+export interface UserActions {
+  loading: boolean;
+  userInfo?: UserType;
+  success?: boolean;
+  error?: string;
+}
+
 export interface RegisterAndUpdateType {
   loading: boolean;
   success: boolean;
@@ -35,6 +42,13 @@ export interface RegisterAndUpdateActions {
   success?: boolean;
   userInfo?: UserType;
   error?: string;
+}
+
+export interface UserListActions {
+  loading: boolean;
+  userInfo: UserType[];
+  error?: string;
+  success?: boolean;
 }
 
 export interface UserType {

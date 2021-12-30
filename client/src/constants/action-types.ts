@@ -1,5 +1,5 @@
 import { ProductType } from "../models/product-model";
-import { RegisterUserRequest, UserType, LogInUserRequest } from "../models/user-types";
+import { RegisterUserRequest, UserType, LogInUserRequest, UserActions } from "../models/user-types";
 
 export const LIST_PRODUCTS = "LIST_PRODUCTS";
 export const SET_PRODUCTS = "SET_PRODUCTS";
@@ -16,6 +16,43 @@ export const USER_LOGOUT_SUCCESS = "USER_LOGOUT_SUCCESS";
 export const USER_LOGIN_REQUEST = "USER_LOGIN_REQUEST";
 export const USER_LOGIN_SUCCESS = "USER_LOGIN_SUCCESS";
 export const USER_LOGIN_FAILURE = "USER_LOGIN_FAILURE";
+
+export const USER_LIST_REQUEST = "USER_LIST_REQUEST";
+export const USER_LIST_SUCCESS = "USER_LIST_SUCCESS";
+export const USER_LIST_FAILURE = "USER_LIST_FAILURE";
+
+export const USER_DELETE_REQUEST = "USER_DELETE_REQUEST";
+export const USER_DELETE_SUCCESS = "USER_DELETE_SUCCESS";
+export const USER_DELETE_FAILURE = "USER_DELETE_FAILURE";
+
+export interface UserListRequest {
+  type: typeof USER_LIST_REQUEST;
+}
+
+export interface UserListSuccess {
+  type: typeof USER_LIST_SUCCESS;
+  payload: UserType[];
+}
+
+export interface UserListFailure {
+  type: typeof USER_LIST_FAILURE;
+  payload: string;
+}
+
+export interface UserDeleteRequest {
+  type: typeof USER_DELETE_REQUEST;
+  payload: string;
+}
+
+export interface UserDeleteSuccess {
+  type: typeof USER_DELETE_SUCCESS;
+  payload: UserActions;
+}
+
+export interface UserDeleteFailure {
+  type: typeof USER_DELETE_FAILURE;
+  payload: string;
+}
 
 export interface UserRegisterRequest {
   type: typeof USER_REGISTER_REQUEST;
@@ -90,6 +127,12 @@ export type UserActionTypes =
   | UserLoginSuccess
   | UserLoginFailure
   | UserLogoutRequest
-  | UserLogoutSuccess;
+  | UserLogoutSuccess
+  | UserListRequest
+  | UserListSuccess
+  | UserListFailure
+  | UserDeleteRequest
+  | UserDeleteSuccess
+  | UserDeleteFailure;
 
 export type AppActions = ProductActionTypes | UserActionTypes;
