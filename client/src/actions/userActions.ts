@@ -60,7 +60,11 @@ export const deleteUser = (userId: string) => async (
     if (userInfo) {
       const {
         data: { data: newOrder },
-      } = await axios.delete(`http://localhost:3030/users/delete/${userId}`);
+      } = await axios.delete(`http://localhost:3030/users/delete/${userId}`, {
+        headers: {
+          "x-auth": userInfo.token || ''
+        }
+      });
       dispatch({ type: USER_DELETE_SUCCESS, payload: newOrder });
     }
   } catch (err: any) {
