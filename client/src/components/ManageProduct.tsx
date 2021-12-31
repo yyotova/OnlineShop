@@ -22,6 +22,7 @@ import { useEffect } from "react";
 import React from "react";
 import { CategoryType } from "../models/category-model";
 import { array, number, object, string } from "yup";
+import { LooseObject } from "../models/shared-types";
 
 interface EditProductParams {
   id: string;
@@ -35,10 +36,6 @@ interface CategoryOption {
 interface SizeOption {
   value: number;
   label: string;
-}
-
-interface LooseObject {
-  [key: string]: any;
 }
 
 const ManageProduct = () => {

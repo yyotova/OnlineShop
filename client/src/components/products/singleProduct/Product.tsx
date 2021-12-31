@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardMedia,
@@ -15,6 +15,7 @@ import useStyles from "./styles";
 import { useRouteMatch, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { deleteProduct } from "../../../actions/requests";
+import Notification from "../../Notification";
 
 export interface ProductProps {
   product: ProductType;
@@ -25,8 +26,13 @@ const Product = ({ product }: ProductProps) => {
   const match = useRouteMatch();
   const dispatch = useDispatch();
 
+  const [message, setMessage] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+
   const handleDelete = () => {
     deleteProduct(dispatch, product._id);
+    setMessage("Product deleted successfully!");
+    setIsOpen(true);
   };
 
   return (
@@ -82,6 +88,8 @@ const Product = ({ product }: ProductProps) => {
           </Box>
         </CardActions>
       </CardContent>
+
+      <Notification message={message} isOpen={isOpen} setIsOpen={setIsOpen} />
     </Card>
   );
 };

@@ -7,7 +7,11 @@ export type IdType = string;
 export interface ReduxState {
   allProducts: ProductType[];
   userRegister: RegisterAndUpdateActions;
-  userLogin: LoginActions
+  userLogin: LoginActions;
 }
 
 export type getStateType = () => ReduxState;
+
+export interface LooseObject {
+  [key: string]: any;
+}

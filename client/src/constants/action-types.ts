@@ -13,6 +13,9 @@ export const UPDATE_PRODUCT = "UPDATE_PRODUCT";
 export const DELETE_PRODUCT = "DELETE_PRODUCT";
 
 export const SET_CATEGORIES = "SET_CATEGORIES";
+export const SAVE_CATEGORY = "SAVE_CATEGORY";
+export const UPDATE_CATEGORY = "UPDATE_CATEGORY";
+export const DELETE_CATEGORY = "DELETE_CATEGORY";
 
 export const USER_REGISTER_CLEANUP = "USER_REGISTER_CLEANUP";
 export const USER_REGISTER_REQUEST = "USER_REGISTER_REQUEST";
@@ -49,6 +52,21 @@ export interface DeleteProductRequest {
 export interface SetCategoriesRequest {
   type: typeof SET_CATEGORIES;
   payload: CategoryType[];
+}
+
+export interface SaveCategoryRequest {
+  type: typeof SAVE_CATEGORY;
+  payload: CategoryType;
+}
+
+export interface UpdateCategoryRequest {
+  type: typeof UPDATE_CATEGORY;
+  payload: CategoryType;
+}
+
+export interface DeleteCategoryRequest {
+  type: typeof DELETE_CATEGORY;
+  payload: string;
 }
 
 export interface UserRegisterRequest {
@@ -101,7 +119,11 @@ export type ProductActionTypes =
   | UpdateProductRequest
   | DeleteProductRequest;
 
-export type CategoryActionTypes = SetCategoriesRequest;
+export type CategoryActionTypes =
+  | SetCategoriesRequest
+  | SaveCategoryRequest
+  | UpdateCategoryRequest
+  | DeleteCategoryRequest;
 
 export type UserActionTypes =
   | UserRegisterRequest
