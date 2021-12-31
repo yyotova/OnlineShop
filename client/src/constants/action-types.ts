@@ -80,6 +80,11 @@ export interface SetUserCartRequest {
   payload: CartType;
 }
 
+export interface UpdateUserCartRequest {
+  type: typeof UPDATE_CART;
+  payload: CartType;
+}
+
 export interface UserRegisterRequest {
   type: typeof USER_REGISTER_REQUEST;
   payload: RegisterUserRequest;
@@ -147,7 +152,7 @@ export type UserActionTypes =
   | UserLogoutRequest
   | UserLogoutSuccess;
 
-export type CartActionTypes = SetUserCartRequest;
+export type CartActionTypes = SetUserCartRequest | UpdateUserCartRequest;
 
 export type AppActions =
   | ProductActionTypes

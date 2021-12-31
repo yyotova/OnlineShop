@@ -15,7 +15,8 @@ import {
 import { ProductType } from "../models/product-model";
 import { IdType } from "../models/shared-types";
 import { CategoryType } from "../models/category-model";
-import { setUserCart } from "./cartActions";
+import { editUserCart, setUserCart } from "./cartActions";
+import { CartType } from "../models/cart-model";
 
 // --- Category ---
 
@@ -138,6 +139,17 @@ export const fetchUserCart = async (
     .then((response) => {
       dispatch(setUserCart(response.data));
       fetchCategories(dispatch);
+    })
+    .catch((err) => {
+      console.error("Error ", err);
+    });
+};
+
+export const updateCart = async (dispatch: Dispatch<any>, cart: CartType) => {
+  await axios
+    .put(`http://localhost:3030/api/cart/${cart._id}`, cart)
+    .then((response) => {
+      dispatch(editUserCart(response.data.data));
     })
     .catch((err) => {
       console.error("Error ", err);
