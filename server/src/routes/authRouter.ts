@@ -33,7 +33,8 @@ router.post('/login', async (req, res, next) => {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      isAdmin: user.isAdmin
+      isAdmin: user.isAdmin,
+      token: token
     });
   } catch (error) {
     next(error)
@@ -55,9 +56,13 @@ router.post('/register', async (req, res, next) => {
       .header("x-auth", token)
       .status(201)
       .send({
-        _id: user._id
-      })
-
+        _id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        isAdmin: user.isAdmin,
+        token: token
+      });
   } catch (error) {
     next(error);
   }

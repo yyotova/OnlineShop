@@ -31,10 +31,16 @@ export const listUsers = () => async (
       userLogin: { userInfo },
     } = getState();
     if (userInfo) {
-      const { data } = await axios.get('http://localhost:3030/users/');
+      const { data } = await axios.get('http://localhost:3030/users', {
+        headers: {
+          "x-auth": userInfo.token || ''
+        }
+      });
+
       const result = data.filter((user: any) => {
         return user.isAdmin === false;
       }) as UserType[];
+
       dispatch({ type: USER_LIST_SUCCESS, payload: result });
     }
   } catch (err: any) {

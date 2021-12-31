@@ -33,7 +33,7 @@ const Navbar = () => {
   const { userInfo } = userLogin;
 
   return (
-    <AppBar>
+    <AppBar position="sticky">
       <Toolbar>
         <Box
           sx={{

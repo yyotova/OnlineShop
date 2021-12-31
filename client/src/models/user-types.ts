@@ -19,13 +19,6 @@ export interface RegisterUserRequest {
   password: string;
 }
 
-export interface RegisterUserRequest {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-}
-
 export interface LogInUserRequest {
   email: string;
   password: string;
@@ -57,4 +50,5 @@ export interface UserType {
   lastName: string;
   email: string;
   isAdmin?: boolean;
+  token?: string;
 }
