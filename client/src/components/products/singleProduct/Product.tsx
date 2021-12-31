@@ -5,11 +5,10 @@ import {
   CardContent,
   CardActions,
   Typography,
-  IconButton,
   Box,
   Button,
 } from "@material-ui/core";
-import { AddShoppingCart, Delete } from "@material-ui/icons";
+import { Delete } from "@material-ui/icons";
 import { ProductType } from "../../../models/product-model";
 import useStyles from "./styles";
 import { useRouteMatch, Link } from "react-router-dom";
@@ -54,10 +53,6 @@ const Product = ({ product }: ProductProps) => {
         </Typography>
 
         <CardActions className={classes.cardActions} disableSpacing>
-          <IconButton aria-label="Add to cart">
-            <AddShoppingCart />
-          </IconButton>
-
           <Box m={1} display="flex" justifyContent="flex-end">
             <Link
               to={{

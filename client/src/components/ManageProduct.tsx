@@ -12,13 +12,7 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import {
-  fetchCategories,
-  fetchProducts,
-  saveProduct,
-  updateProduct,
-} from "../actions/requests";
-import { useEffect } from "react";
+import { saveProduct, updateProduct } from "../actions/requests";
 import React from "react";
 import { CategoryType } from "../models/category-model";
 import { array, number, object, string } from "yup";
@@ -53,10 +47,6 @@ const ManageProduct = () => {
   const allProducts = useSelector(
     (state: AppState) => state.allProducts.products
   );
-
-  useEffect(() => {
-    fetchCategories(dispatch);
-  }, []);
 
   let catCounter = 1;
   const allCategoryOptions: CategoryOption[] = allCategories.flatMap((c) => ({
@@ -124,10 +114,6 @@ const ManageProduct = () => {
       initialSizeOptions.push(option);
     }
   });
-
-  useEffect(() => {
-    fetchProducts(dispatch);
-  }, []);
 
   const clearUp = (obj: ProductType): void => {
     obj._id = "";

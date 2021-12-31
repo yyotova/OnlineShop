@@ -1,11 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { DataGrid } from "@material-ui/data-grid";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  deleteCategory,
-  fetchCategories,
-  saveCategory,
-} from "../actions/requests";
+import { deleteCategory, saveCategory } from "../actions/requests";
 import { AppState } from "../store";
 import { updateCategory } from "../actions/requests";
 import { Box, Button, TextField } from "@material-ui/core";
@@ -28,10 +24,6 @@ const CategoryView = () => {
 
   const [message, setMessage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    fetchCategories(dispatch);
-  }, []);
 
   const handleEditCommit = (e: any) => {
     if (allCategories.find((c) => c.name === e.value && c._id !== e.id)) {

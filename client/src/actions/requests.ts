@@ -15,6 +15,9 @@ import {
 import { ProductType } from "../models/product-model";
 import { IdType } from "../models/shared-types";
 import { CategoryType } from "../models/category-model";
+import { setUserCart } from "./cartActions";
+
+// --- Category ---
 
 export const fetchCategories = async (dispatch: Dispatch<any>) => {
   await axios
@@ -69,6 +72,7 @@ export const deleteCategory = async (
     });
 };
 
+// --- Product ---
 export const fetchProducts = async (dispatch: Dispatch<any>) => {
   await axios
     .get("http://localhost:3030/api/items")
@@ -117,6 +121,23 @@ export const deleteProduct = async (
     .delete(`http://localhost:3030/api/items/${productId}`)
     .then((response) => {
       dispatch(removeProduct(productId));
+    })
+    .catch((err) => {
+      console.error("Error ", err);
+    });
+};
+
+// --- Cart ---
+
+export const fetchUserCart = async (
+  dispatch: Dispatch<any>,
+  userId: IdType
+) => {
+  await axios
+    .get(`http://localhost:3030/api/cart/${userId}`)
+    .then((response) => {
+      dispatch(setUserCart(response.data));
+      fetchCategories(dispatch);
     })
     .catch((err) => {
       console.error("Error ", err);

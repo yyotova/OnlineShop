@@ -119,10 +119,7 @@ const ProductView = ({ p }: any) => {
                       >
                         Purchase
                       </Button>
-                      <Button
-                        type="button"
-                        onClick={() => history.push("/products")}
-                      >
+                      <Button type="button" onClick={() => history.goBack()}>
                         Back
                       </Button>
                     </Box>

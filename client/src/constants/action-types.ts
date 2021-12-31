@@ -1,3 +1,4 @@
+import { CartType } from "../models/cart-model";
 import { CategoryType } from "../models/category-model";
 import { ProductType } from "../models/product-model";
 import { IdType } from "../models/shared-types";
@@ -16,6 +17,11 @@ export const SET_CATEGORIES = "SET_CATEGORIES";
 export const SAVE_CATEGORY = "SAVE_CATEGORY";
 export const UPDATE_CATEGORY = "UPDATE_CATEGORY";
 export const DELETE_CATEGORY = "DELETE_CATEGORY";
+
+export const SET_USER_CART = "SET_USER_CART";
+export const SAVE_CART = "SAVE_CART";
+export const UPDATE_CART = "UPDATE_CART";
+export const DELETE_CART = "DELETE_CART";
 
 export const USER_REGISTER_CLEANUP = "USER_REGISTER_CLEANUP";
 export const USER_REGISTER_REQUEST = "USER_REGISTER_REQUEST";
@@ -67,6 +73,11 @@ export interface UpdateCategoryRequest {
 export interface DeleteCategoryRequest {
   type: typeof DELETE_CATEGORY;
   payload: string;
+}
+
+export interface SetUserCartRequest {
+  type: typeof SET_USER_CART;
+  payload: CartType;
 }
 
 export interface UserRegisterRequest {
@@ -136,7 +147,10 @@ export type UserActionTypes =
   | UserLogoutRequest
   | UserLogoutSuccess;
 
+export type CartActionTypes = SetUserCartRequest;
+
 export type AppActions =
   | ProductActionTypes
   | CategoryActionTypes
-  | UserActionTypes;
+  | UserActionTypes
+  | CartActionTypes;

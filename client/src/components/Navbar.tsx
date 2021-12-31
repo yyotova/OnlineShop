@@ -11,10 +11,14 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
-import { Link, useRouteMatch } from "react-router-dom";
+import { Link, useHistory, useRouteMatch } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { AppState } from "../store";
 
 const Navbar = () => {
+  const history = useHistory();
   const match = useRouteMatch();
+  const cart = useSelector((state: AppState) => state.userCart.cart);
 
   return (
     <AppBar>
@@ -45,6 +49,12 @@ const Navbar = () => {
                 component={Link}
                 to="/manage-products"
               />
+              <Tab
+                label="Manage Categories"
+                value="/manage-categories"
+                component={Link}
+                to="/manage-categories"
+              />
             </Tabs>
           </Box>
 
@@ -58,8 +68,11 @@ const Navbar = () => {
             <Button variant="contained" color="secondary">
               My Account
             </Button>
-            <IconButton>
-              <Badge badgeContent={4} color="secondary">
+            <IconButton onClick={() => history.push("/cart")}>
+              <Badge
+                badgeContent={cart ? cart.items.length : 0}
+                color="secondary"
+              >
                 <ShoppingBasketIcon />
               </Badge>
             </IconButton>
