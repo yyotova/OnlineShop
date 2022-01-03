@@ -6,6 +6,7 @@ import Products from "./components/products/Products";
 import ProductView from "./components/ProductView";
 import Register from "./components/forms/Register";
 import Login from "./components/forms/Login";
+import UserManagement from "./components/UserManagment";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route exact path="/manage-products" component={ManageProduct} />
         <Route exact path="/register" component={Register} />
         <Route exact path="/login" component={Login} />
+        <Route exact path="/users" component={UserManagement} />
       </Switch>
     </BrowserRouter>
   );

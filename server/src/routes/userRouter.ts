@@ -9,8 +9,8 @@ router.get('/', authenticate, isAdmin, async (req, res) => {
   const users = await User.find({});
 
   return res.status(200).json(users.map(user => {
-    const { firstName, lastName, email } = user;
-    return { firstName, lastName, email };
+    const { _id, firstName, lastName, email, isAdmin } = user;
+    return { _id, firstName, lastName, email, isAdmin };
   }));
 });
 
