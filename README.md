@@ -19,7 +19,10 @@ What did Yoanna?
 - Added auth and users routes. :heavy_check_mark:
 - Register page. :heavy_check_mark:
 - Login page. :heavy_check_mark:
+- Modify Navbar for different type of users. :heavy_check_mark:
+- User Managment (show all users and deleting users). :heavy_check_mark:
+
 
 Yoanna's TODO:
-- Modify Navbar for different type of users.
+- Some fixes for user's type (e.g.editing product)
 - Order functionality.
