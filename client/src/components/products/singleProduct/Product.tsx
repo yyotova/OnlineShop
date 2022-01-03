@@ -58,6 +58,9 @@ const Product = ({ product }: ProductProps) => {
               to={{
                 pathname: `edit-products/${product._id}`,
               }}
+              style={{
+                textDecoration: "none"
+              }}
             >
               <Button type="submit" variant="contained" color="secondary">
                 Edit
@@ -71,6 +74,9 @@ const Product = ({ product }: ProductProps) => {
               to={{
                 pathname: `${match.url}/${product._id}`,
                 state: { selectedProduct: product },
+              }}
+              style={{
+                textDecoration: "none"
               }}
             >
               <Button type="submit" variant="contained" color="secondary">

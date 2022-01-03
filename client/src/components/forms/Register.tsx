@@ -34,7 +34,7 @@ export default function Registration(): ReactElement {
   const dispatch = useDispatch();
 
   const location = useLocation();
-  const redirect = location.search ? location.search.split('=')[1] : '/';
+  const redirect = location.search ? location.search.split('=')[1] : '/products';
 
   const handleClick = () => {
     window.location.reload(false);
