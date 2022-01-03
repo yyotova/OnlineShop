@@ -14,6 +14,7 @@ import Item from "../models/itemModel";
 import type { IItem } from "../types/Item";
 import type { IResponse } from "../types/Response";
 import { lowerCaseFirstLetter } from "../utilities/helperUtil";
+import Cart from "../models/cartModel";
 
 const router = express.Router();
 
@@ -58,7 +59,6 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// TODO:: authentication
 router.post("/manage-items", async (req, res) => {
   const reqData = req.body as IItem;
   const existingItem = await Item.findOne({ name: reqData.name });
@@ -100,7 +100,6 @@ router.post("/manage-items", async (req, res) => {
   return res.status(500).json(returnedData);
 });
 
-// TODO:: authentication
 router.put("/:id", async (req, res) => {
   const itemId = req.params.id;
   const itemToUpdate = await Item.findOne({ _id: itemId });
@@ -149,7 +148,6 @@ router.put("/:id", async (req, res) => {
     .json({ errorMessage: notExist(itemObjectName, "id", itemId) });
 });
 
-// TODO:: authentication
 router.delete("/:id", async (req, res) => {
   const itemId = req.params.id;
   const itemToDelete = await Item.findById(itemId);
@@ -158,6 +156,14 @@ router.delete("/:id", async (req, res) => {
     const deletedItem = await itemToDelete.remove();
 
     if (deletedItem) {
+      const carts = await Cart.find({
+        items: { $elemMatch: { itemId: itemId } },
+      });
+      for (const cart of carts) {
+        cart.items = cart.items.filter((i) => i.itemId.toString() !== itemId);
+        await cart.save();
+      }
+
       const returnedData: IResponse = {
         message: successByDeleting(itemObjectName),
       };

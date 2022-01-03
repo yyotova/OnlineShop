@@ -51,9 +51,9 @@ const CartItem = ({ product }: CartItemProps) => {
               </Link>
             </div>
             <div style={{ padding: 5 }}>{item?.description}</div>
-            <div style={{ padding: 5 }}>Size: {product.selectedItemSize}</div>
-            <div style={{ padding: 5 }}>Quantity: {product.quantity}</div>
-            <h4> Price: {item.price * product.quantity} €</h4>
+            <div style={{ padding: 5 }}>Size: {product?.selectedItemSize}</div>
+            <div style={{ padding: 5 }}>Quantity: {product?.quantity}</div>
+            <h4> Price: {item?.price * product?.quantity} €</h4>
 
             <Box m={2}>
               <Button

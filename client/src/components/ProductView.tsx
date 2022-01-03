@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Box,
   Button,
@@ -226,7 +226,10 @@ const ProductView = () => {
                                 variant="contained"
                                 type="submit"
                                 color="secondary"
-                                disabled={(userInfo?.token && userInfo?.isAdmin) || !userInfo?.token}
+                                disabled={
+                                  (userInfo?.token && userInfo?.isAdmin) ||
+                                  !userInfo?.token
+                                }
                               >
                                 Purchase
                               </Button>
