@@ -58,7 +58,7 @@ router.put("/:id", async (req, res) => {
     const name = req.body.name as string;
 
     const existingCategory = await Category.findOne({ name: name });
-    if (existingCategory._id.toString() !== categoryId) {
+    if (existingCategory && existingCategory._id.toString() !== categoryId) {
       const returnedData: IResponse = {
         errorMessage: alreadyExist(
           lowerCaseFirstLetter(categoryObjectName),

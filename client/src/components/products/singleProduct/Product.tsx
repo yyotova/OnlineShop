@@ -1,18 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardMedia,
   CardContent,
   CardActions,
   Typography,
-  IconButton,
   Box,
   Button,
 } from "@material-ui/core";
-import { AddShoppingCart } from "@material-ui/icons";
+import { Delete } from "@material-ui/icons";
 import { ProductType } from "../../../models/product-model";
 import useStyles from "./styles";
 import { useRouteMatch, Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { deleteProduct } from "../../../actions/requests";
+import Notification from "../../Notification";
 import { LoginActions } from "../../../models/user-types";
 import { useSelector } from "react-redux";
 import { ReduxState } from "../../../models/shared-types";
@@ -24,6 +26,17 @@ export interface ProductProps {
 const Product = ({ product }: ProductProps) => {
   const classes = useStyles();
   const match = useRouteMatch();
+  const dispatch = useDispatch();
+
+  const [message, setMessage] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleDelete = () => {
+    deleteProduct(dispatch, product._id);
+    setMessage("Product deleted successfully!");
+    setIsOpen(true);
+  };
+
   const userLogin: LoginActions = useSelector(
     (state: ReduxState) => state.userLogin
   );
@@ -49,26 +62,6 @@ const Product = ({ product }: ProductProps) => {
         </Typography>
 
         <CardActions className={classes.cardActions} disableSpacing>
-          <IconButton aria-label="Add to cart">
-            <AddShoppingCart />
-          </IconButton>
-          {userInfo?.isAdmin && (
-            <Box m={1} display="flex" justifyContent="flex-end">
-            <Link
-              to={{
-                pathname: `edit-products/${product._id}`,
-              }}
-              style={{
-                textDecoration: "none"
-              }}
-            >
-              <Button type="submit" variant="contained" color="secondary">
-                Edit
-              </Button>
-            </Link>
-          </Box>
-          )}
-          
           <Box m={1} display="flex" justifyContent="flex-end">
             <Link
               to={{
@@ -76,7 +69,7 @@ const Product = ({ product }: ProductProps) => {
                 state: { selectedProduct: product },
               }}
               style={{
-                textDecoration: "none"
+                textDecoration: "none",
               }}
             >
               <Button type="submit" variant="contained" color="secondary">
@@ -84,8 +77,33 @@ const Product = ({ product }: ProductProps) => {
               </Button>
             </Link>
           </Box>
+
+          {userInfo?.isAdmin && (
+            <Box m={1} display="flex" justifyContent="flex-end">
+              <Link
+                to={{
+                  pathname: `edit-products/${product._id}`,
+                }}
+                style={{
+                  textDecoration: "none",
+                }}
+              >
+                <Button type="submit" variant="contained" color="secondary">
+                  Edit
+                </Button>
+              </Link>
+            </Box>
+          )}
+
+          {userInfo?.isAdmin && (
+            <Box>
+              <Delete onClick={handleDelete} style={{ color: "	#a70000" }} />
+            </Box>
+          )}
         </CardActions>
       </CardContent>
+
+      <Notification message={message} isOpen={isOpen} setIsOpen={setIsOpen} />
     </Card>
   );
 };

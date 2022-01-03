@@ -1,4 +1,5 @@
 import {
+  DELETE_PRODUCT,
   ProductActionTypes,
   SAVE_PRODUCT,
   SET_PRODUCTS,
@@ -29,6 +30,9 @@ export const productReducer = (
         (p) => p._id !== action.payload._id
       );
       return { ...state, products: products.concat(action.payload) };
+    case DELETE_PRODUCT:
+      const newItems = state.products.filter((p) => p._id !== action.payload);
+      return { ...state, products: newItems };
     default:
       return state;
   }

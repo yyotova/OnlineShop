@@ -1,17 +1,22 @@
 import * as mongoose from "mongoose";
 
 const cartItemSchema = new mongoose.Schema({
-  item: {
+  itemId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Item",
     required: true,
   },
   quantity: { type: Number, default: 1 },
+  selectedItemSize: { type: String, required: true },
 });
 
 const cartSchema = new mongoose.Schema(
   {
-    //  TODO  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     items: [cartItemSchema],
   },
   {

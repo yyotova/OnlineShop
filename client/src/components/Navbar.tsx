@@ -12,19 +12,21 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
-import { ReduxState } from "../models/shared-types";
+import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { AppState } from "../store";
+import { ReduxState } from "../models/shared-types";
 import { LoginActions } from "../models/user-types";
-import { Link, useHistory } from "react-router-dom";
-import AddIcon from '@material-ui/icons/Add';
-import ShopIcon from '@material-ui/icons/Shop';
-import PeopleIcon from '@material-ui/icons/People';
-import useStyles from './styles';
+import AddIcon from "@material-ui/icons/Add";
+import ShopIcon from "@material-ui/icons/Shop";
+import PeopleIcon from "@material-ui/icons/People";
+import useStyles from "./styles";
 
 const Navbar = () => {
   const classes = useStyles();
   const history = useHistory();
-
+  const match = useRouteMatch();
+  const cart = useSelector((state: AppState) => state.userCart.cart);
   const userLogin: LoginActions = useSelector(
     (state: ReduxState) => state.userLogin
   );
@@ -48,12 +50,12 @@ const Navbar = () => {
               style={{
                 textDecoration: "none",
                 color: "white",
-                fontSize: "22px"
+                fontSize: "22px",
               }}
               component={Link}
               to="/products"
-            > 
-              DRESS IN STYLE 
+            >
+              DRESS IN STYLE
             </Typography>
           </Box>
 
@@ -64,58 +66,69 @@ const Navbar = () => {
               alignItems: "center",
             }}
           >
-            { userInfo?.isAdmin && (
+            {userInfo?.isAdmin && (
+              <Link to="/manage-categories" className={classes.link}>
+                <ListItem button>
+                  <ListItemIcon>
+                    <AddIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={"Manage Categories"} />
+                </ListItem>
+              </Link>
+            )}
+            {userInfo?.isAdmin && (
               <Link to="/manage-products" className={classes.link}>
                 <ListItem button>
                   <ListItemIcon>
                     <AddIcon />
                   </ListItemIcon>
-                  <ListItemText primary={'Manage Items'} />
+                  <ListItemText primary={"Manage Items"} />
                 </ListItem>
               </Link>
-            ) }
+            )}
             {userInfo?.isAdmin ? (
-               <>
-               <Link to="/orders" className={classes.link}>
-                 <ListItem button>
-                   <ListItemIcon>
-                     <ShopIcon />
-                   </ListItemIcon>
-                   <ListItemText primary={'Orders'} />
-                 </ListItem>
-               </Link>
-               <Link to="/users" className={classes.link}>
-                 <ListItem button>
-                   <ListItemIcon>
-                     <PeopleIcon />
-                   </ListItemIcon>
-                   <ListItemText primary={'Users'} />
-                 </ListItem>
-               </Link>
-             </>
-            ) : (
-                userInfo ? (
-                  <>
-                    <Button variant="contained" color="secondary">
-                      My Account
-                    </Button>
-                    <IconButton>
-                      <Badge badgeContent={4} color="secondary">
-                        <ShoppingBasketIcon />
-                      </Badge>
-                    </IconButton>
-                  </>
-                ) : (
-                  <Button
-                    type="button"
-                    variant="contained" 
+              <>
+                <Link to="/orders" className={classes.link}>
+                  <ListItem button>
+                    <ListItemIcon>
+                      <ShopIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={"Orders"} />
+                  </ListItem>
+                </Link>
+                <Link to="/users" className={classes.link}>
+                  <ListItem button>
+                    <ListItemIcon>
+                      <PeopleIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={"Users"} />
+                  </ListItem>
+                </Link>
+              </>
+            ) : userInfo ? (
+              <>
+                <Button variant="contained" color="secondary">
+                  My Account
+                </Button>
+                <IconButton onClick={() => history.push("/cart")}>
+                  <Badge
+                    badgeContent={cart ? cart.items.length : 0}
                     color="secondary"
-                    onClick={() => history.push("/login")}
                   >
-                    Login
-                  </Button>
-                )
-              )}
+                    <ShoppingBasketIcon />
+                  </Badge>
+                </IconButton>
+              </>
+            ) : (
+              <Button
+                type="button"
+                variant="contained"
+                color="secondary"
+                onClick={() => history.push("/login")}
+              >
+                Login
+              </Button>
+            )}
           </Box>
         </Box>
       </Toolbar>

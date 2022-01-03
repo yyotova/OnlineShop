@@ -23,7 +23,7 @@ app.use("/auth", authRouter);
 app.use("/users", userRouter);
 app.use("/api/items", itemRoute);
 app.use("/api/orders", orderRoute);
-app.use("/api/carts", cartRoute);
+app.use("/api/cart", cartRoute);
 app.use("/api/categories", categoryRouter);
 
 app.listen(serverPort, () => {

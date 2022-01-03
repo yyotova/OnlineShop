@@ -1,17 +1,28 @@
+import { CartType } from "../models/cart-model";
 import { CategoryType } from "../models/category-model";
 import { ProductType } from "../models/product-model";
+import { IdType } from "../models/shared-types";
 import {
   RegisterUserRequest,
   UserType,
   LogInUserRequest,
-  UserActions
+  UserActions,
 } from "../models/user-types";
 
 export const SET_PRODUCTS = "SET_PRODUCTS";
 export const SAVE_PRODUCT = "SAVE_PRODUCT";
 export const UPDATE_PRODUCT = "UPDATE_PRODUCT";
+export const DELETE_PRODUCT = "DELETE_PRODUCT";
 
 export const SET_CATEGORIES = "SET_CATEGORIES";
+export const SAVE_CATEGORY = "SAVE_CATEGORY";
+export const UPDATE_CATEGORY = "UPDATE_CATEGORY";
+export const DELETE_CATEGORY = "DELETE_CATEGORY";
+
+export const SET_USER_CART = "SET_USER_CART";
+export const SAVE_CART = "SAVE_CART";
+export const UPDATE_CART = "UPDATE_CART";
+export const DELETE_CART = "DELETE_CART";
 
 export const USER_REGISTER_CLEANUP = "USER_REGISTER_CLEANUP";
 export const USER_REGISTER_REQUEST = "USER_REGISTER_REQUEST";
@@ -77,9 +88,39 @@ export interface UpdateProductRequest {
   payload: ProductType;
 }
 
+export interface DeleteProductRequest {
+  type: typeof DELETE_PRODUCT;
+  payload: string;
+}
+
 export interface SetCategoriesRequest {
   type: typeof SET_CATEGORIES;
   payload: CategoryType[];
+}
+
+export interface SaveCategoryRequest {
+  type: typeof SAVE_CATEGORY;
+  payload: CategoryType;
+}
+
+export interface UpdateCategoryRequest {
+  type: typeof UPDATE_CATEGORY;
+  payload: CategoryType;
+}
+
+export interface DeleteCategoryRequest {
+  type: typeof DELETE_CATEGORY;
+  payload: string;
+}
+
+export interface SetUserCartRequest {
+  type: typeof SET_USER_CART;
+  payload: CartType;
+}
+
+export interface UpdateUserCartRequest {
+  type: typeof UPDATE_CART;
+  payload: CartType;
 }
 
 export interface UserRegisterRequest {
@@ -114,7 +155,7 @@ export interface UserLoginSuccess {
 
 export interface UserLoginFailure {
   type: typeof USER_LOGIN_FAILURE;
-  payload: string;
+  payload: IdType;
 }
 
 export interface UserLogoutRequest {
@@ -129,9 +170,14 @@ export interface UserLogoutSuccess {
 export type ProductActionTypes =
   | SetProductsRequest
   | SaveProductRequest
-  | UpdateProductRequest;
+  | UpdateProductRequest
+  | DeleteProductRequest;
 
-export type CategoryActionTypes = SetCategoriesRequest;
+export type CategoryActionTypes =
+  | SetCategoriesRequest
+  | SaveCategoryRequest
+  | UpdateCategoryRequest
+  | DeleteCategoryRequest;
 
 export type UserActionTypes =
   | UserRegisterRequest
@@ -150,7 +196,10 @@ export type UserActionTypes =
   | UserDeleteSuccess
   | UserDeleteFailure;
 
+export type CartActionTypes = SetUserCartRequest | UpdateUserCartRequest;
+
 export type AppActions =
   | ProductActionTypes
   | CategoryActionTypes
-  | UserActionTypes;
+  | UserActionTypes
+  | CartActionTypes;

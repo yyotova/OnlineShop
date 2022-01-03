@@ -12,16 +12,11 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import {
-  fetchCategories,
-  fetchProducts,
-  saveProduct,
-  updateProduct,
-} from "../actions/requests";
-import { useEffect } from "react";
+import { saveProduct, updateProduct } from "../actions/requests";
 import React from "react";
 import { CategoryType } from "../models/category-model";
 import { array, number, object, string } from "yup";
+import { LooseObject } from "../models/shared-types";
 
 interface EditProductParams {
   id: string;
@@ -37,14 +32,12 @@ interface SizeOption {
   label: string;
 }
 
-interface LooseObject {
-  [key: string]: any;
-}
-
 const ManageProduct = () => {
   const history = useHistory();
   const params = useParams<EditProductParams>();
   const dispatch = useDispatch();
+
+  const products = useSelector((state: AppState) => state.allProducts.products);
 
   const [categories, setCategories] = React.useState([]);
   const [sizes, setSizes] = React.useState([]);
@@ -54,23 +47,6 @@ const ManageProduct = () => {
   const allProducts = useSelector(
     (state: AppState) => state.allProducts.products
   );
-
-  useEffect(() => {
-    fetchCategories(dispatch);
-  }, []);
-
-  const item: ProductType | undefined = useSelector((state: AppState) => {
-    if (params.id) {
-      const index = state.allProducts.products.findIndex(
-        (i) => i._id === params.id
-      );
-
-      if (index >= 0) {
-        return state.allProducts.products[index];
-      }
-    }
-    return undefined;
-  });
 
   let catCounter = 1;
   const allCategoryOptions: CategoryOption[] = allCategories.flatMap((c) => ({
@@ -91,19 +67,32 @@ const ManageProduct = () => {
     label: value,
   }));
 
-  const initialValues: ProductType = {
-    _id: item?._id || "",
-    name: item?.name || "",
-    description: item?.description || "",
-    price: item?.price || 0,
-    imageUrl: item?.imageUrl || "",
-    itemsInStock: item?.itemsInStock || 0,
-    categories: item?.categories || [],
-    size: item?.size || [],
+  const getInitialValues = (): ProductType => {
+    let item: ProductType | undefined = undefined;
+
+    if (params.id) {
+      console.log(params.id);
+      const index = products.findIndex((i) => i._id === params.id);
+
+      if (index >= 0) {
+        item = products[index];
+      }
+    }
+
+    return {
+      _id: item?._id || "",
+      name: item?.name || "",
+      description: item?.description || "",
+      price: item?.price || 0,
+      imageUrl: item?.imageUrl || "",
+      itemsInStock: item?.itemsInStock || 0,
+      categories: item?.categories || [],
+      size: item?.size || [],
+    };
   };
 
   const initialCategories: CategoryType[] = [];
-  initialValues.categories.forEach((catId) => {
+  getInitialValues().categories.forEach((catId) => {
     const category = allCategories.find((cat) => cat._id === catId);
     if (category) {
       initialCategories.push(category);
@@ -119,21 +108,28 @@ const ManageProduct = () => {
   });
 
   const initialSizeOptions: SizeOption[] = [];
-  initialValues.size.forEach((sizeValue) => {
+  getInitialValues().size.forEach((sizeValue) => {
     const option = allSizeOptions.find((opt) => opt.label === sizeValue);
     if (option) {
       initialSizeOptions.push(option);
     }
   });
 
-  useEffect(() => {
-    fetchProducts(dispatch);
-  }, []);
+  const clearUp = (obj: ProductType): void => {
+    obj._id = "";
+    obj.name = "";
+    obj.description = "";
+    obj.price = 0;
+    obj.imageUrl = "";
+    obj.itemsInStock = 0;
+    obj.categories = [];
+    obj.size = [];
+  };
 
   return (
     <div>
       <Formik
-        initialValues={initialValues}
+        initialValues={getInitialValues()}
         validationSchema={object({
           name: string().required(),
           description: string().required(),
@@ -197,6 +193,7 @@ const ManageProduct = () => {
             saveProduct(dispatch, result);
           }
 
+          clearUp(values);
           history.push("/products");
         }}
       >
@@ -261,7 +258,7 @@ const ManageProduct = () => {
                           helperText={errors.name}
                         />
                       </div>
-                      {console.log("err", !!errors.name)}
+
                       <div style={{ marginTop: "15px", marginBottom: "15px" }}>
                         <TextField
                           variant="standard"

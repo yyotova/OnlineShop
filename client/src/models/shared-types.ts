@@ -1,5 +1,9 @@
 import { ProductType } from "./product-model";
-import { RegisterAndUpdateActions, LoginActions, UserListActions } from "./user-types";
+import {
+  RegisterAndUpdateActions,
+  LoginActions,
+  UserListActions,
+} from "./user-types";
 
 export type IdType = string;
 
@@ -13,3 +17,7 @@ export interface ReduxState {
 }
 
 export type getStateType = () => ReduxState;
+
+export interface LooseObject {
+  [key: string]: any;
+}
