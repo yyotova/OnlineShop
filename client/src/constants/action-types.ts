@@ -6,7 +6,7 @@ import {
   RegisterUserRequest,
   UserType,
   LogInUserRequest,
-  UserActions
+  UserActions,
 } from "../models/user-types";
 
 export const SET_PRODUCTS = "SET_PRODUCTS";

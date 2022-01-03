@@ -30,7 +30,6 @@ function App() {
   useEffect(() => {
     fetchProducts(dispatch);
     fetchCategories(dispatch);
-    // TODO Use the id of the logged user
     fetchUserCart(dispatch, userInfo?._id);
   }, [userInfo]);
 

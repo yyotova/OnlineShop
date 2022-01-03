@@ -1,6 +1,7 @@
 # OnlineShop
 
 What did Pavleta?
+
 - Added the database models for an item, order and cart. :heavy_check_mark:
 - Implemented the item, order and cart routes. :heavy_check_mark:
 - Navigation bar. :heavy_check_mark:
@@ -13,6 +14,7 @@ What did Pavleta?
 Pavleta's TO-DO:
 
 What did Yoanna?
+
 - Added the database model for users. :heavy_check_mark:
 - Added middlewares for authentication and checking if the user is admin. :heavy_check_mark:
 - Added auth and users routes. :heavy_check_mark:
@@ -23,5 +25,6 @@ What did Yoanna?
 - Add Private Route :heavy_check_mark:
 
 Yoanna's TODO:
+
 - Some fixes for user's type (e.g.editing product :heavy_check_mark:)
 - Order functionality.
