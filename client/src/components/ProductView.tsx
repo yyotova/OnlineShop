@@ -16,7 +16,8 @@ import { Formik } from "formik";
 import { number, object, string } from "yup";
 import { updateCart } from "../actions/requests";
 import { CartItemType, CartType } from "../models/cart-model";
-import { LooseObject } from "../models/shared-types";
+import { LooseObject, ReduxState } from "../models/shared-types";
+import { LoginActions } from "../models/user-types";
 
 interface ProductView {
   selectedProduct: ProductType;
@@ -45,6 +46,12 @@ const ProductView = () => {
   const { itemsInStock, size } = selectedProduct;
   const arrQty = [...Array(+itemsInStock).keys()];
   const cartObj = useSelector((state: AppState) => state.userCart.cart);
+
+  const userLogin: LoginActions = useSelector(
+    (state: ReduxState) => state.userLogin
+  );
+
+  const { userInfo } = userLogin;
 
   const allCategories = useSelector(
     (state: AppState) => state.allCategories.categories
@@ -164,7 +171,6 @@ const ProductView = () => {
                           });
                         }
                         updateCart(dispatch, updatedCart);
-                        history.push("/products");
                       }}
                     >
                       {({ values, errors, handleSubmit }) => (
@@ -214,26 +220,31 @@ const ProductView = () => {
                             </Box>
                           )}
 
-                          {itemsInStock && itemsInStock > 0 && (
-                            <Box m={1} mt={2}>
+                          <Box m={1} mt={2}>
+                            {itemsInStock && itemsInStock > 0 && (
                               <Button
                                 variant="contained"
                                 type="submit"
                                 color="secondary"
+                                disabled={(userInfo?.token && userInfo?.isAdmin) || !userInfo?.token}
                               >
                                 Purchase
                               </Button>
-                              <Button
-                                type="button"
-                                onClick={() => history.goBack()}
-                              >
-                                Back
-                              </Button>
-                            </Box>
-                          )}
+                            )}
+                            <Button
+                              type="button"
+                              onClick={() => history.goBack()}
+                            >
+                              Back
+                            </Button>
+                          </Box>
                         </form>
                       )}
                     </Formik>
+
+                    {!userInfo?.token && (
+                      <h3>If you would like to purchase, sign in!</h3>
+                    )}
                   </div>
                 </Box>
               </Box>

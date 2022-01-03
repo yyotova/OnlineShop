@@ -11,13 +11,18 @@ What did Pavleta?
 Pavleta's TO-DO:
 - Modify product pages for different type of users.
 - Add a category management page.
+- Cart functionality.
 
 What did Yoanna?
 - Added the database model for users. :heavy_check_mark:
 - Added middlewares for authentication and checking if the user is admin. :heavy_check_mark:
 - Added auth and users routes. :heavy_check_mark:
-
-Yoanna's TODO:
 - Register page. :heavy_check_mark:
 - Login page. :heavy_check_mark:
-- Modify Navbar for different type of users.
+- Modify Navbar for different type of users. :heavy_check_mark:
+- User Managment (show all users and deleting users). :heavy_check_mark:
+- Add Private Route :heavy_check_mark:
+
+Yoanna's TODO:
+- Some fixes for user's type (e.g.editing product :heavy_check_mark:)
+- Order functionality.

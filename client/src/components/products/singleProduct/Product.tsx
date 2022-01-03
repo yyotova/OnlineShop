@@ -15,6 +15,9 @@ import { useRouteMatch, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { deleteProduct } from "../../../actions/requests";
 import Notification from "../../Notification";
+import { LoginActions } from "../../../models/user-types";
+import { useSelector } from "react-redux";
+import { ReduxState } from "../../../models/shared-types";
 
 export interface ProductProps {
   product: ProductType;
@@ -33,6 +36,12 @@ const Product = ({ product }: ProductProps) => {
     setMessage("Product deleted successfully!");
     setIsOpen(true);
   };
+
+  const userLogin: LoginActions = useSelector(
+    (state: ReduxState) => state.userLogin
+  );
+
+  const { userInfo } = userLogin;
 
   return (
     <Card className={classes.root}>
@@ -59,6 +68,9 @@ const Product = ({ product }: ProductProps) => {
                 pathname: `${match.url}/${product._id}`,
                 state: { selectedProduct: product },
               }}
+              style={{
+                textDecoration: "none",
+              }}
             >
               <Button type="submit" variant="contained" color="secondary">
                 Details
@@ -66,21 +78,28 @@ const Product = ({ product }: ProductProps) => {
             </Link>
           </Box>
 
-          <Box m={1} display="flex" justifyContent="flex-end">
-            <Link
-              to={{
-                pathname: `edit-products/${product._id}`,
-              }}
-            >
-              <Button type="submit" variant="contained" color="secondary">
-                Edit
-              </Button>
-            </Link>
-          </Box>
+          {userInfo?.isAdmin && (
+            <Box m={1} display="flex" justifyContent="flex-end">
+              <Link
+                to={{
+                  pathname: `edit-products/${product._id}`,
+                }}
+                style={{
+                  textDecoration: "none",
+                }}
+              >
+                <Button type="submit" variant="contained" color="secondary">
+                  Edit
+                </Button>
+              </Link>
+            </Box>
+          )}
 
-          <Box>
-            <Delete onClick={handleDelete} style={{ color: "	#a70000" }} />
-          </Box>
+          {userInfo?.isAdmin && (
+            <Box>
+              <Delete onClick={handleDelete} style={{ color: "	#a70000" }} />
+            </Box>
+          )}
         </CardActions>
       </CardContent>
 

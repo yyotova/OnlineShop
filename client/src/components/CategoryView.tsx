@@ -81,7 +81,7 @@ const CategoryView = () => {
   ];
 
   return (
-    <div style={{ margin: 100, height: 450 }}>
+    <div style={{ marginLeft: 100, marginRight: 100, height: 450 }}>
       <h2 style={{ textAlign: "center", padding: 20 }}>Manage Categories</h2>
       <div style={{ display: "flex" }}>
         <div

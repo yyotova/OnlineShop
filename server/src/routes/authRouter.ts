@@ -1,46 +1,47 @@
-import express from 'express';
-import User, { IUser } from '../models/user';
+import express from "express";
+import User, { IUser } from "../models/user";
+import Cart from "../models/cartModel";
 
 const router = express.Router();
 
-router.post('/login', async (req, res, next) => {
+router.post("/login", async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
     if (!email || !password) {
-      return res.status(400).json({ message: 'All fields are required.' });
+      return res.status(400).json({ message: "All fields are required." });
     }
-  
+
     const user = await User.findByEmail(email);
-  
-    if(!user) {
-      return res.status(400).json({ message: 'There is no user registered with this email.' });
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: "There is no user registered with this email." });
     }
-  
+
     const isPasswordValid = user.validatePassword(password);
-    
-    if(!isPasswordValid) {
-      return res.status(400).json({ message: 'Invalid login credentials.' });
+
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: "Invalid login credentials." });
     }
-  
+
     const token = await user.generateAuthToken();
-  
-    return res
-    .header("x-auth", token)
-    .status(200)
-    .send({
+
+    return res.header("x-auth", token).status(200).send({
       _id: user._id,
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      isAdmin: user.isAdmin
+      isAdmin: user.isAdmin,
+      token: token,
     });
   } catch (error) {
-    next(error)
+    next(error);
   }
 });
 
-router.post('/register', async (req, res, next) => {
+router.post("/register", async (req, res, next) => {
   const { firstName, lastName, email, password, isAdmin } = req.body as IUser;
 
   try {
@@ -51,13 +52,20 @@ router.post('/register', async (req, res, next) => {
     user = await user.save();
     const token = await user.generateAuthToken();
 
-    return res
-      .header("x-auth", token)
-      .status(201)
-      .send({
-        _id: user._id
-      })
+    const newCart = new Cart({
+      userId: user._id,
+      items: [],
+    });
+    await newCart.save();
 
+    return res.header("x-auth", token).status(201).send({
+      _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      token: token,
+    });
   } catch (error) {
     next(error);
   }
