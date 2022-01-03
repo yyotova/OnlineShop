@@ -7,11 +7,10 @@ What did Pavleta?
 - Product listing page. :heavy_check_mark:
 - Product details page. :heavy_check_mark:
 - ADD/EDIT product page. :heavy_check_mark:
+- Added a category management page. :heavy_check_mark:
+- Implemented cart functionality. :heavy_check_mark:
 
 Pavleta's TO-DO:
-- Modify product pages for different type of users.
-- Add a category management page.
-- Cart functionality.
 
 What did Yoanna?
 - Added the database model for users. :heavy_check_mark:
