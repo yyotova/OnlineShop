@@ -1,12 +1,12 @@
 import { IdType } from "./shared-types";
 
 export interface ProductType {
-  id: IdType;
+  _id: IdType;
   name: string;
   description: string;
   price: number;
   imageUrl: string;
-  category: string[];
+  categories: string[];
   itemsInStock: number;
   size: string[];
 }

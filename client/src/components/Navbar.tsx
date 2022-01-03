@@ -1,8 +1,6 @@
 import {
   AppBar,
-  Tabs,
   Typography,
-  Tab,
   Toolbar,
   Button,
   Box,
@@ -17,7 +15,7 @@ import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
 import { ReduxState } from "../models/shared-types";
 import { useSelector } from "react-redux";
 import { LoginActions } from "../models/user-types";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import AddIcon from '@material-ui/icons/Add';
 import ShopIcon from '@material-ui/icons/Shop';
 import PeopleIcon from '@material-ui/icons/People';
@@ -25,6 +23,7 @@ import useStyles from './styles';
 
 const Navbar = () => {
   const classes = useStyles();
+  const history = useHistory();
 
   const userLogin: LoginActions = useSelector(
     (state: ReduxState) => state.userLogin
@@ -45,13 +44,17 @@ const Navbar = () => {
           component="div"
         >
           <Box>
-            <Typography> DRESS IN STYLE </Typography>
-          </Box>
-
-          <Box sx={{ display: "flex" }}>
-            <Tabs>
-              <Tab label="Products" />
-            </Tabs>
+            <Typography
+              style={{
+                textDecoration: "none",
+                color: "white",
+                fontSize: "22px"
+              }}
+              component={Link}
+              to="/products"
+            > 
+              DRESS IN STYLE 
+            </Typography>
           </Box>
 
           <Box
@@ -62,7 +65,7 @@ const Navbar = () => {
             }}
           >
             { userInfo?.isAdmin && (
-              <Link to="/manage-items" className={classes.link}>
+              <Link to="/manage-products" className={classes.link}>
                 <ListItem button>
                   <ListItemIcon>
                     <AddIcon />
@@ -91,7 +94,7 @@ const Navbar = () => {
                </Link>
              </>
             ) : (
-                userInfo && (
+                userInfo ? (
                   <>
                     <Button variant="contained" color="secondary">
                       My Account
@@ -102,6 +105,15 @@ const Navbar = () => {
                       </Badge>
                     </IconButton>
                   </>
+                ) : (
+                  <Button
+                    type="button"
+                    variant="contained" 
+                    color="secondary"
+                    onClick={() => history.push("/login")}
+                  >
+                    Login
+                  </Button>
                 )
               )}
           </Box>

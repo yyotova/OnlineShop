@@ -2,7 +2,7 @@ const notExist = (object: string, field: string, fieldValue: string) =>
   `${object} with ${field} '${fieldValue}' does not exist!`;
 
 const alreadyExist = (object: string, field: string, fieldValue: string) =>
-  "The provided ${object} with ${field} '${fieldValue}' already exists!";
+  `The provided ${object} with ${field} '${fieldValue}' already exists!`;
 
 const successByCreating = (object: string) => `${object} added successfully!`;
 
