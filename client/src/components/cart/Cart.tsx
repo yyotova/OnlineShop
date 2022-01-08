@@ -1,11 +1,12 @@
 import { Box, Button, Container, Grid, Typography } from "@material-ui/core";
-import React from "react";
+import React, { useState } from "react";
 import useStyles from "./styles";
 import { AppState } from "../../store";
 import { useSelector } from "react-redux";
 import { IdType } from "../../models/shared-types";
 import { ProductType } from "../../models/product-model";
 import CartItem from "./CartItem";
+import OrderDialog from "./OrderDialog";
 
 export interface CartItemObject {
   item: ProductType;
@@ -21,6 +22,7 @@ interface ICart {
 const Cart = () => {
   const classes = useStyles();
   const cartObj = useSelector((state: AppState) => state.userCart.cart);
+  const [orderDialog, setOrderDialog] = useState<boolean>(false);
   const allProducts = useSelector(
     (state: AppState) => state.allProducts.products
   );
@@ -44,6 +46,14 @@ const Cart = () => {
       sum += +(productItem.item?.price * productItem.quantity);
     });
     return sum;
+  };
+
+  const handleOrderDialogClose = () => {
+    setOrderDialog(false);
+  };
+
+  const handleCheckout = () => {
+    setOrderDialog(true);
   };
 
   return (
@@ -91,9 +101,11 @@ const Cart = () => {
               type="button"
               variant="contained"
               color="secondary"
+              onClick={handleCheckout}
             >
               Checkout
             </Button>
+            <OrderDialog open={orderDialog} onClose={handleOrderDialogClose} />
           </div>
         </>
       )}

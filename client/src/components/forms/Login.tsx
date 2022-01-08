@@ -28,7 +28,7 @@ export default function Login(): ReactElement {
   };
 
   const action = (
-    <Button color="secondary" size="small" onClick={handleClick}>
+    <Button className={classes.btn} size="small" onClick={handleClick}>
       Try Again!
     </Button>
   );
@@ -78,7 +78,6 @@ export default function Login(): ReactElement {
               <Button
                 type="submit"
                 variant="contained"
-                color="primary"
                 className={classes.btn}
               >
                 Log In

@@ -12,7 +12,8 @@ export default makeStyles((theme: Theme) =>
       backgroundColor: "#800095",
       '&:hover': {
         backgroundColor: "#800089",
-      }
+      },
+      color: 'white'
     },
     link: {
       textDecoration: 'none',

@@ -16,4 +16,11 @@ export default makeStyles(() => ({
     display: "flex",
     justifyContent: "space-between",
   },
+  btn: {
+    backgroundColor: "#800095",
+    '&:hover': {
+      backgroundColor: "#800089",
+    },
+    color: 'white'
+  },
 }));

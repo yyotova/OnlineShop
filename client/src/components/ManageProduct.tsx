@@ -17,6 +17,7 @@ import React from "react";
 import { CategoryType } from "../models/category-model";
 import { array, number, object, string } from "yup";
 import { LooseObject } from "../models/shared-types";
+import useStyles from './styles';
 
 interface EditProductParams {
   id: string;
@@ -36,6 +37,7 @@ const ManageProduct = () => {
   const history = useHistory();
   const params = useParams<EditProductParams>();
   const dispatch = useDispatch();
+  const classes = useStyles();
 
   const products = useSelector((state: AppState) => state.allProducts.products);
 
@@ -354,7 +356,7 @@ const ManageProduct = () => {
                       >
                         <Button
                           variant="outlined"
-                          color="secondary"
+                          className={classes.btn}
                           type="submit"
                         >
                           Submit

@@ -10,6 +10,7 @@ import Notification from "./Notification";
 import { IdType, LooseObject } from "../models/shared-types";
 import { Formik } from "formik";
 import { object, string } from "yup";
+import useStyles from './styles';
 
 interface Row {
   id: string;
@@ -18,6 +19,8 @@ interface Row {
 
 const CategoryView = () => {
   const dispatch = useDispatch();
+  const classes = useStyles();
+
   const allCategories = useSelector(
     (state: AppState) => state.allCategories.categories
   );
@@ -68,7 +71,7 @@ const CategoryView = () => {
       renderCell: (cellValues: any) => (
         <Button
           variant="outlined"
-          color="primary"
+          className={classes.btn}
           startIcon={<DeleteIcon />}
           onClick={() => {
             handleDelete(cellValues.id, cellValues.row.name);
@@ -150,7 +153,7 @@ const CategoryView = () => {
                 flexDirection="column"
                 m={3}
               >
-                <Button variant="outlined" color="secondary" type="submit">
+                <Button variant="outlined" className={classes.btn} type="submit">
                   Submit
                 </Button>
               </Box>

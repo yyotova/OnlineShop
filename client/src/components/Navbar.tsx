@@ -14,24 +14,16 @@ import {
   MenuItem
 } from "@material-ui/core";
 import React, { useState } from "react";
-import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
 import { Link, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { AppState } from "../store";
 import { ReduxState } from "../models/shared-types";
 import { LoginActions } from "../models/user-types";
 import { loginAction } from "../actions/userActions";
-import AddIcon from "@material-ui/icons/Add";
-import ShopIcon from "@material-ui/icons/Shop";
-import PeopleIcon from "@material-ui/icons/People";
-import useStyles from "./styles";
 
 const Navbar = () => {
-  const classes = useStyles();
   const history = useHistory();
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
 
-  const cart = useSelector((state: AppState) => state.userCart.cart);
   const userLogin: LoginActions = useSelector(
     (state: ReduxState) => state.userLogin
   );

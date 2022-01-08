@@ -114,7 +114,6 @@ export default function Registration(): ReactElement {
             <Box display="flex" justifyContent="center" margin="25px">
               <Button
                 variant="contained"
-                color="primary"
                 className={classes.btn}
                 type="submit"
               >

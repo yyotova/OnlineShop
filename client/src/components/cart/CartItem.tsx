@@ -6,6 +6,7 @@ import { AppState } from "../../store";
 import { useDispatch, useSelector } from "react-redux";
 import { IdType } from "../../models/shared-types";
 import { updateCart } from "../../actions/requests";
+import useStyles from '../styles';
 
 interface CartItemProps {
   product: CartItemObject;
@@ -13,6 +14,7 @@ interface CartItemProps {
 
 const CartItem = ({ product }: CartItemProps) => {
   const dispatch = useDispatch();
+  const classes = useStyles();
   const cartObj = useSelector((state: AppState) => state.userCart.cart);
   const item = product.item;
 
@@ -59,7 +61,7 @@ const CartItem = ({ product }: CartItemProps) => {
             <Box m={2}>
               <Button
                 variant="contained"
-                color="primary"
+                className={classes.btn}
                 onClick={() => handleDelete(item?._id)}
               >
                 Delete

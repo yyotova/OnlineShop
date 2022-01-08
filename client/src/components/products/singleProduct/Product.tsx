@@ -72,7 +72,7 @@ const Product = ({ product }: ProductProps) => {
                 textDecoration: "none",
               }}
             >
-              <Button type="submit" variant="contained" color="secondary">
+              <Button type="submit" variant="contained" className={classes.btn}>
                 Details
               </Button>
             </Link>
@@ -88,7 +88,7 @@ const Product = ({ product }: ProductProps) => {
                   textDecoration: "none",
                 }}
               >
-                <Button type="submit" variant="contained" color="secondary">
+                <Button type="submit" variant="contained" className={classes.btn}>
                   Edit
                 </Button>
               </Link>

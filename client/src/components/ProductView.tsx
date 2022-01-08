@@ -18,8 +18,9 @@ import { updateCart } from "../actions/requests";
 import { CartItemType, CartType } from "../models/cart-model";
 import { LooseObject, ReduxState } from "../models/shared-types";
 import { LoginActions } from "../models/user-types";
+import useStyles from './styles';
 
-interface ProductView {
+interface IProductView {
   selectedProduct: ProductType;
 }
 
@@ -41,7 +42,8 @@ interface FormProps {
 const ProductView = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const location = useLocation<ProductView>();
+  const classes = useStyles();
+  const location = useLocation<IProductView>();
   const { selectedProduct } = location.state;
   const { itemsInStock, size } = selectedProduct;
   const arrQty = [...Array(+itemsInStock).keys()];
@@ -225,7 +227,7 @@ const ProductView = () => {
                               <Button
                                 variant="contained"
                                 type="submit"
-                                color="secondary"
+                                className={classes.btn}
                                 disabled={
                                   (userInfo?.token && userInfo?.isAdmin) ||
                                   !userInfo?.token
