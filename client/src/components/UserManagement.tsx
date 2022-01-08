@@ -157,7 +157,7 @@ export default function UserManagement(): ReactElement {
                             alignItems="center"
                           >
                             <DeleteIcon
-                              style={{ color: '	#a70000', cursor: "pointer" }}
+                              style={{ color: '#a70000', cursor: "pointer" }}
                               onClick={() => {
                                 dispatch(deleteUser(row._id));
                               }}

@@ -35,6 +35,7 @@ const CartItem = ({ product }: CartItemProps) => {
         <Grid container>
           <Grid item sm={2}>
             <img
+              alt="item"
               src={item?.imageUrl}
               style={{ maxWidth: "9rem", maxHeight: "9rem" }}
             />

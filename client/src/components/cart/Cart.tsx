@@ -13,7 +13,7 @@ export interface CartItemObject {
   selectedItemSize: string;
 }
 
-interface Cart {
+interface ICart {
   userId: IdType;
   items: CartItemObject[];
 }
@@ -25,9 +25,9 @@ const Cart = () => {
     (state: AppState) => state.allProducts.products
   );
 
-  const cart: Cart = {
+  const cart: ICart = {
     userId: cartObj.userId,
-    items: cartObj.items.flatMap((item) => {
+    items: cartObj.items?.flatMap((item) => {
       const product = allProducts.find((p) => p._id === item.itemId);
       return {
         item: product,

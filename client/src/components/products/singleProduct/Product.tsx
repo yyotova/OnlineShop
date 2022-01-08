@@ -97,7 +97,7 @@ const Product = ({ product }: ProductProps) => {
 
           {userInfo?.isAdmin && (
             <Box>
-              <Delete onClick={handleDelete} style={{ color: "	#a70000" }} />
+              <Delete onClick={handleDelete} style={{ color: "#a70000", cursor: "pointer" }} />
             </Box>
           )}
         </CardActions>

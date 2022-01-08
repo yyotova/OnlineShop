@@ -9,14 +9,18 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Avatar,
+  Menu,
+  MenuItem
 } from "@material-ui/core";
-import React from "react";
+import React, { useState } from "react";
 import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
-import { Link, useHistory, useRouteMatch } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Link, useHistory } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { AppState } from "../store";
 import { ReduxState } from "../models/shared-types";
 import { LoginActions } from "../models/user-types";
+import { loginAction } from "../actions/userActions";
 import AddIcon from "@material-ui/icons/Add";
 import ShopIcon from "@material-ui/icons/Shop";
 import PeopleIcon from "@material-ui/icons/People";
@@ -25,11 +29,18 @@ import useStyles from "./styles";
 const Navbar = () => {
   const classes = useStyles();
   const history = useHistory();
-  const match = useRouteMatch();
+  const [anchorEl, setAnchorEl] = useState<Element | null>(null);
+
   const cart = useSelector((state: AppState) => state.userCart.cart);
   const userLogin: LoginActions = useSelector(
     (state: ReduxState) => state.userLogin
   );
+  const dispatch = useDispatch();
+
+  const logout = () => {
+    setAnchorEl(null);
+    dispatch(loginAction('', ''));
+  };
 
   const { userInfo } = userLogin;
 
@@ -66,58 +77,16 @@ const Navbar = () => {
               alignItems: "center",
             }}
           >
-            {userInfo?.isAdmin && (
-              <Link to="/manage-categories" className={classes.link}>
-                <ListItem button>
-                  <ListItemIcon>
-                    <AddIcon />
-                  </ListItemIcon>
-                  <ListItemText primary={"Manage Categories"} />
-                </ListItem>
-              </Link>
-            )}
-            {userInfo?.isAdmin && (
-              <Link to="/manage-products" className={classes.link}>
-                <ListItem button>
-                  <ListItemIcon>
-                    <AddIcon />
-                  </ListItemIcon>
-                  <ListItemText primary={"Manage Items"} />
-                </ListItem>
-              </Link>
-            )}
-            {userInfo?.isAdmin ? (
+            { userInfo ? (
               <>
-                <Link to="/orders" className={classes.link}>
-                  <ListItem button>
-                    <ListItemIcon>
-                      <ShopIcon />
-                    </ListItemIcon>
-                    <ListItemText primary={"Orders"} />
-                  </ListItem>
-                </Link>
-                <Link to="/users" className={classes.link}>
-                  <ListItem button>
-                    <ListItemIcon>
-                      <PeopleIcon />
-                    </ListItemIcon>
-                    <ListItemText primary={"Users"} />
-                  </ListItem>
-                </Link>
-              </>
-            ) : userInfo ? (
-              <>
-                <Button variant="contained" color="secondary">
-                  My Account
-                </Button>
-                <IconButton onClick={() => history.push("/cart")}>
-                  <Badge
-                    badgeContent={cart ? cart.items.length : 0}
-                    color="secondary"
-                  >
-                    <ShoppingBasketIcon />
-                  </Badge>
-                </IconButton>
+              <Typography component="span">
+                Hello, {userInfo?.firstName} {userInfo?.lastName}!
+              </Typography>
+              <IconButton
+              onClick={(event) => setAnchorEl(event.currentTarget)}
+              >
+                <Avatar style={{ background: '#a70000',  color: '#ffffff'}}>{userInfo?.firstName[0]}</Avatar>
+              </IconButton>
               </>
             ) : (
               <Button
@@ -128,9 +97,35 @@ const Navbar = () => {
               >
                 Login
               </Button>
-            )}
+            )} 
           </Box>
         </Box>
+        <Menu
+          anchorEl={anchorEl}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          keepMounted
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          open={!!anchorEl}
+          onClose={() => setAnchorEl(null)}
+        > { userInfo?.isAdmin && (
+          <>
+            <MenuItem onClick={() => setAnchorEl(null)} component={Link} to="/manage-categories">Manage Categories</MenuItem>
+            <MenuItem onClick={() => setAnchorEl(null)} component={Link} to="/manage-products">Manage Products</MenuItem>
+            <MenuItem onClick={() => setAnchorEl(null)} component={Link} to="/orders">Orders</MenuItem>
+            <MenuItem component={Link} to="/users">Users</MenuItem>
+          </>
+          )}
+          {!userInfo?.isAdmin && (
+            <MenuItem  onClick={() => setAnchorEl(null)} component={Link} to="/cart">My Cart</MenuItem>
+          )}
+          <MenuItem onClick={logout}>Logout</MenuItem>
+        </Menu>
       </Toolbar>
     </AppBar>
   );
