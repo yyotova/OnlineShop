@@ -12,7 +12,11 @@ const orderItemSchema = new mongoose.Schema({
 
 const orderSchema = new mongoose.Schema(
   {
-    // TODO  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     items: [orderItemSchema],
     amount: { type: Number, required: true },
     address: { type: Object, required: true },

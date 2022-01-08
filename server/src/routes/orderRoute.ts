@@ -34,6 +34,7 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const newOrder = new Order({
+      userId: req.body.userId,
       items: req.body.items,
       amount: req.body.amount,
       address: req.body.address,
