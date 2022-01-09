@@ -4,14 +4,10 @@ import {
   Toolbar,
   Button,
   Box,
-  Badge,
   IconButton,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
   Avatar,
   Menu,
-  MenuItem
+  MenuItem,
 } from "@material-ui/core";
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
@@ -31,7 +27,7 @@ const Navbar = () => {
 
   const logout = () => {
     setAnchorEl(null);
-    dispatch(loginAction('', ''));
+    dispatch(loginAction("", ""));
   };
 
   const { userInfo } = userLogin;
@@ -69,16 +65,18 @@ const Navbar = () => {
               alignItems: "center",
             }}
           >
-            { userInfo ? (
+            {userInfo ? (
               <>
-              <Typography component="span">
-                Hello, {userInfo?.firstName} {userInfo?.lastName}!
-              </Typography>
-              <IconButton
-              onClick={(event) => setAnchorEl(event.currentTarget)}
-              >
-                <Avatar style={{ background: '#a70000',  color: '#ffffff'}}>{userInfo?.firstName[0]}</Avatar>
-              </IconButton>
+                <Typography component="span">
+                  Hello, {userInfo?.firstName} {userInfo?.lastName}!
+                </Typography>
+                <IconButton
+                  onClick={(event) => setAnchorEl(event.currentTarget)}
+                >
+                  <Avatar style={{ background: "#a70000", color: "#ffffff" }}>
+                    {userInfo?.firstName[0]}
+                  </Avatar>
+                </IconButton>
               </>
             ) : (
               <Button
@@ -89,32 +87,60 @@ const Navbar = () => {
               >
                 Login
               </Button>
-            )} 
+            )}
           </Box>
         </Box>
         <Menu
           anchorEl={anchorEl}
           anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
+            vertical: "top",
+            horizontal: "right",
           }}
           keepMounted
           transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
+            vertical: "top",
+            horizontal: "right",
           }}
           open={!!anchorEl}
           onClose={() => setAnchorEl(null)}
-        > { userInfo?.isAdmin && (
-          <>
-            <MenuItem onClick={() => setAnchorEl(null)} component={Link} to="/manage-categories">Manage Categories</MenuItem>
-            <MenuItem onClick={() => setAnchorEl(null)} component={Link} to="/manage-products">Manage Products</MenuItem>
-            <MenuItem onClick={() => setAnchorEl(null)} component={Link} to="/orders">Orders</MenuItem>
-            <MenuItem component={Link} to="/users">Users</MenuItem>
-          </>
+        >
+          {" "}
+          {userInfo?.isAdmin && (
+            <>
+              <MenuItem
+                onClick={() => setAnchorEl(null)}
+                component={Link}
+                to="/manage-categories"
+              >
+                Manage Categories
+              </MenuItem>
+              <MenuItem
+                onClick={() => setAnchorEl(null)}
+                component={Link}
+                to="/manage-products"
+              >
+                Manage Products
+              </MenuItem>
+              <MenuItem
+                onClick={() => setAnchorEl(null)}
+                component={Link}
+                to="/orders"
+              >
+                Orders
+              </MenuItem>
+              <MenuItem component={Link} to="/users">
+                Users
+              </MenuItem>
+            </>
           )}
           {!userInfo?.isAdmin && (
-            <MenuItem  onClick={() => setAnchorEl(null)} component={Link} to="/cart">My Cart</MenuItem>
+            <MenuItem
+              onClick={() => setAnchorEl(null)}
+              component={Link}
+              to="/cart"
+            >
+              My Cart
+            </MenuItem>
           )}
           <MenuItem onClick={logout}>Logout</MenuItem>
         </Menu>

@@ -59,15 +59,13 @@ const Cart = () => {
   return (
     <Container>
       <div className={classes.toolbar} />
-      <Typography variant="h5" className={classes.title}>
+      <Typography variant="h5">
         <Box
           display="flex"
           justifyContent="center"
           flexDirection="column"
           alignItems="center"
           fontWeight="fontWeightBold"
-          p={3}
-          m={2}
         >
           Your Shopping Cart
         </Box>

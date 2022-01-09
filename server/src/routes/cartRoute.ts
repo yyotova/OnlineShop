@@ -16,6 +16,7 @@ import {
   userObjectName,
 } from "../utilities/constants/global";
 import { lowerCaseFirstLetter } from "../utilities/helperUtil";
+import { authenticate } from "../middlewares/auth";
 
 const router = express.Router();
 
@@ -24,7 +25,7 @@ interface ItemOrder {
   quantity: Number;
 }
 
-router.get("/:userId", async (req, res) => {
+router.get("/:userId", authenticate, async (req, res) => {
   try {
     const userId = req.params.userId;
     const cart = await Cart.findOne({ userId: userId });
@@ -34,7 +35,7 @@ router.get("/:userId", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", authenticate, async (req, res) => {
   try {
     const newCart = new Cart({
       userId: req.body.userId,
@@ -68,7 +69,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", authenticate, async (req, res) => {
   try {
     for (const i of req.body.items) {
       await checkItemId(i);
@@ -92,7 +93,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authenticate, async (req, res) => {
   try {
     const cartId = req.params.id;
     const deletedCart = await Cart.findByIdAndDelete(cartId);

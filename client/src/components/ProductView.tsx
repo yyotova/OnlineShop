@@ -18,7 +18,7 @@ import { updateCart } from "../actions/requests";
 import { CartItemType, CartType } from "../models/cart-model";
 import { LooseObject, ReduxState } from "../models/shared-types";
 import { LoginActions } from "../models/user-types";
-import useStyles from './styles';
+import useStyles from "./styles";
 
 interface IProductView {
   selectedProduct: ProductType;
@@ -172,7 +172,7 @@ const ProductView = () => {
                             selectedItemSize: values.size,
                           });
                         }
-                        updateCart(dispatch, updatedCart);
+                        updateCart(updatedCart, dispatch, userInfo);
                       }}
                     >
                       {({ values, errors, handleSubmit }) => (

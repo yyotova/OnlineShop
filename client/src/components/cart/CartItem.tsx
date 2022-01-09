@@ -4,9 +4,10 @@ import { CartItemObject } from "./Cart";
 import { Link } from "react-router-dom";
 import { AppState } from "../../store";
 import { useDispatch, useSelector } from "react-redux";
-import { IdType } from "../../models/shared-types";
+import { IdType, ReduxState } from "../../models/shared-types";
 import { updateCart } from "../../actions/requests";
-import useStyles from '../styles';
+import useStyles from "../styles";
+import { LoginActions } from "../../models/user-types";
 
 interface CartItemProps {
   product: CartItemObject;
@@ -18,6 +19,11 @@ const CartItem = ({ product }: CartItemProps) => {
   const cartObj = useSelector((state: AppState) => state.userCart.cart);
   const item = product.item;
 
+  const userLogin: LoginActions = useSelector(
+    (state: ReduxState) => state.userLogin
+  );
+  const { userInfo } = userLogin;
+
   const handleDelete = (itemId: IdType) => {
     const updatedCart = {
       _id: cartObj._id,
@@ -28,7 +34,7 @@ const CartItem = ({ product }: CartItemProps) => {
       userId: cartObj.userId,
     };
 
-    updateCart(dispatch, updatedCart);
+    updateCart(updatedCart, dispatch, userInfo);
   };
 
   return (

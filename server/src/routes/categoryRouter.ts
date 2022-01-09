@@ -10,10 +10,11 @@ import {
   successByUpdating,
 } from "../utilities/validations/messages";
 import Category from "../models/categoryModel";
+import { isAdmin, authenticate } from "../middlewares/auth";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/", authenticate, async (req, res) => {
   try {
     const categories = await Category.find();
     return res.status(200).json(categories);
@@ -22,7 +23,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", authenticate, isAdmin, async (req, res) => {
   try {
     const name = req.body.name as string;
     const existingCategory = await Category.findOne({ name: name });
@@ -52,7 +53,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", authenticate, isAdmin, async (req, res) => {
   try {
     const categoryId = req.params.id;
     const name = req.body.name as string;
@@ -90,7 +91,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authenticate, isAdmin, async (req, res) => {
   try {
     const categoryId = req.params.id;
     const deletedCategory = await Category.findByIdAndDelete(categoryId);

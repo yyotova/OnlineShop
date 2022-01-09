@@ -27,21 +27,19 @@ const Product = ({ product }: ProductProps) => {
   const classes = useStyles();
   const match = useRouteMatch();
   const dispatch = useDispatch();
+  const userLogin: LoginActions = useSelector(
+    (state: ReduxState) => state.userLogin
+  );
+  const { userInfo } = userLogin;
 
   const [message, setMessage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
   const handleDelete = () => {
-    deleteProduct(dispatch, product._id);
+    deleteProduct(dispatch, product._id, userInfo);
     setMessage("Product deleted successfully!");
     setIsOpen(true);
   };
-
-  const userLogin: LoginActions = useSelector(
-    (state: ReduxState) => state.userLogin
-  );
-
-  const { userInfo } = userLogin;
 
   return (
     <Card className={classes.root}>
@@ -62,21 +60,27 @@ const Product = ({ product }: ProductProps) => {
         </Typography>
 
         <CardActions className={classes.cardActions} disableSpacing>
-          <Box m={1} display="flex" justifyContent="flex-end">
-            <Link
-              to={{
-                pathname: `${match.url}/${product._id}`,
-                state: { selectedProduct: product },
-              }}
-              style={{
-                textDecoration: "none",
-              }}
-            >
-              <Button type="submit" variant="contained" className={classes.btn}>
-                Details
-              </Button>
-            </Link>
-          </Box>
+          {!userInfo?.isAdmin && (
+            <Box m={1} display="flex" justifyContent="flex-end">
+              <Link
+                to={{
+                  pathname: `${match.url}/${product._id}`,
+                  state: { selectedProduct: product },
+                }}
+                style={{
+                  textDecoration: "none",
+                }}
+              >
+                <Button
+                  type="submit"
+                  variant="contained"
+                  className={classes.btn}
+                >
+                  Details
+                </Button>
+              </Link>
+            </Box>
+          )}
 
           {userInfo?.isAdmin && (
             <Box m={1} display="flex" justifyContent="flex-end">
@@ -88,7 +92,11 @@ const Product = ({ product }: ProductProps) => {
                   textDecoration: "none",
                 }}
               >
-                <Button type="submit" variant="contained" className={classes.btn}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  className={classes.btn}
+                >
                   Edit
                 </Button>
               </Link>
@@ -97,7 +105,10 @@ const Product = ({ product }: ProductProps) => {
 
           {userInfo?.isAdmin && (
             <Box>
-              <Delete onClick={handleDelete} style={{ color: "#a70000", cursor: "pointer" }} />
+              <Delete
+                onClick={handleDelete}
+                style={{ color: "#a70000", cursor: "pointer" }}
+              />
             </Box>
           )}
         </CardActions>

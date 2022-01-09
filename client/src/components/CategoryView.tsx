@@ -7,10 +7,11 @@ import { updateCategory } from "../actions/requests";
 import { Box, Button, TextField } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Notification from "./Notification";
-import { IdType, LooseObject } from "../models/shared-types";
+import { IdType, LooseObject, ReduxState } from "../models/shared-types";
 import { Formik } from "formik";
 import { object, string } from "yup";
-import useStyles from './styles';
+import useStyles from "./styles";
+import { LoginActions } from "../models/user-types";
 
 interface Row {
   id: string;
@@ -20,6 +21,12 @@ interface Row {
 const CategoryView = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
+
+  const userLogin: LoginActions = useSelector(
+    (state: ReduxState) => state.userLogin
+  );
+
+  const { userInfo } = userLogin;
 
   const allCategories = useSelector(
     (state: AppState) => state.allCategories.categories
@@ -31,14 +38,14 @@ const CategoryView = () => {
   const handleEditCommit = (e: any) => {
     if (allCategories.find((c) => c.name === e.value && c._id !== e.id)) {
     } else {
-      updateCategory(dispatch, { _id: e.id, name: e.value });
+      updateCategory({ _id: e.id, name: e.value }, dispatch, userInfo);
       setMessage("Category name updated successfully!");
       setIsOpen(true);
     }
   };
 
   const handleDelete = (id: IdType, name: string) => {
-    deleteCategory(dispatch, id);
+    deleteCategory(dispatch, id, userInfo);
     setMessage(`Category with a name '${name}' deleted successfully!`);
     setIsOpen(true);
   };
@@ -128,7 +135,8 @@ const CategoryView = () => {
             return errors;
           }}
           onSubmit={(values) => {
-            saveCategory(dispatch, { _id: "", name: values.name });
+            console.log("sub");
+            saveCategory(dispatch, userInfo, { _id: "", name: values.name });
           }}
         >
           {({ values, errors, handleChange, handleSubmit }) => (
@@ -153,7 +161,11 @@ const CategoryView = () => {
                 flexDirection="column"
                 m={3}
               >
-                <Button variant="outlined" className={classes.btn} type="submit">
+                <Button
+                  variant="outlined"
+                  className={classes.btn}
+                  type="submit"
+                >
                   Submit
                 </Button>
               </Box>

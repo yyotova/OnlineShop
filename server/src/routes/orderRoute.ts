@@ -8,10 +8,8 @@ import {
   successByDeleting,
   successByUpdating,
 } from "../utilities/validations/messages";
-import {
-  itemObjectName,
-  orderObjectName,
-} from "../utilities/constants/global";
+import { itemObjectName, orderObjectName } from "../utilities/constants/global";
+import { isAdmin, authenticate } from "../middlewares/auth";
 
 const router = express.Router();
 
@@ -44,12 +42,10 @@ router.post("/", async (req, res) => {
     checkItemIds(newOrder.items, res);
 
     const newOrderCreated = await newOrder.save();
-    return res
-      .status(201)
-      .json({
-        message: successByCreating(orderObjectName),
-        data: newOrderCreated,
-      });
+    return res.status(201).json({
+      message: successByCreating(orderObjectName),
+      data: newOrderCreated,
+    });
   } catch (err: any) {
     return res.status(500).json({ message: err.message });
   }
