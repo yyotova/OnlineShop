@@ -62,43 +62,44 @@ const Product = ({ product }: ProductProps) => {
         </Typography>
 
         <CardActions className={classes.cardActions} disableSpacing>
-          <Box m={1} display="flex" justifyContent="flex-end">
-            <Link
-              to={{
-                pathname: `${match.url}/${product._id}`,
-                state: { selectedProduct: product },
-              }}
-              style={{
-                textDecoration: "none",
-              }}
-            >
-              <Button type="submit" variant="contained" className={classes.btn}>
-                Details
-              </Button>
-            </Link>
-          </Box>
-
-          {userInfo?.isAdmin && (
+          {!userInfo?.isAdmin && (
             <Box m={1} display="flex" justifyContent="flex-end">
               <Link
                 to={{
-                  pathname: `edit-products/${product._id}`,
+                  pathname: `${match.url}/${product._id}`,
+                  state: { selectedProduct: product },
                 }}
                 style={{
                   textDecoration: "none",
                 }}
               >
                 <Button type="submit" variant="contained" className={classes.btn}>
-                  Edit
-                </Button>
+                  Details
+              </Button>
               </Link>
             </Box>
           )}
 
           {userInfo?.isAdmin && (
-            <Box>
-              <Delete onClick={handleDelete} style={{ color: "#a70000", cursor: "pointer" }} />
-            </Box>
+            <>
+              <Box m={1} display="flex" justifyContent="flex-end">
+                <Link
+                  to={{
+                    pathname: `edit-products/${product._id}`,
+                  }}
+                  style={{
+                    textDecoration: "none",
+                  }}
+                >
+                  <Button type="submit" variant="contained" className={classes.btn}>
+                    Edit
+                </Button>
+                </Link>
+              </Box>
+              <Box>
+                <Delete onClick={handleDelete} style={{ color: "#a70000", cursor: "pointer" }} />
+              </Box>
+            </>
           )}
         </CardActions>
       </CardContent>

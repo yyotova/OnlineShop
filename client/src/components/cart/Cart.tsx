@@ -14,7 +14,7 @@ export interface CartItemObject {
   selectedItemSize: string;
 }
 
-interface ICart {
+export interface ICart {
   userId: IdType;
   items: CartItemObject[];
 }
@@ -57,59 +57,58 @@ const Cart = () => {
   };
 
   return (
-    <Container>
-      <div className={classes.toolbar} />
-      <Typography variant="h5" className={classes.title}>
-        <Box
-          display="flex"
-          justifyContent="center"
-          flexDirection="column"
-          alignItems="center"
-          fontWeight="fontWeightBold"
-          p={3}
-          m={2}
-        >
-          Your Shopping Cart
-        </Box>
-      </Typography>
+    <>
+      <Container>
+        <div className={classes.toolbar} />
+        <Typography variant="h5" className={classes.title}>
+          <Box
+            display="flex"
+            justifyContent="center"
+            flexDirection="column"
+            alignItems="center"
+            fontWeight="fontWeightBold"
+            p={3}
+            m={2}
+          >
+            Your Shopping Cart
+          </Box>
+        </Typography>
 
-      {isEmpty ? (
-        <>
+        {isEmpty ? (
           <Typography variant="subtitle1">
-            {" "}
             You have no products in your shopping cart!
           </Typography>
-        </>
-      ) : (
-        <>
-          <Grid container spacing={1}>
-            <Grid item sm={9}>
-              {cart.items.map((product) => (
-                <CartItem product={product} />
-              ))}
-            </Grid>
-          </Grid>
+        ) : (
+            <>
+              <Grid container spacing={1}>
+                <Grid item sm={9}>
+                  {cart.items.map((product) => (
+                    <CartItem product={product} />
+                  ))}
+                </Grid>
+              </Grid>
 
-          <div className={classes.cardDetails}>
-            <Typography variant="h5">
-              Subtotal: {getCartTotalPrice()} €
-            </Typography>
+              <div className={classes.cardDetails}>
+                <Typography variant="h5">
+                  Subtotal: {getCartTotalPrice()} €
+                </Typography>
 
-            <Button
-              className={classes.checkoutButton}
-              size="large"
-              type="button"
-              variant="contained"
-              color="secondary"
-              onClick={handleCheckout}
-            >
-              Checkout
-            </Button>
-            <OrderDialog open={orderDialog} onClose={handleOrderDialogClose} />
-          </div>
-        </>
-      )}
-    </Container>
+                <Button
+                  className={classes.checkoutButton}
+                  size="large"
+                  type="button"
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleCheckout}
+                >
+                  Checkout
+                </Button>
+              </div>
+            </>
+          )}
+      </Container>
+      <OrderDialog amount={getCartTotalPrice()} open={orderDialog} onClose={handleOrderDialogClose} />
+    </>
   );
 };
 

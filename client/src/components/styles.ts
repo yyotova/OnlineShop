@@ -13,11 +13,20 @@ export default makeStyles((theme: Theme) =>
       '&:hover': {
         backgroundColor: "#800089",
       },
-      color: 'white'
+      color: 'white',
     },
     link: {
       textDecoration: 'none',
       color: theme.palette.text.primary,
     },
+    orderContainer: {
+      display: 'grid',
+      gap: '15px'
+    },
+    orderDialog: {
+      // width: '40%',
+      display: 'grid',
+      gap: '5px'
+    }
   })
 );

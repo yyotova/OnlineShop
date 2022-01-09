@@ -8,6 +8,7 @@ import {
   LogInUserRequest,
   UserActions,
 } from "../models/user-types";
+import { Order } from "../models/order-model";
 
 export const SET_PRODUCTS = "SET_PRODUCTS";
 export const SAVE_PRODUCT = "SAVE_PRODUCT";
@@ -43,6 +44,16 @@ export const USER_LIST_FAILURE = "USER_LIST_FAILURE";
 export const USER_DELETE_REQUEST = "USER_DELETE_REQUEST";
 export const USER_DELETE_SUCCESS = "USER_DELETE_SUCCESS";
 export const USER_DELETE_FAILURE = "USER_DELETE_FAILURE";
+
+export const CREATE_ORDER_REQUEST = 'CREATE_ORDER_REQUEST';
+export const CREATE_ORDER_SUCCESS = 'CREATE_ORDER_SUCCESS';
+export const CREATE_ORDER_FAILURE = 'CREATE_ORDER_FAILURE';
+export const UPDATE_ORDER_REQUEST = 'UPDATE_ORDER_REQUEST';
+export const UPDATE_ORDER_SUCCESS = 'UPDATE_ORDER_SUCCESS';
+export const UPDATE_ORDER_FAILURE = 'UPDATE_ORDER_FAILURE';
+export const DELETE_ORDER_REQUEST = 'DELETE_ORDER_REQUEST';
+export const DELETE_ORDER_SUCCESS = 'DELETE_ORDER_SUCCESS';
+export const DELETE_ORDER_FAILURE = 'DELETE_ORDER_FAILURE';
 
 export interface UserListRequest {
   type: typeof USER_LIST_REQUEST;
@@ -167,6 +178,62 @@ export interface UserLogoutSuccess {
   payload: undefined;
 }
 
+export interface CreateOrderRequest {
+  type: typeof CREATE_ORDER_REQUEST;
+  payload: Order;
+}
+
+export interface CreateOrderSuccess {
+  type: typeof CREATE_ORDER_SUCCESS;
+  payload: Order;
+}
+
+export interface CreateOrderFailure {
+  type: typeof CREATE_ORDER_FAILURE;
+  payload: string;
+}
+
+export interface UpdateOrderRequest {
+  type: typeof UPDATE_ORDER_REQUEST;
+  payload: Order;
+}
+
+export interface UpdateOrderSuccess {
+  type: typeof UPDATE_ORDER_SUCCESS;
+  payload: Order;
+}
+
+export interface UpdateOrderFailure {
+  type: typeof UPDATE_ORDER_FAILURE;
+  payload: string;
+}
+
+export interface DeleteOrderRequest {
+  type: typeof DELETE_ORDER_REQUEST;
+  payload: string;
+}
+
+export interface DeleteOrderSuccess {
+  type: typeof DELETE_ORDER_SUCCESS;
+  payload: Order;
+}
+
+export interface DeleteOrderFailure {
+  type: typeof DELETE_ORDER_FAILURE;
+  payload: string;
+}
+
+export type OrderActionTypes = 
+  | CreateOrderRequest
+  | CreateOrderSuccess
+  | CreateOrderFailure
+  | UpdateOrderRequest
+  | UpdateOrderSuccess
+  | UpdateOrderFailure
+  | DeleteOrderRequest
+  | DeleteOrderSuccess
+  | DeleteOrderFailure
+
 export type ProductActionTypes =
   | SetProductsRequest
   | SaveProductRequest
@@ -202,4 +269,5 @@ export type AppActions =
   | ProductActionTypes
   | CategoryActionTypes
   | UserActionTypes
-  | CartActionTypes;
+  | CartActionTypes
+  | OrderActionTypes;

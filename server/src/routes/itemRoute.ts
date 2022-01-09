@@ -126,7 +126,9 @@ router.put("/:id", async (req, res) => {
     itemToUpdate.size = reqData.size;
     itemToUpdate.imageUrl = reqData.imageUrl;
     itemToUpdate.itemsInStock = reqData.itemsInStock;
-    itemToUpdate.categories = reqData.categories;
+    if (reqData.categories) {
+      itemToUpdate.categories = reqData.categories;
+    }
 
     const updatedItem = await itemToUpdate.save();
 

@@ -12,6 +12,7 @@ import {
   itemObjectName,
   orderObjectName,
 } from "../utilities/constants/global";
+import { authenticate } from "../middlewares/auth";
 
 const router = express.Router();
 
@@ -22,7 +23,7 @@ interface ItemOrder {
 
 // TODO get orders of a given user
 
-router.get("/", async (req, res) => {
+router.get("/", authenticate, async (req, res) => {
   try {
     const orders = await Order.find();
     return res.status(200).json(orders);
@@ -31,14 +32,15 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", authenticate, async (req, res) => {
+  console.log("HERE");
   try {
     const newOrder = new Order({
       userId: req.body.userId,
       items: req.body.items,
       amount: req.body.amount,
       address: req.body.address,
-      status: req.body.status,
+      zipCode: req.body.zipCode,
     });
 
     checkItemIds(newOrder.items, res);
@@ -55,7 +57,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", authenticate, async (req, res) => {
   try {
     checkItemIds(req.body.items, res);
 
@@ -81,7 +83,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authenticate, async (req, res) => {
   try {
     const orderId = req.params.id;
     const deletedOrder = await Order.findByIdAndDelete(orderId);

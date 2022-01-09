@@ -8,6 +8,7 @@ import {
   usersListReducer,
   userDeleteReducer,
 } from "./userReducer";
+import { orderCreateReducer, orderUpdateReducer, orderDeleteReducer } from "./orderReducer";
 
 const reducers = combineReducers({
   allProducts: productReducer,
@@ -17,6 +18,9 @@ const reducers = combineReducers({
   userCart: cartReducer,
   userList: usersListReducer,
   userDelete: userDeleteReducer,
+  createOrder: orderCreateReducer,
+  updateOrder: orderUpdateReducer,
+  deleteOder: orderDeleteReducer
 });
 
 export default reducers;

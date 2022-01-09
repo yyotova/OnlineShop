@@ -54,7 +54,7 @@ function App() {
         <Route exact path="/register" component={Register} />
         <Route exact path="/login" component={Login} />
         <PrivateRoute exact path="/users" component={UserManagement} />
-        <Route exact path="/cart" component={Cart} />
+        <PrivateRoute exact path="/cart" component={Cart} />
         <Redirect to="/products" />
       </Switch>
     </BrowserRouter>

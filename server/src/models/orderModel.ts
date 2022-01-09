@@ -19,7 +19,8 @@ const orderSchema = new mongoose.Schema(
     },
     items: [orderItemSchema],
     amount: { type: Number, required: true },
-    address: { type: Object, required: true },
+    address: { type: String, required: true },
+    zipCode: { type: String, required: true },
     status: { type: String, default: StatusOrder.PENDING },
   },
   {

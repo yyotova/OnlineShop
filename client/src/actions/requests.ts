@@ -17,6 +17,7 @@ import { IdType } from "../models/shared-types";
 import { CategoryType } from "../models/category-model";
 import { editUserCart, setUserCart } from "./cartActions";
 import { CartType } from "../models/cart-model";
+import { OrderItem } from "../models/order-model";
 
 // --- Category ---
 
@@ -102,7 +103,7 @@ export const saveProduct = async (
 
 export const updateProduct = async (
   dispatch: Dispatch<any>,
-  product: ProductType
+  product: ProductType | OrderItem
 ) => {
   await axios
     .put(`http://localhost:3030/api/items/${product._id}`, product)
