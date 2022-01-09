@@ -15,10 +15,11 @@ import type { IItem } from "../types/Item";
 import type { IResponse } from "../types/Response";
 import { lowerCaseFirstLetter } from "../utilities/helperUtil";
 import Cart from "../models/cartModel";
+import { isAdmin, authenticate } from "../middlewares/auth";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/", authenticate, async (req, res) => {
   const qCategory = req.query.category;
   let items;
 
@@ -35,7 +36,7 @@ router.get("/", async (req, res) => {
   return res.json(items);
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", authenticate, async (req, res) => {
   try {
     const id = req.params.id;
     const item = await Item.findOne({ _id: id });
@@ -59,7 +60,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/manage-items", async (req, res) => {
+router.post("/manage-items", authenticate, isAdmin, async (req, res) => {
   const reqData = req.body as IItem;
   const existingItem = await Item.findOne({ name: reqData.name });
 
@@ -100,7 +101,7 @@ router.post("/manage-items", async (req, res) => {
   return res.status(500).json(returnedData);
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", authenticate, isAdmin, async (req, res) => {
   const itemId = req.params.id;
   const itemToUpdate = await Item.findOne({ _id: itemId });
   const reqData = req.body as IItem;
@@ -150,7 +151,7 @@ router.put("/:id", async (req, res) => {
     .json({ errorMessage: notExist(itemObjectName, "id", itemId) });
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authenticate, isAdmin, async (req, res) => {
   const itemId = req.params.id;
   const itemToDelete = await Item.findById(itemId);
 

@@ -27,21 +27,19 @@ const Product = ({ product }: ProductProps) => {
   const classes = useStyles();
   const match = useRouteMatch();
   const dispatch = useDispatch();
+  const userLogin: LoginActions = useSelector(
+    (state: ReduxState) => state.userLogin
+  );
+  const { userInfo } = userLogin;
 
   const [message, setMessage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
   const handleDelete = () => {
-    deleteProduct(dispatch, product._id);
+    deleteProduct(dispatch, product._id, userInfo);
     setMessage("Product deleted successfully!");
     setIsOpen(true);
   };
-
-  const userLogin: LoginActions = useSelector(
-    (state: ReduxState) => state.userLogin
-  );
-
-  const { userInfo } = userLogin;
 
   return (
     <Card className={classes.root}>

@@ -16,8 +16,9 @@ import { saveProduct, updateProduct } from "../actions/requests";
 import React from "react";
 import { CategoryType } from "../models/category-model";
 import { array, number, object, string } from "yup";
-import { LooseObject } from "../models/shared-types";
-import useStyles from './styles';
+import { LooseObject, ReduxState } from "../models/shared-types";
+import useStyles from "./styles";
+import { LoginActions } from "../models/user-types";
 
 interface EditProductParams {
   id: string;
@@ -34,12 +35,17 @@ interface SizeOption {
 }
 
 const ManageProduct = () => {
+  const dispatch = useDispatch();
   const history = useHistory();
   const params = useParams<EditProductParams>();
-  const dispatch = useDispatch();
   const classes = useStyles();
 
   const products = useSelector((state: AppState) => state.allProducts.products);
+
+  const userLogin: LoginActions = useSelector(
+    (state: ReduxState) => state.userLogin
+  );
+  const { userInfo } = userLogin;
 
   const [categories, setCategories] = React.useState([]);
   const [sizes, setSizes] = React.useState([]);
@@ -190,9 +196,9 @@ const ManageProduct = () => {
           });
 
           if (params.id) {
-            updateProduct(dispatch, result);
+            updateProduct(result, dispatch, userInfo);
           } else {
-            saveProduct(dispatch, result);
+            saveProduct(result, dispatch, userInfo);
           }
 
           clearUp(values);

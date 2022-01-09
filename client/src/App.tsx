@@ -28,9 +28,9 @@ function App() {
   const { userInfo } = userLogin;
 
   useEffect(() => {
-    fetchProducts(dispatch);
-    fetchCategories(dispatch);
-    fetchUserCart(dispatch, userInfo?._id);
+    fetchProducts(dispatch, userInfo);
+    fetchCategories(dispatch, userInfo);
+    fetchUserCart(userInfo?._id, dispatch, userInfo);
   }, [userInfo]);
 
   return (

@@ -60,7 +60,7 @@ const Cart = () => {
     <>
       <Container>
         <div className={classes.toolbar} />
-        <Typography variant="h5" className={classes.title}>
+        <Typography variant="h5">
           <Box
             display="flex"
             justifyContent="center"
