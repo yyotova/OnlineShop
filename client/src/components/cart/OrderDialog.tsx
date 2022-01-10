@@ -9,6 +9,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { AppState } from '../../store';
 import { Order } from '../../models/order-model';
 import { createOrder } from '../../actions/orderActions';
+import { updateCart, updateProduct } from '../../actions/requests';
+import { ProductType } from '../../models/product-model';
 
 interface DialogProps {
   open: boolean;
@@ -46,7 +48,14 @@ const OrderDialog = ({open, onClose, amount}: DialogProps) => {
     items: cartObj.items?.flatMap((item) => {
       const product = allProducts.find((p) => p._id === item.itemId);
       return {
-        item: product,
+        _id: product._id,
+        name: product.name,
+        description: product.description,
+        imageUrl: product.imageUrl,
+        price: product.price,
+        categories: product.categories,
+        itemsInStock: product.itemsInStock,
+        size: product.size,
         quantity: item?.quantity,
         selectedItemSize: item?.selectedItemSize,
       };
@@ -59,13 +68,30 @@ const OrderDialog = ({open, onClose, amount}: DialogProps) => {
 
   const handleSubmit = () => {
     dispatch(createOrder(order));
-    // order.items.forEach((i) => {
-    //   if (i.itemsInStock < i.qty) {
-    //     console.log('Not enough');
-    //   } else {
-    //     updateProduct(dispatch, i);
-    //   }
-    // });
+    order.items.forEach((item) => {
+      if (item.itemsInStock < item.quantity) {
+        console.log('Not enough');
+      } else {
+        item.itemsInStock -= item.quantity;
+        const updatedProduct: ProductType = {
+          _id: item._id,
+          name: item.name,
+          description: item.description,
+          price: item.price,
+          imageUrl: item.imageUrl,
+          categories: item.categories,
+          itemsInStock: item.itemsInStock,
+          size: item.size
+        }
+        updateProduct(updatedProduct, dispatch, userInfo);
+      }
+    });
+    const updatedCart = {
+      _id: cartObj._id,
+      items: [],
+      userId: cartObj.userId
+    };
+    updateCart(updatedCart, dispatch, userInfo);
     handleClose();
   };
 

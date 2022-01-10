@@ -16,11 +16,12 @@ export interface OrderItem {
   name: string;
   description: string;
   imageUrl: string;
-  qty: number;
+  quantity: number;
   price: number;
-  sizselectedItemSize: string;
+  electedItemSize: string;
   itemsInStock: number;
-  category: string;
+  size: string[];
+  categories: string[];
 }
 
 export interface OrderCreate {

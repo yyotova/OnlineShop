@@ -135,7 +135,6 @@ const CategoryView = () => {
             return errors;
           }}
           onSubmit={(values) => {
-            console.log("sub");
             saveCategory(dispatch, userInfo, { _id: "", name: values.name });
           }}
         >

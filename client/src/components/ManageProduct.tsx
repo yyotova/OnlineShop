@@ -79,7 +79,6 @@ const ManageProduct = () => {
     let item: ProductType | undefined = undefined;
 
     if (params.id) {
-      console.log(params.id);
       const index = products.findIndex((i) => i._id === params.id);
 
       if (index >= 0) {

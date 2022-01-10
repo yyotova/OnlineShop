@@ -17,8 +17,16 @@ import { isAdmin, authenticate } from "../middlewares/auth";
 const router = express.Router();
 
 interface ItemOrder {
-  item: String;
-  quantity: Number;
+  _id: string;
+  name: string;
+  description: string;
+  imageUrl: string;
+  quantity: number;
+  price: number;
+  sizselectedItemSize: string;
+  itemsInStock: number;
+  size: string[];
+  categories: string[];
 }
 
 // TODO get orders of a given user
@@ -33,7 +41,6 @@ router.get("/", authenticate, async (req, res) => {
 });
 
 router.post("/", authenticate, async (req, res) => {
-  console.log("HERE");
   try {
     const newOrder = new Order({
       userId: req.body.userId,
@@ -104,7 +111,7 @@ router.delete("/:id", authenticate, async (req, res) => {
 
 function checkItemIds(items: ItemOrder[], res: any) {
   items.forEach(async (itemObj: ItemOrder) => {
-    const currentId = itemObj.item.toString();
+    const currentId = itemObj._id.toString();
     const existingItem = await Item.findOne({ _id: currentId });
     if (existingItem == null) {
       return res.status(404).json({

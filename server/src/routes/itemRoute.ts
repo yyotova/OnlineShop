@@ -101,7 +101,9 @@ router.post("/manage-items", authenticate, isAdmin, async (req, res) => {
   return res.status(500).json(returnedData);
 });
 
-router.put("/:id", authenticate, isAdmin, async (req, res) => {
+router.put("/:id", authenticate, async (req, res) => {
+  console.log("HERE");
+
   const itemId = req.params.id;
   const itemToUpdate = await Item.findOne({ _id: itemId });
   const reqData = req.body as IItem;
