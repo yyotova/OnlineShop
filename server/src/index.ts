@@ -1,4 +1,5 @@
 import express from "express";
+// import { Server } from "socket.io";
 import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
@@ -12,13 +13,17 @@ import http from "http";
 import { Server } from "socket.io";
 import { formatMessage } from "./routes/chatRouter";
 
+const socket = require("socket.io");
+
 dotenv.config();
 
 const app = express();
-const server = http.createServer(app);
-const socketio = new Server(server, { cors: { origin: "*" } });
 const serverPort = process.env.SERVER_PORT as any;
 const dbConnection = process.env.DB_CONNECTION as string;
+const socketio = new Server(server, { cors: { origin: "*" } });
+const server = app.listen(serverPort, () => {
+  console.log(`Listening on port ${serverPort}`);
+});
 
 app.use(express.json());
 app.use(cors());
@@ -46,10 +51,6 @@ socketio.on("connection", (socket) => {
   socket.on("chatMessage", (message) => {
     console.log(message);
   });
-});
-
-server.listen(serverPort, () => {
-  console.log(`Listening on port ${serverPort}`);
 });
 
 // mongooseDB connection
