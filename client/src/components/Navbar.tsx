@@ -108,7 +108,7 @@ const Navbar = () => {
           onClose={() => setAnchorEl(null)}
         >
           {" "}
-          {userInfo?.isAdmin ? (
+          {userInfo?.isAdmin && (
             <>
               <MenuItem
                 onClick={() => setAnchorEl(null)}
@@ -135,9 +135,8 @@ const Navbar = () => {
                 Users
               </MenuItem>
             </>
-          ) :
+          )}
             <MenuItem onClick={logout}>Logout</MenuItem>
-          }
         </Menu>
         {!userInfo?.isAdmin && (
           <>
