@@ -9,18 +9,24 @@ import itemRoute from "./routes/itemRoute";
 import orderRoute from "./routes/orderRoute";
 import cartRoute from "./routes/cartRoute";
 import categoryRouter from "./routes/categoryRouter";
+import http from "http";
+import { Server } from "socket.io";
+import { formatMessage } from "./routes/chatRouter";
 
 const socket = require("socket.io");
 
 dotenv.config();
 
 const app = express();
+const serverPort = process.env.SERVER_PORT as any;
+const dbConnection = process.env.DB_CONNECTION as string;
+const socketio = new Server(server, { cors: { origin: "*" } });
+const server = app.listen(serverPort, () => {
+  console.log(`Listening on port ${serverPort}`);
+});
 
 app.use(express.json());
 app.use(cors());
-
-const serverPort = process.env.SERVER_PORT as any;
-const dbConnection = process.env.DB_CONNECTION as string;
 
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
@@ -29,8 +35,22 @@ app.use("/api/orders", orderRoute);
 app.use("/api/cart", cartRoute);
 app.use("/api/categories", categoryRouter);
 
-const server = app.listen(serverPort, () => {
-  console.log(`Listening on port ${serverPort}`);
+socketio.on("connection", (socket) => {
+  socket.emit("message", formatMessage("Ivan", "Welcome"));
+
+  // Emit everybody except the client that is connecting.
+  // Do not need to notify him
+  socket.broadcast.emit("message", "A user has joined the chat!");
+
+  // Runs when client disconnects
+  socket.on("disconnect", () => {
+    socketio.emit("message", "A user has left the chat");
+  });
+
+  // Listen for chat message
+  socket.on("chatMessage", (message) => {
+    console.log(message);
+  });
 });
 
 // mongooseDB connection
@@ -42,10 +62,3 @@ mongoose
   .catch((err) => {
     console.error("Error connecting to the DB", err);
   });
-
-  // Socket setup
-const io = socket(server);
-
-io.on("connection", function (socket) {
-  console.log("Made socket connection");
-});

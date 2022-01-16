@@ -15,6 +15,7 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "latest-version": "^6.0.0",
+    "moment": "^2.29.1",
     "mongoose": "^6.0.14",
     "socket.io": "^4.4.1",
     "validator": "^13.7.0"
