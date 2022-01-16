@@ -55,6 +55,10 @@ export const DELETE_ORDER_REQUEST = 'DELETE_ORDER_REQUEST';
 export const DELETE_ORDER_SUCCESS = 'DELETE_ORDER_SUCCESS';
 export const DELETE_ORDER_FAILURE = 'DELETE_ORDER_FAILURE';
 
+export const LIST_ORDER_REQUEST = 'LIST_ORDER_REQUEST';
+export const LIST_ORDER_SUCCESS = 'LIST_ORDER_SUCCESS';
+export const LIST_ORDER_FAILURE = 'LIST_ORDER_FAILURE';
+
 export interface UserListRequest {
   type: typeof USER_LIST_REQUEST;
 }
@@ -223,6 +227,20 @@ export interface DeleteOrderFailure {
   payload: string;
 }
 
+export interface ListOrderRequest {
+  type: typeof LIST_ORDER_REQUEST;
+}
+
+export interface ListOrderSuccess {
+  type: typeof LIST_ORDER_SUCCESS;
+  payload: Order[];
+}
+
+export interface ListOrderFailure {
+  type: typeof LIST_ORDER_FAILURE;
+  payload: string;
+}
+
 export type OrderActionTypes = 
   | CreateOrderRequest
   | CreateOrderSuccess
@@ -233,6 +251,9 @@ export type OrderActionTypes =
   | DeleteOrderRequest
   | DeleteOrderSuccess
   | DeleteOrderFailure
+  | ListOrderRequest
+  | ListOrderSuccess
+  | ListOrderFailure
 
 export type ProductActionTypes =
   | SetProductsRequest

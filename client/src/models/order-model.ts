@@ -5,7 +5,7 @@ export interface Order {
   createdAt?: Date;
   items: OrderItem[];
   amount: number;
-  updatedAt: Date;
+  updatedAt?: Date;
   address: string;
   zipCode: string;
   status?: string;
@@ -34,4 +34,11 @@ export interface OrderDelete {
   loading: boolean;
   order?: Order[];
   success?: boolean;
+}
+
+export interface OrderList {
+  loading: boolean;
+  order?: Order[];
+  success?: boolean;
+  error?: string;
 }

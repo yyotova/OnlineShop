@@ -4,6 +4,7 @@ import {
   LoginActions,
   UserListActions,
 } from "./user-types";
+import { OrderCreate } from "./order-model";
 
 export type IdType = string;
 
@@ -14,6 +15,9 @@ export interface ReduxState {
   userLogin: LoginActions;
   userList: UserListActions;
   userDelete: any;
+  listOrders: OrderCreate;
+  deleteOrders: OrderCreate;
+  updateOrder: OrderCreate;
 }
 
 export type getStateType = () => ReduxState;

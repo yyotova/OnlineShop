@@ -8,9 +8,12 @@ import {
   UPDATE_ORDER_FAILURE, 
   DELETE_ORDER_REQUEST, 
   DELETE_ORDER_SUCCESS, 
-  DELETE_ORDER_FAILURE 
+  DELETE_ORDER_FAILURE, 
+  LIST_ORDER_REQUEST,
+  LIST_ORDER_SUCCESS,
+  LIST_ORDER_FAILURE
 } from "../constants/action-types";
-import { OrderCreate, OrderDelete } from "../models/order-model";
+import { OrderCreate, OrderDelete, OrderList } from "../models/order-model";
 
 const orderCreateState: OrderCreate = { loading: false };
 
@@ -77,6 +80,19 @@ export const orderDeleteReducer = (state = orderDeleteState, action: AppActions)
         loading: false,
         error: action.payload 
       };
+    default:
+      return state;
+  }
+};
+
+export const orderListReducer = (state = orderCreateState, action: AppActions): OrderList => {
+  switch (action.type) {
+    case LIST_ORDER_REQUEST:
+      return { loading: true };
+    case LIST_ORDER_SUCCESS:
+      return { loading: false, order: action.payload, success: true };
+    case LIST_ORDER_FAILURE:
+      return { loading: false, error: action.payload };
     default:
       return state;
   }

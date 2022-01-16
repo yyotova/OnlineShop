@@ -18,6 +18,7 @@ import UserManagement from "./components/UserManagement";
 import PrivateRoute from "./components/auth/PrivateRoute";
 import { ReduxState } from "./models/shared-types";
 import { LoginActions } from "./models/user-types";
+import OrdesManagement from "./components/OrdersManagement";
 
 function App() {
   const dispatch = useDispatch();
@@ -55,6 +56,7 @@ function App() {
         <Route exact path="/login" component={Login} />
         <PrivateRoute exact path="/users" component={UserManagement} />
         <PrivateRoute exact path="/cart" component={Cart} />
+        <PrivateRoute exact path="/orders" component={OrdesManagement} />
         <Redirect to="/products" />
       </Switch>
     </BrowserRouter>
