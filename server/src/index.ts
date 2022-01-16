@@ -1,4 +1,5 @@
 import express from "express";
+// import { Server } from "socket.io";
 import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
@@ -8,6 +9,8 @@ import itemRoute from "./routes/itemRoute";
 import orderRoute from "./routes/orderRoute";
 import cartRoute from "./routes/cartRoute";
 import categoryRouter from "./routes/categoryRouter";
+
+const socket = require("socket.io");
 
 dotenv.config();
 
@@ -26,7 +29,7 @@ app.use("/api/orders", orderRoute);
 app.use("/api/cart", cartRoute);
 app.use("/api/categories", categoryRouter);
 
-app.listen(serverPort, () => {
+const server = app.listen(serverPort, () => {
   console.log(`Listening on port ${serverPort}`);
 });
 
@@ -39,3 +42,10 @@ mongoose
   .catch((err) => {
     console.error("Error connecting to the DB", err);
   });
+
+  // Socket setup
+const io = socket(server);
+
+io.on("connection", function (socket) {
+  console.log("Made socket connection");
+});
