@@ -8,7 +8,10 @@ import {
   Avatar,
   Menu,
   MenuItem,
+  Badge,
 } from "@material-ui/core";
+import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
+import PermIdentityIcon from '@material-ui/icons/PermIdentity';
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -19,6 +22,8 @@ import { loginAction } from "../actions/userActions";
 const Navbar = () => {
   const history = useHistory();
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
+
+  const cart = useSelector((state: AppState) => state.userCart.cart);
 
   const userLogin: LoginActions = useSelector(
     (state: ReduxState) => state.userLogin
@@ -73,21 +78,19 @@ const Navbar = () => {
                 <IconButton
                   onClick={(event) => setAnchorEl(event.currentTarget)}
                 >
-                  <Avatar style={{ background: "#a70000", color: "#ffffff" }}>
-                    {userInfo?.firstName[0]}
-                  </Avatar>
+                  <PermIdentityIcon />
                 </IconButton>
               </>
             ) : (
-              <Button
-                type="button"
-                variant="contained"
-                color="secondary"
-                onClick={() => history.push("/login")}
-              >
-                Login
-              </Button>
-            )}
+                <Button
+                  type="button"
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => history.push("/login")}
+                >
+                  Login
+                </Button>
+              )}
           </Box>
         </Box>
         <Menu
@@ -105,7 +108,7 @@ const Navbar = () => {
           onClose={() => setAnchorEl(null)}
         >
           {" "}
-          {userInfo?.isAdmin && (
+          {userInfo?.isAdmin ? (
             <>
               <MenuItem
                 onClick={() => setAnchorEl(null)}
@@ -132,18 +135,22 @@ const Navbar = () => {
                 Users
               </MenuItem>
             </>
-          )}
-          {!userInfo?.isAdmin && (
-            <MenuItem
-              onClick={() => setAnchorEl(null)}
-              component={Link}
-              to="/cart"
-            >
-              My Cart
-            </MenuItem>
-          )}
-          <MenuItem onClick={logout}>Logout</MenuItem>
+          ) :
+            <MenuItem onClick={logout}>Logout</MenuItem>
+          }
         </Menu>
+        {!userInfo?.isAdmin && (
+          <>
+            <IconButton onClick={() => history.push("/cart")}>
+              <Badge
+                badgeContent={cart ? cart.items.length : 0}
+                color="secondary"
+              >
+                <ShoppingBasketIcon />
+              </Badge>
+            </IconButton>
+          </>
+        )}
       </Toolbar>
     </AppBar>
   );
