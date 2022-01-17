@@ -8,7 +8,13 @@ import {
   usersListReducer,
   userDeleteReducer,
 } from "./userReducer";
-import { orderCreateReducer, orderUpdateReducer, orderDeleteReducer, orderListReducer } from "./orderReducer";
+import {
+  orderCreateReducer,
+  orderUpdateReducer,
+  orderDeleteReducer,
+  orderListReducer,
+} from "./orderReducer";
+import { messageReducer } from "./messageReducer";
 
 const reducers = combineReducers({
   allProducts: productReducer,
@@ -22,6 +28,7 @@ const reducers = combineReducers({
   updateOrder: orderUpdateReducer,
   deleteOder: orderDeleteReducer,
   listOrders: orderListReducer,
+  messageList: messageReducer,
 });
 
 export default reducers;

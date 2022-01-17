@@ -1,29 +1,31 @@
 import express from "express";
-// import { Server } from "socket.io";
 import cors from "cors";
 import dotenv from "dotenv";
-import mongoose from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 import authRouter from "./routes/authRouter";
 import userRouter from "./routes/userRouter";
 import itemRoute from "./routes/itemRoute";
 import orderRoute from "./routes/orderRoute";
 import cartRoute from "./routes/cartRoute";
 import categoryRouter from "./routes/categoryRouter";
-import http from "http";
 import { Server } from "socket.io";
-import { formatMessage } from "./routes/chatRouter";
+import Message from "./models/messageModel";
 
-const socket = require("socket.io");
+export interface MessageObject {
+  userId: string;
+  message: string;
+  time: string;
+}
 
 dotenv.config();
 
 const app = express();
 const serverPort = process.env.SERVER_PORT as any;
 const dbConnection = process.env.DB_CONNECTION as string;
-const socketio = new Server(server, { cors: { origin: "*" } });
 const server = app.listen(serverPort, () => {
   console.log(`Listening on port ${serverPort}`);
 });
+const socketio = new Server(server, { cors: { origin: "*" } });
 
 app.use(express.json());
 app.use(cors());
@@ -36,20 +38,32 @@ app.use("/api/cart", cartRoute);
 app.use("/api/categories", categoryRouter);
 
 socketio.on("connection", (socket) => {
-  socket.emit("message", formatMessage("Ivan", "Welcome"));
-
-  // Emit everybody except the client that is connecting.
-  // Do not need to notify him
-  socket.broadcast.emit("message", "A user has joined the chat!");
-
-  // Runs when client disconnects
-  socket.on("disconnect", () => {
-    socketio.emit("message", "A user has left the chat");
+  socket.on("getUserMessages", async (userId: string) => {
+    try {
+      const messages = await Message.find({
+        userId: new mongoose.Types.ObjectId(userId.trim()),
+      });
+      socket.emit("listMessages", messages);
+    } catch (error: any) {
+      console.error(error);
+    }
   });
 
-  // Listen for chat message
-  socket.on("chatMessage", (message) => {
-    console.log(message);
+  socket.on("chatMessage", async (messageObject: MessageObject) => {
+    try {
+      const newMessage = new Message({
+        userId: new mongoose.Types.ObjectId(messageObject.userId.trim()),
+        message: messageObject.message,
+        time: messageObject.time,
+      });
+
+      const returnedMessage = await newMessage.save();
+      if (returnedMessage) {
+        socket.emit("returnedFromServerMessage", returnedMessage);
+      }
+    } catch (error: any) {
+      console.error(error);
+    }
   });
 });
 

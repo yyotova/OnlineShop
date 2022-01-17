@@ -1,6 +1,7 @@
 import { CartType } from "../models/cart-model";
 import { CategoryType } from "../models/category-model";
 import { ProductType } from "../models/product-model";
+import { MessageModel } from "../models/message-model";
 import { IdType } from "../models/shared-types";
 import {
   RegisterUserRequest,
@@ -45,19 +46,21 @@ export const USER_DELETE_REQUEST = "USER_DELETE_REQUEST";
 export const USER_DELETE_SUCCESS = "USER_DELETE_SUCCESS";
 export const USER_DELETE_FAILURE = "USER_DELETE_FAILURE";
 
-export const CREATE_ORDER_REQUEST = 'CREATE_ORDER_REQUEST';
-export const CREATE_ORDER_SUCCESS = 'CREATE_ORDER_SUCCESS';
-export const CREATE_ORDER_FAILURE = 'CREATE_ORDER_FAILURE';
-export const UPDATE_ORDER_REQUEST = 'UPDATE_ORDER_REQUEST';
-export const UPDATE_ORDER_SUCCESS = 'UPDATE_ORDER_SUCCESS';
-export const UPDATE_ORDER_FAILURE = 'UPDATE_ORDER_FAILURE';
-export const DELETE_ORDER_REQUEST = 'DELETE_ORDER_REQUEST';
-export const DELETE_ORDER_SUCCESS = 'DELETE_ORDER_SUCCESS';
-export const DELETE_ORDER_FAILURE = 'DELETE_ORDER_FAILURE';
+export const CREATE_ORDER_REQUEST = "CREATE_ORDER_REQUEST";
+export const CREATE_ORDER_SUCCESS = "CREATE_ORDER_SUCCESS";
+export const CREATE_ORDER_FAILURE = "CREATE_ORDER_FAILURE";
+export const UPDATE_ORDER_REQUEST = "UPDATE_ORDER_REQUEST";
+export const UPDATE_ORDER_SUCCESS = "UPDATE_ORDER_SUCCESS";
+export const UPDATE_ORDER_FAILURE = "UPDATE_ORDER_FAILURE";
+export const DELETE_ORDER_REQUEST = "DELETE_ORDER_REQUEST";
+export const DELETE_ORDER_SUCCESS = "DELETE_ORDER_SUCCESS";
+export const DELETE_ORDER_FAILURE = "DELETE_ORDER_FAILURE";
 
-export const LIST_ORDER_REQUEST = 'LIST_ORDER_REQUEST';
-export const LIST_ORDER_SUCCESS = 'LIST_ORDER_SUCCESS';
-export const LIST_ORDER_FAILURE = 'LIST_ORDER_FAILURE';
+export const LIST_ORDER_REQUEST = "LIST_ORDER_REQUEST";
+export const LIST_ORDER_SUCCESS = "LIST_ORDER_SUCCESS";
+export const LIST_ORDER_FAILURE = "LIST_ORDER_FAILURE";
+
+export const SET_MESSAGES = "SET_MESSAGES";
 
 export interface UserListRequest {
   type: typeof USER_LIST_REQUEST;
@@ -241,7 +244,12 @@ export interface ListOrderFailure {
   payload: string;
 }
 
-export type OrderActionTypes = 
+export interface SetMessagesRequest {
+  type: typeof SET_MESSAGES;
+  payload: MessageModel[];
+}
+
+export type OrderActionTypes =
   | CreateOrderRequest
   | CreateOrderSuccess
   | CreateOrderFailure
@@ -253,7 +261,7 @@ export type OrderActionTypes =
   | DeleteOrderFailure
   | ListOrderRequest
   | ListOrderSuccess
-  | ListOrderFailure
+  | ListOrderFailure;
 
 export type ProductActionTypes =
   | SetProductsRequest
@@ -286,9 +294,12 @@ export type UserActionTypes =
 
 export type CartActionTypes = SetUserCartRequest | UpdateUserCartRequest;
 
+export type MessageActionTypes = SetMessagesRequest;
+
 export type AppActions =
   | ProductActionTypes
   | CategoryActionTypes
   | UserActionTypes
   | CartActionTypes
-  | OrderActionTypes;
+  | OrderActionTypes
+  | MessageActionTypes;

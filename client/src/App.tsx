@@ -19,22 +19,14 @@ import PrivateRoute from "./components/auth/PrivateRoute";
 import { ReduxState } from "./models/shared-types";
 import { LoginActions } from "./models/user-types";
 import OrdesManagement from "./components/OrdersManagement";
-import socketIOClient from "socket.io-client";
 
 function App() {
-  const ENDPOINT = "http://localhost:3030/";
   const dispatch = useDispatch();
   const userLogin: LoginActions = useSelector(
     (state: ReduxState) => state.userLogin
   );
 
   const { userInfo } = userLogin;
-
-  const socket = socketIOClient(ENDPOINT);
-  socket.on("message", (data) => {
-    console.log(data);
-  });
-  socket.emit("message", "","hello there");
 
   useEffect(() => {
     fetchProducts(dispatch, userInfo);

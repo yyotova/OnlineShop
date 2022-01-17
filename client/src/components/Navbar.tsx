@@ -5,19 +5,19 @@ import {
   Button,
   Box,
   IconButton,
-  Avatar,
   Menu,
   MenuItem,
   Badge,
 } from "@material-ui/core";
 import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
-import PermIdentityIcon from '@material-ui/icons/PermIdentity';
+import PermIdentityIcon from "@material-ui/icons/PermIdentity";
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { ReduxState } from "../models/shared-types";
 import { LoginActions } from "../models/user-types";
 import { loginAction } from "../actions/userActions";
+import { AppState } from "../store";
 
 const Navbar = () => {
   const history = useHistory();
@@ -82,15 +82,15 @@ const Navbar = () => {
                 </IconButton>
               </>
             ) : (
-                <Button
-                  type="button"
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => history.push("/login")}
-                >
-                  Login
-                </Button>
-              )}
+              <Button
+                type="button"
+                variant="contained"
+                color="secondary"
+                onClick={() => history.push("/login")}
+              >
+                Login
+              </Button>
+            )}
           </Box>
         </Box>
         <Menu
@@ -135,9 +135,9 @@ const Navbar = () => {
                 Users
               </MenuItem>
             </>
-          ) :
+          ) : (
             <MenuItem onClick={logout}>Logout</MenuItem>
-          }
+          )}
         </Menu>
         {!userInfo?.isAdmin && (
           <>
