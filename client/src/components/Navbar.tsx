@@ -18,6 +18,7 @@ import { ReduxState } from "../models/shared-types";
 import { LoginActions } from "../models/user-types";
 import { loginAction } from "../actions/userActions";
 import { AppState } from "../store";
+import { setUserCart } from "../actions/cartActions";
 
 const Navbar = () => {
   const history = useHistory();
@@ -33,6 +34,7 @@ const Navbar = () => {
   const logout = () => {
     setAnchorEl(null);
     dispatch(loginAction("", ""));
+    dispatch(setUserCart({ _id: "", userId: "", items: [] }));
   };
 
   const { userInfo } = userLogin;
@@ -134,12 +136,13 @@ const Navbar = () => {
               <MenuItem component={Link} to="/users">
                 Users
               </MenuItem>
+              <MenuItem onClick={logout}>Logout</MenuItem>
             </>
           ) : (
             <MenuItem onClick={logout}>Logout</MenuItem>
           )}
         </Menu>
-        {!userInfo?.isAdmin && (
+        {userInfo && !userInfo?.isAdmin && (
           <>
             <IconButton onClick={() => history.push("/cart")}>
               <Badge

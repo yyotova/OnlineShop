@@ -5,19 +5,19 @@ export default makeStyles((theme) => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
-    display: 'flex',
+    display: "flex",
   },
   root: {
     flexGrow: 1,
   },
   items: {
-    maxHeight: '100%',
-    overflow: 'scrow'
+    maxHeight: "100%",
+    overflow: "scrow",
   },
   chat: {
-    minWidth: '20%',
-    position: 'fixed',
+    minWidth: "20%",
+    position: "fixed",
     bottom: 0,
-    right: 0
-  }
+    right: 0,
+  },
 }));

@@ -246,7 +246,7 @@ export interface ListOrderFailure {
 
 export interface SetMessagesRequest {
   type: typeof SET_MESSAGES;
-  payload: MessageModel[];
+  payload: MessageModel;
 }
 
 export type OrderActionTypes =

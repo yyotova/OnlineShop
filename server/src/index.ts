@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import mongoose, { ObjectId } from "mongoose";
+import mongoose from "mongoose";
 import authRouter from "./routes/authRouter";
 import userRouter from "./routes/userRouter";
 import itemRoute from "./routes/itemRoute";
@@ -9,13 +9,9 @@ import orderRoute from "./routes/orderRoute";
 import cartRoute from "./routes/cartRoute";
 import categoryRouter from "./routes/categoryRouter";
 import { Server } from "socket.io";
-import Message from "./models/messageModel";
-
-export interface MessageObject {
-  userId: string;
-  message: string;
-  time: string;
-}
+import Message, { MessageObject, MessageType } from "./models/messageModel";
+import User from "./models/user";
+import { notExist } from "./utilities/validations/messages";
 
 dotenv.config();
 
@@ -38,28 +34,98 @@ app.use("/api/cart", cartRoute);
 app.use("/api/categories", categoryRouter);
 
 socketio.on("connection", (socket) => {
-  socket.on("getUserMessages", async (userId: string) => {
+  socket.on("getAllMessageObjects", async () => {
     try {
-      const messages = await Message.find({
-        userId: new mongoose.Types.ObjectId(userId.trim()),
-      });
-      socket.emit("listMessages", messages);
+      const existingMessageObjects = await Message.find({});
+
+      let result: MessageObject[] = [];
+      for (const m of existingMessageObjects) {
+        const existingUser = await User.findOne({ _id: m.userId });
+        if (!existingUser) {
+          throw new Error(notExist("user", "id", m.userId));
+        }
+
+        const username = existingUser.email.substr(
+          0,
+          existingUser.email.indexOf("@")
+        );
+
+        result = result.concat({
+          userId: m.userId.toString(),
+          username: username,
+          messages: m.messages,
+        });
+      }
+
+      socket.emit("listAllMessageObjects", result);
     } catch (error: any) {
       console.error(error);
     }
   });
 
-  socket.on("chatMessage", async (messageObject: MessageObject) => {
+  socket.on("getUserMessages", async (userId: string) => {
     try {
-      const newMessage = new Message({
-        userId: new mongoose.Types.ObjectId(messageObject.userId.trim()),
-        message: messageObject.message,
-        time: messageObject.time,
-      });
+      const existingUser = await User.findOne({ _id: userId.trim() });
+      if (!existingUser) {
+        throw new Error(notExist("user", "id", userId));
+      }
 
-      const returnedMessage = await newMessage.save();
+      const returnedMessage = await Message.findOne({
+        userId: new mongoose.Types.ObjectId(userId.trim()),
+      });
+      const username = existingUser.email.substr(
+        0,
+        existingUser.email.indexOf("@")
+      );
+      let message: MessageObject;
       if (returnedMessage) {
-        socket.emit("returnedFromServerMessage", returnedMessage);
+        message = {
+          userId: returnedMessage.userId.toString(),
+          username: username,
+          messages: returnedMessage.messages,
+        };
+      } else {
+        message = {
+          userId: existingUser._id,
+          username: username,
+          messages: [],
+        };
+      }
+
+      socket.emit("listMessages", message);
+    } catch (error: any) {
+      console.error(error);
+    }
+  });
+
+  socket.on("sendMessage", async (messageObject: MessageObject) => {
+    try {
+      const userId = messageObject.userId.trim();
+      const existingUser = await User.findOne({ _id: userId });
+      if (!existingUser) {
+        throw new Error(notExist("user", "id", userId));
+      }
+
+      const existingMessageObject = await Message.findOne({
+        userId: new mongoose.Types.ObjectId(userId),
+      });
+      if (existingMessageObject) {
+        existingMessageObject.messages = existingMessageObject.messages.concat(
+          messageObject.messages[0]
+        );
+        await existingMessageObject.save();
+        socket.emit("newMessage", messageObject.messages[0]);
+      } else {
+        const newMessage = new Message({
+          userId: new mongoose.Types.ObjectId(userId),
+          messages: messageObject.messages,
+        });
+        const returnedMessage: MessageObject = await newMessage.save();
+        returnedMessage.username = existingUser.email.substr(
+          0,
+          existingUser.email.indexOf("@")
+        );
+        socket.emit("newMessage", returnedMessage.messages[0]);
       }
     } catch (error: any) {
       console.error(error);

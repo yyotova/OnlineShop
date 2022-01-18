@@ -2,11 +2,15 @@ import { MessageActionTypes, SET_MESSAGES } from "../constants/action-types";
 import { MessageModel } from "../models/message-model";
 
 type MessageState = {
-  messages: MessageModel[];
+  messageObject: MessageModel;
 };
 
 const MessageInitialState: MessageState = {
-  messages: [],
+  messageObject: {
+    userId: "",
+    username: "",
+    messages: [],
+  },
 };
 
 export const messageReducer = (
@@ -15,7 +19,7 @@ export const messageReducer = (
 ) => {
   switch (action.type) {
     case SET_MESSAGES:
-      return { ...state, messages: action.payload };
+      return { ...state, messageObject: action.payload };
     default:
       return state;
   }

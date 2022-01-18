@@ -16,9 +16,8 @@ import socketIOClient from "socket.io-client";
 import { useDispatch, useSelector } from "react-redux";
 import { LoginActions } from "../models/user-types";
 import { ReduxState } from "../models/shared-types";
-import { MessageModel } from "../models/message-model";
-import { IconButton } from "@material-ui/core";
-import { setMessages } from "../actions/messageActions";
+import { MessageModel, MessageType } from "../models/message-model";
+import { setMessageObject } from "../actions/messageActions";
 import { AppState } from "../store";
 
 const useStyles = makeStyles({
@@ -41,7 +40,12 @@ const useStyles = makeStyles({
   },
 });
 
-const Chat = () => {
+interface ChatType {
+  receiverId: string;
+  currentMessages?: MessageType[];
+}
+
+const Chat = ({ receiverId }: ChatType) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const userLogin: LoginActions = useSelector(
@@ -50,25 +54,34 @@ const Chat = () => {
   const { userInfo } = userLogin;
   const [message, setMessage] = useState("");
 
-  const allUserMessages = useSelector(
-    (state: AppState) => state.messageList.messages
+  const userMessageObject = useSelector(
+    (state: AppState) => state.messageList.messageObject
   );
   const timeNow = moment().format("h:mm A");
 
-  const socket = socketIOClient(ENDPOINT);
-  socket.on("returnedFromServerMessage", (message: MessageModel) => {
-    dispatch(setMessages(allUserMessages.concat(message)));
-  });
-
-  socket.on("listMessages", (messages: MessageModel[]) => {
-    dispatch(setMessages(messages));
-  });
-
+  let socket;
   useEffect(() => {
-    if (userInfo && userInfo.token) {
+    socket = socketIOClient(ENDPOINT);
+    socket.connect();
+    socket.on("newMessage", (message: MessageType) => {
+      userMessageObject.messages = userMessageObject.messages.concat(message);
+      dispatch(setMessageObject(userMessageObject));
+    });
+
+    socket.on("listMessages", (messageObject: MessageModel) => {
+      dispatch(setMessageObject(messageObject));
+    });
+
+    if (userInfo && userInfo.token && !userInfo.isAdmin) {
       socket.emit("getUserMessages", userInfo?._id);
+    } else if (userInfo && userInfo.isAdmin && receiverId !== "") {
+      socket.emit("getUserMessages", receiverId);
     }
-  }, [userInfo]);
+
+    return () => {
+      socket.disconnect();
+    };
+  });
 
   return (
     <div className={classes.chat}>
@@ -92,19 +105,31 @@ const Chat = () => {
                 </Grid>
               </Grid>
             </ListItem>
-            {allUserMessages &&
-              allUserMessages.map((message: MessageModel, index: number) => (
-                <ListItem key={index}>
-                  <Grid container>
-                    <Grid item xs={12}>
-                      <ListItemText primary={message.message}></ListItemText>
+            {userMessageObject &&
+              userMessageObject.messages.map(
+                (message: MessageType, index: number) => (
+                  <ListItem key={index}>
+                    <Grid container>
+                      <Grid item xs={12}>
+                        <ListItemText primary={message.message}></ListItemText>
+                      </Grid>
+                      <Grid item xs={12}>
+                        {userInfo && userInfo.token ? (
+                          <ListItemText
+                            secondary={
+                              message.toAdmin
+                                ? `${message.time} ${userMessageObject.username}`
+                                : `${message.time} Admin`
+                            }
+                          ></ListItemText>
+                        ) : (
+                          <ListItemText secondary={message.time}></ListItemText>
+                        )}
+                      </Grid>
                     </Grid>
-                    <Grid item xs={12}>
-                      <ListItemText secondary={message.time}></ListItemText>
-                    </Grid>
-                  </Grid>
-                </ListItem>
-              ))}
+                  </ListItem>
+                )
+              )}
           </List>
           <Divider />
           <Grid container style={{ padding: "20px" }}>
@@ -122,31 +147,40 @@ const Chat = () => {
                 color="primary"
                 aria-label="add"
                 style={{ maxWidth: "50px", maxHeight: "50px" }}
-              >
-                <IconButton
-                  onClick={() => {
-                    if (message) {
-                      const messageObject: MessageModel = {
-                        userId: "",
-                        message: message,
-                        time: moment().format("h:mm A"),
+                onClick={() => {
+                  if (message) {
+                    const messageType: MessageType = {
+                      message: message,
+                      time: moment().format("h:mm A"),
+                      toAdmin: !userInfo || !userInfo.isAdmin,
+                    };
+
+                    let messageObject: MessageModel;
+                    if (messageType.toAdmin) {
+                      messageObject = {
+                        userId: userInfo._id,
+                        messages: [messageType],
                       };
-
-                      if (userInfo) {
-                        messageObject.userId = userInfo._id;
-                        socket.emit("chatMessage", messageObject);
-                      } else {
-                        dispatch(
-                          setMessages(allUserMessages.concat(messageObject))
-                        );
-                      }
-
-                      setMessage("");
+                    } else {
+                      messageObject = {
+                        userId: receiverId,
+                        messages: [messageType],
+                      };
                     }
-                  }}
-                >
-                  <SendIcon />
-                </IconButton>
+
+                    userMessageObject.messages =
+                      userMessageObject.messages.concat(messageType);
+                    if (userInfo) {
+                      socket.emit("sendMessage", messageObject);
+                    } else {
+                      dispatch(setMessageObject(userMessageObject));
+                    }
+
+                    setMessage("");
+                  }
+                }}
+              >
+                <SendIcon />
               </Fab>
             </Grid>
           </Grid>
