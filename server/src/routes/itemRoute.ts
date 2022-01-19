@@ -19,7 +19,7 @@ import { isAdmin, authenticate } from "../middlewares/auth";
 
 const router = express.Router();
 
-router.get("/", authenticate, async (req, res) => {
+router.get("/", async (req, res) => {
   const qCategory = req.query.category;
   let items;
 

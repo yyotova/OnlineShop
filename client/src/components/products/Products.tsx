@@ -20,7 +20,7 @@ import { ReduxState } from "../../models/shared-types";
 import { ENDPOINT } from "../../constants/global";
 import socketIOClient from "socket.io-client";
 import Select from "react-select";
-import { MessageModel, MessageType } from "../../models/message-model";
+import { MessageModel } from "../../models/message-model";
 
 interface ReceiverType {
   label: string;
