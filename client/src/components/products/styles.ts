@@ -15,7 +15,7 @@ export default makeStyles((theme) => ({
     overflow: "scrow",
   },
   chat: {
-    minWidth: "20%",
+    width: "20%",
     position: "fixed",
     bottom: 0,
     right: 0,
