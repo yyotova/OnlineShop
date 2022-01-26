@@ -85,13 +85,6 @@ const Chat = ({ receiverId }: ChatType) => {
 
   return (
     <div className={classes.chat}>
-      <Grid container>
-        <Grid item xs={12}>
-          <Typography variant="h5" className="header-message">
-            Chat
-          </Typography>
-        </Grid>
-      </Grid>
       <Grid container component={Paper} className={classes.chatSection}>
         <Grid item xs={9}>
           <List className={classes.messageArea}>
@@ -123,8 +116,8 @@ const Chat = ({ receiverId }: ChatType) => {
                             }
                           ></ListItemText>
                         ) : (
-                          <ListItemText secondary={message.time}></ListItemText>
-                        )}
+                            <ListItemText secondary={message.time}></ListItemText>
+                          )}
                       </Grid>
                     </Grid>
                   </ListItem>
