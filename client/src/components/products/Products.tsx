@@ -58,7 +58,7 @@ const Products = () => {
     return () => {
       socket.disconnect();
     };
-  });
+  }, [userInfo]);
 
   return (
     <main className={classes.content}>

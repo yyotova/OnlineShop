@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Divider from "@material-ui/core/Divider";
 import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -12,12 +11,12 @@ import Fab from "@material-ui/core/Fab";
 import SendIcon from "@material-ui/icons/Send";
 import moment from "moment";
 import { ENDPOINT } from "../constants/global";
-import socketIOClient from "socket.io-client";
+import socketIOClient, { Socket } from "socket.io-client";
 import { useDispatch, useSelector } from "react-redux";
 import { LoginActions } from "../models/user-types";
 import { ReduxState } from "../models/shared-types";
 import { MessageModel, MessageType } from "../models/message-model";
-import { setMessageObject } from "../actions/messageActions";
+import { setMessageObject, addMessage } from "../actions/messageActions";
 import { AppState } from "../store";
 
 const useStyles = makeStyles({
@@ -48,6 +47,7 @@ interface ChatType {
 const Chat = ({ receiverId }: ChatType) => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const socket = useRef<Socket>(null);
   const userLogin: LoginActions = useSelector(
     (state: ReduxState) => state.userLogin
   );
@@ -59,29 +59,27 @@ const Chat = ({ receiverId }: ChatType) => {
   );
   const timeNow = moment().format("h:mm A");
 
-  let socket;
   useEffect(() => {
-    socket = socketIOClient(ENDPOINT);
-    socket.connect();
-    socket.on("newMessage", (message: MessageType) => {
-      userMessageObject.messages = userMessageObject.messages.concat(message);
-      dispatch(setMessageObject(userMessageObject));
+    socket.current = socketIOClient(ENDPOINT);
+    socket.current.connect();
+    socket.current.on("newMessage", (message: MessageType) => {
+      dispatch(addMessage(message));
     });
 
-    socket.on("listMessages", (messageObject: MessageModel) => {
+    socket.current.on("listMessages", (messageObject: MessageModel) => {
       dispatch(setMessageObject(messageObject));
     });
 
     if (userInfo && userInfo.token && !userInfo.isAdmin) {
-      socket.emit("getUserMessages", userInfo?._id);
+      socket.current.emit("getUserMessages", userInfo?._id);
     } else if (userInfo && userInfo.isAdmin && receiverId !== "") {
-      socket.emit("getUserMessages", receiverId);
+      socket.current.emit("getUserMessages", receiverId);
     }
 
     return () => {
-      socket.disconnect();
+      socket.current.disconnect();
     };
-  });
+  }, [userInfo, receiverId]);
 
   return (
     <div className={classes.chat}>
@@ -161,12 +159,10 @@ const Chat = ({ receiverId }: ChatType) => {
                       };
                     }
 
-                    userMessageObject.messages =
-                      userMessageObject.messages.concat(messageType);
                     if (userInfo) {
-                      socket.emit("sendMessage", messageObject);
+                      socket.current.emit("sendMessage", messageObject);
                     } else {
-                      dispatch(setMessageObject(userMessageObject));
+                      dispatch(addMessage(messageType));
                     }
 
                     setMessage("");

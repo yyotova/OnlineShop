@@ -1,4 +1,4 @@
-import { MessageActionTypes, SET_MESSAGES } from "../constants/action-types";
+import { MessageActionTypes, SET_MESSAGES, ADD_MESSAGE } from "../constants/action-types";
 import { MessageModel } from "../models/message-model";
 
 type MessageState = {
@@ -20,6 +20,13 @@ export const messageReducer = (
   switch (action.type) {
     case SET_MESSAGES:
       return { ...state, messageObject: action.payload };
+    case ADD_MESSAGE:
+      return {
+        ...state, messageObject: {
+          ...state.messageObject,
+          messages: [...state.messageObject.messages, action.payload]
+        }
+      }
     default:
       return state;
   }
