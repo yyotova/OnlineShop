@@ -61,7 +61,15 @@ const Chat = ({ receiverId }: ChatType) => {
 
   useEffect(() => {
     socket.current = socketIOClient(ENDPOINT);
+
     socket.current.connect();
+
+    socket.current.on('connect', () => {
+      if (userInfo) {
+        socket.current.emit('userAuthenticate', userInfo);
+      }
+    });
+
     socket.current.on("newMessage", (message: MessageType) => {
       dispatch(addMessage(message));
     });
@@ -151,11 +159,13 @@ const Chat = ({ receiverId }: ChatType) => {
                       messageObject = {
                         userId: userInfo._id,
                         messages: [messageType],
+                        toAdmin: true
                       };
                     } else {
                       messageObject = {
                         userId: receiverId,
                         messages: [messageType],
+                        toAdmin: false
                       };
                     }
 

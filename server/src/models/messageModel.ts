@@ -28,5 +28,6 @@ export interface MessageType {
 export interface MessageObject {
   userId: string;
   username?: string;
+  toAdmin?: boolean;
   messages: MessageType[];
 }

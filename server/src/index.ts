@@ -34,6 +34,14 @@ app.use("/api/cart", cartRoute);
 app.use("/api/categories", categoryRouter);
 
 socketio.on("connection", (socket) => {
+  socket.on('userAuthenticate', (userInfo: any) => {
+    socket.join(`users/${userInfo._id}`);
+
+    if (userInfo.isAdmin) {
+      socket.join('admins');
+    }
+  });
+
   socket.on("getAllMessageObjects", async () => {
     try {
       const existingMessageObjects = await Message.find({});
@@ -115,6 +123,12 @@ socketio.on("connection", (socket) => {
         );
         await existingMessageObject.save();
         socket.emit("newMessage", messageObject.messages[0]);
+
+        if (messageObject.toAdmin) {
+          socketio.to('admins').emit('newMessage', messageObject.messages[0]);
+        } else {
+          socketio.to(`users/${messageObject.userId}`).emit('newMessage', messageObject.messages[0])
+        }
       } else {
         const newMessage = new Message({
           userId: new mongoose.Types.ObjectId(userId),
@@ -126,6 +140,12 @@ socketio.on("connection", (socket) => {
           existingUser.email.indexOf("@")
         );
         socket.emit("newMessage", returnedMessage.messages[0]);
+
+        if (returnedMessage.toAdmin) {
+          socketio.to('admins').emit('newMessage', returnedMessage.messages[0]);
+        } else {
+          socketio.to(`users/${returnedMessage.userId}`).emit('newMessage', returnedMessage.messages[0])
+        }
       }
     } catch (error: any) {
       console.error(error);

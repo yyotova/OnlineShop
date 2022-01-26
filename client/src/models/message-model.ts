@@ -1,6 +1,7 @@
 export interface MessageModel {
   userId: string;
   username?: string;
+  toAdmin?: boolean;
   messages: MessageType[];
 }
 

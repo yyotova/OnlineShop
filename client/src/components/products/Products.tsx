@@ -42,6 +42,7 @@ const Products = () => {
   useEffect(() => {
     const socket = socketIOClient(ENDPOINT);
     socket.connect();
+
     socket.on("listAllMessageObjects", (messageObjects: MessageModel[]) => {
       console.log(messageObjects);
       let options: ReceiverType[] = [];
