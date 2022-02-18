@@ -1,16 +1,23 @@
-import React, { useState } from 'react';
-import { Dialog, Container, DialogTitle, DialogActions, Button, TextField } from '@material-ui/core';
-import useStyles from '../styles';
-import { LoginActions } from '../../models/user-types';
-import { useSelector, useDispatch } from 'react-redux';
-import { ReduxState } from '../../models/shared-types';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { AppState } from '../../store';
-import { Order } from '../../models/order-model';
-import { createOrder } from '../../actions/orderActions';
-import { updateCart, updateProduct } from '../../actions/requests';
-import { ProductType } from '../../models/product-model';
+import React, { useState } from "react";
+import {
+  Dialog,
+  Container,
+  DialogTitle,
+  DialogActions,
+  Button,
+  TextField,
+} from "@material-ui/core";
+import useStyles from "../styles";
+import { LoginActions } from "../../models/user-types";
+import { useSelector, useDispatch } from "react-redux";
+import { ReduxState } from "../../models/shared-types";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import { AppState } from "../../store";
+import { Order } from "../../models/order-model";
+import { createOrder } from "../../actions/orderActions";
+import { updateCart, updateProduct } from "../../actions/requests";
+import { ProductType } from "../../models/product-model";
 
 interface DialogProps {
   open: boolean;
@@ -18,7 +25,7 @@ interface DialogProps {
   amount: number;
 }
 
-const OrderDialog = ({open, onClose, amount}: DialogProps) => {
+const OrderDialog = ({ open, onClose, amount }: DialogProps) => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
@@ -34,8 +41,8 @@ const OrderDialog = ({open, onClose, amount}: DialogProps) => {
   const [firstName, setFirstName] = useState(userInfo?.firstName);
   const [lastName, setLastName] = useState(userInfo?.lastName);
   const [email, setEmail] = useState(userInfo?.email);
-  const [address, setAddress] = useState('');
-  const [zipCode, setZipCode] = useState('');
+  const [address, setAddress] = useState("");
+  const [zipCode, setZipCode] = useState("");
 
   const cartObj = useSelector((state: AppState) => state.userCart.cart);
 
@@ -63,14 +70,13 @@ const OrderDialog = ({open, onClose, amount}: DialogProps) => {
     amount: amount,
     address: address,
     zipCode: zipCode,
-    updatedAt: new Date()
+    updatedAt: new Date(),
   };
 
   const handleSubmit = () => {
     dispatch(createOrder(order));
     order.items.forEach((item) => {
       if (item.itemsInStock < item.quantity) {
-        console.log('Not enough');
       } else {
         item.itemsInStock -= item.quantity;
         const updatedProduct: ProductType = {
@@ -81,15 +87,15 @@ const OrderDialog = ({open, onClose, amount}: DialogProps) => {
           imageUrl: item.imageUrl,
           categories: item.categories,
           itemsInStock: item.itemsInStock,
-          size: item.size
-        }
+          size: item.size,
+        };
         updateProduct(updatedProduct, dispatch, userInfo);
       }
     });
     const updatedCart = {
       _id: cartObj._id,
       items: [],
-      userId: cartObj.userId
+      userId: cartObj.userId,
     };
     updateCart(updatedCart, dispatch, userInfo);
     handleClose();
@@ -97,9 +103,7 @@ const OrderDialog = ({open, onClose, amount}: DialogProps) => {
 
   return (
     <Dialog onClose={handleClose} open={open} maxWidth="md">
-      <DialogTitle>
-          Finish your order
-        </DialogTitle>
+      <DialogTitle>Finish your order</DialogTitle>
       <Container maxWidth="md" className={classes.orderContainer}>
         <TextField
           label="First Name"
@@ -147,19 +151,16 @@ const OrderDialog = ({open, onClose, amount}: DialogProps) => {
         />
       </Container>
       <DialogActions>
-          <Container>
-            <Button onClick={handleClose} className={classes.btn}>
-              Cancel
-            </Button>
-            <Button
-              onClick={handleSubmit}
-              color="inherit"
-            >
-              Confirm
-            </Button>
-          </Container>
-        </DialogActions>
-    </Dialog>   
+        <Container>
+          <Button onClick={handleClose} className={classes.btn}>
+            Cancel
+          </Button>
+          <Button onClick={handleSubmit} color="inherit">
+            Confirm
+          </Button>
+        </Container>
+      </DialogActions>
+    </Dialog>
   );
 };
 
