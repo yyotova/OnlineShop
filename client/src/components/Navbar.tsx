@@ -108,7 +108,7 @@ const Navbar = () => {
           onClose={() => setAnchorEl(null)}
         >
           {" "}
-          {userInfo?.isAdmin ? (
+          {userInfo?.isAdmin && (
             <div>
               <MenuItem
                 onClick={() => setAnchorEl(null)}
@@ -135,11 +135,10 @@ const Navbar = () => {
                 Users
               </MenuItem>
             </div>
-          ) :
-            <MenuItem onClick={logout}>Logout</MenuItem>
-          }
+          )}
+          <MenuItem onClick={logout}>Logout</MenuItem>
         </Menu>
-        {!userInfo?.isAdmin && (
+        {userInfo && !userInfo?.isAdmin && (
           <>
             <IconButton onClick={() => history.push("/cart")}>
               <Badge
