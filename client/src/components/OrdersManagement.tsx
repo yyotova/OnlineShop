@@ -25,7 +25,7 @@ import {
   updateOrder,
   deleteOrder,
 } from '../actions/orderActions';
-import { OrderItem, OrderCreate } from '../models/order-model';
+import { OrderCreate } from '../models/order-model';
 import moment from 'moment';
 import { AppState } from '../store';
 
