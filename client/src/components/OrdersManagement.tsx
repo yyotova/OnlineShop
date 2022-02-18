@@ -18,13 +18,6 @@ import {
   Grid,
   Typography,
   Divider,
-<<<<<<< HEAD
-} from "@material-ui/core";
-import { ReduxState } from "../models/shared-types";
-import { listOrders, updateOrder, deleteOrder } from "../actions/orderActions";
-import { OrderCreate } from "../models/order-model";
-import moment from "moment";
-=======
 } from '@material-ui/core';
 import { ReduxState } from '../models/shared-types';
 import {
@@ -34,7 +27,6 @@ import {
 } from '../actions/orderActions';
 import { OrderCreate } from '../models/order-model';
 import moment from 'moment';
->>>>>>> origin/main
 
 const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({

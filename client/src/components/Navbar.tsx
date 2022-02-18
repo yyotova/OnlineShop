@@ -18,10 +18,7 @@ import { ReduxState } from "../models/shared-types";
 import { LoginActions } from "../models/user-types";
 import { loginAction } from "../actions/userActions";
 import { AppState } from "../store";
-<<<<<<< HEAD
 import { setUserCart } from "../actions/cartActions";
-=======
->>>>>>> origin/main
 
 const Navbar = () => {
   const history = useHistory();
