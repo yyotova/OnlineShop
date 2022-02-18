@@ -19,6 +19,7 @@ import PrivateRoute from "./components/auth/PrivateRoute";
 import { ReduxState } from "./models/shared-types";
 import { LoginActions } from "./models/user-types";
 import OrdesManagement from "./components/OrdersManagement";
+// import { AppState } from "./store";
 
 function App() {
   const dispatch = useDispatch();
@@ -28,9 +29,11 @@ function App() {
 
   const { userInfo } = userLogin;
 
+  // const products = useSelector((state: AppState) => state.allProducts.products);
+
   useEffect(() => {
-    fetchProducts(dispatch, userInfo);
-    fetchCategories(dispatch, userInfo);
+    fetchProducts(dispatch);
+    fetchCategories(dispatch);
     fetchUserCart(userInfo?._id, dispatch, userInfo);
   }, [userInfo]);
 
