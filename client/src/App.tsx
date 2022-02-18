@@ -32,8 +32,8 @@ function App() {
   // const products = useSelector((state: AppState) => state.allProducts.products);
 
   useEffect(() => {
-    fetchProducts(dispatch, userInfo);
-    fetchCategories(dispatch, userInfo);
+    fetchProducts(dispatch);
+    fetchCategories(dispatch);
     fetchUserCart(userInfo?._id, dispatch, userInfo);
   }, [userInfo]);
 

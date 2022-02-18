@@ -21,24 +21,15 @@ import { UserType } from "../models/user-types";
 
 // --- Category ---
 
-export const fetchCategories = async (
-  dispatch: Dispatch<any>,
-  userInfo: UserType | undefined
-) => {
-  if (userInfo) {
-    await axios
-      .get("http://localhost:3030/api/categories", {
-        headers: {
-          "x-auth": userInfo.token || "",
-        },
-      })
-      .then((response: any) => {
-        dispatch(setCategories(response.data));
-      })
-      .catch((err: any) => {
-        console.error("Error ", err);
-      });
-  }
+export const fetchCategories = async (dispatch: Dispatch<any>) => {
+  await axios
+    .get("http://localhost:3030/api/categories")
+    .then((response: any) => {
+      dispatch(setCategories(response.data));
+    })
+    .catch((err: any) => {
+      console.error("Error ", err);
+    });
 };
 
 export const saveCategory = async (
@@ -105,25 +96,16 @@ export const deleteCategory = async (
 };
 
 // --- Product ---
-export const fetchProducts = async (
-  dispatch: Dispatch<any>,
-  userInfo: UserType | undefined
-) => {
-  if (userInfo) {
-    await axios
-      .get("http://localhost:3030/api/items", {
-        headers: {
-          "x-auth": userInfo.token || "",
-        },
-      })
-      .then((response) => {
-        dispatch(setProducts(response.data));
-        fetchCategories(dispatch, userInfo);
-      })
-      .catch((err) => {
-        console.error("Error ", err);
-      });
-  }
+export const fetchProducts = async (dispatch: Dispatch<any>) => {
+  await axios
+    .get("http://localhost:3030/api/items")
+    .then((response) => {
+      dispatch(setProducts(response.data));
+      fetchCategories(dispatch);
+    })
+    .catch((err) => {
+      console.error("Error ", err);
+    });
 };
 
 export const saveProduct = async (
@@ -205,7 +187,7 @@ export const fetchUserCart = async (
       })
       .then((response) => {
         dispatch(setUserCart(response.data));
-        fetchCategories(dispatch, userInfo);
+        fetchCategories(dispatch);
       })
       .catch((err) => {
         console.error("Error ", err);
