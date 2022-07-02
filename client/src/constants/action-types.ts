@@ -1,6 +1,7 @@
 import { CartType } from "../models/cart-model";
 import { CategoryType } from "../models/category-model";
 import { ProductType } from "../models/product-model";
+import { MessageModel, MessageType } from "../models/message-model";
 import { IdType } from "../models/shared-types";
 import {
   RegisterUserRequest,
@@ -65,6 +66,9 @@ export const DELETE_ORDER_FAILURE = "DELETE_ORDER_FAILURE";
 export const LIST_ORDER_REQUEST = "LIST_ORDER_REQUEST";
 export const LIST_ORDER_SUCCESS = "LIST_ORDER_SUCCESS";
 export const LIST_ORDER_FAILURE = "LIST_ORDER_FAILURE";
+
+export const SET_MESSAGES = "SET_MESSAGES";
+export const ADD_MESSAGE = "ADD_MESSAGE";
 
 export interface UserListRequest {
   type: typeof USER_LIST_REQUEST;
@@ -273,6 +277,16 @@ export interface ListOrderFailure {
   payload: string;
 }
 
+export interface SetMessagesRequest {
+  type: typeof SET_MESSAGES;
+  payload: MessageModel;
+}
+
+export interface AddMesageRequest {
+  type: typeof ADD_MESSAGE;
+  payload: MessageType;
+}
+
 export type OrderActionTypes =
   | CreateOrderRequest
   | CreateOrderSuccess
@@ -325,10 +339,13 @@ export type UserActionTypes =
 
 export type CartActionTypes = SetUserCartRequest | UpdateUserCartRequest;
 
+export type MessageActionTypes = SetMessagesRequest | AddMesageRequest;
+
 export type AppActions =
   | ProductActionTypes
   | CategoryActionTypes
   | SectionActionTypes
   | UserActionTypes
   | CartActionTypes
-  | OrderActionTypes;
+  | OrderActionTypes
+  | MessageActionTypes;

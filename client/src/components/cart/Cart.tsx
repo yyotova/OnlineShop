@@ -79,35 +79,39 @@ const Cart = () => {
             You have no products in your shopping cart!
           </Typography>
         ) : (
-            <>
-              <Grid container spacing={1}>
-                <Grid item sm={9}>
-                  {cart.items.map((product) => (
-                    <CartItem product={product} />
-                  ))}
-                </Grid>
+          <>
+            <Grid container spacing={1}>
+              <Grid item sm={9}>
+                {cart.items.map((product) => (
+                  <CartItem product={product} />
+                ))}
               </Grid>
+            </Grid>
 
-              <div className={classes.cardDetails}>
-                <Typography variant="h5">
-                  Subtotal: {getCartTotalPrice()} €
-                </Typography>
+            <div className={classes.cardDetails}>
+              <Typography variant="h5">
+                Subtotal: {getCartTotalPrice()} €
+              </Typography>
 
-                <Button
-                  className={classes.checkoutButton}
-                  size="large"
-                  type="button"
-                  variant="contained"
-                  color="secondary"
-                  onClick={handleCheckout}
-                >
-                  Checkout
-                </Button>
-              </div>
-            </>
-          )}
+              <Button
+                className={classes.checkoutButton}
+                size="large"
+                type="button"
+                variant="contained"
+                color="secondary"
+                onClick={handleCheckout}
+              >
+                Checkout
+              </Button>
+            </div>
+          </>
+        )}
       </Container>
-      <OrderDialog amount={getCartTotalPrice()} open={orderDialog} onClose={handleOrderDialogClose} />
+      <OrderDialog
+        amount={getCartTotalPrice()}
+        open={orderDialog}
+        onClose={handleOrderDialogClose}
+      />
     </>
   );
 };

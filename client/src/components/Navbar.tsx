@@ -18,6 +18,7 @@ import { ReduxState } from "../models/shared-types";
 import { LoginActions } from "../models/user-types";
 import { loginAction } from "../actions/userActions";
 import { AppState } from "../store";
+import { setUserCart } from "../actions/cartActions";
 import { ListItemButton, ListItem, List, ListItemText } from "@mui/material";
 
 const Navbar = () => {
@@ -35,6 +36,7 @@ const Navbar = () => {
   const logout = () => {
     setAnchorEl(null);
     dispatch(loginAction("", ""));
+    dispatch(setUserCart({ _id: "", userId: "", items: [] }));
   };
 
   const flexContainer = {

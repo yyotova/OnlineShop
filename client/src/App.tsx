@@ -21,9 +21,9 @@ import { ReduxState } from "./models/shared-types";
 import { LoginActions } from "./models/user-types";
 import OrdesManagement from "./components/OrdersManagement";
 import socketIOClient from "socket.io-client";
+import { ENDPOINT } from "./constants/global";
 
 function App() {
-  const ENDPOINT = "http://localhost:3030/";
   const dispatch = useDispatch();
   const userLogin: LoginActions = useSelector(
     (state: ReduxState) => state.userLogin

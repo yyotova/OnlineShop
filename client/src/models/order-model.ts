@@ -1,4 +1,3 @@
-
 export interface Order {
   _id?: string;
   userId: string;
@@ -18,7 +17,7 @@ export interface OrderItem {
   imageUrl: string;
   quantity: number;
   price: number;
-  electedItemSize: string;
+  selectedItemSize: string;
   itemsInStock: number;
   size: string[];
   categories: string[];
