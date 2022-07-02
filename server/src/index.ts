@@ -4,14 +4,15 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import authRouter from "./routes/authRouter";
 import userRouter from "./routes/userRouter";
-import itemRoute from "./routes/itemRoute";
-import orderRoute from "./routes/orderRoute";
-import cartRoute from "./routes/cartRoute";
+import itemRouter from "./routes/itemRouter";
+import orderRouter from "./routes/orderRouter";
+import cartRouter from "./routes/cartRouter";
 import categoryRouter from "./routes/categoryRouter";
 import { Server } from "socket.io";
-import Message, { MessageObject, MessageType } from "./models/messageModel";
+import Message, { MessageObject } from "./models/messageModel";
 import User from "./models/user";
 import { notExist } from "./utilities/validations/messages";
+import sectionRouter from "./routes/sectionRouter";
 
 dotenv.config();
 
@@ -28,17 +29,18 @@ app.use(cors());
 
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
-app.use("/api/items", itemRoute);
-app.use("/api/orders", orderRoute);
-app.use("/api/cart", cartRoute);
+app.use("/api/items", itemRouter);
+app.use("/api/orders", orderRouter);
+app.use("/api/cart", cartRouter);
 app.use("/api/categories", categoryRouter);
+app.use("/api/sections", sectionRouter);
 
 socketio.on("connection", (socket) => {
-  socket.on('userAuthenticate', (userInfo: any) => {
+  socket.on("userAuthenticate", (userInfo: any) => {
     socket.join(`users/${userInfo._id}`);
 
     if (userInfo.isAdmin) {
-      socket.join('admins');
+      socket.join("admins");
     }
   });
 
@@ -125,9 +127,11 @@ socketio.on("connection", (socket) => {
         socket.emit("newMessage", messageObject.messages[0]);
 
         if (messageObject.toAdmin) {
-          socketio.to('admins').emit('newMessage', messageObject.messages[0]);
+          socketio.to("admins").emit("newMessage", messageObject.messages[0]);
         } else {
-          socketio.to(`users/${messageObject.userId}`).emit('newMessage', messageObject.messages[0])
+          socketio
+            .to(`users/${messageObject.userId}`)
+            .emit("newMessage", messageObject.messages[0]);
         }
       } else {
         const newMessage = new Message({
@@ -142,9 +146,11 @@ socketio.on("connection", (socket) => {
         socket.emit("newMessage", returnedMessage.messages[0]);
 
         if (returnedMessage.toAdmin) {
-          socketio.to('admins').emit('newMessage', returnedMessage.messages[0]);
+          socketio.to("admins").emit("newMessage", returnedMessage.messages[0]);
         } else {
-          socketio.to(`users/${returnedMessage.userId}`).emit('newMessage', returnedMessage.messages[0])
+          socketio
+            .to(`users/${returnedMessage.userId}`)
+            .emit("newMessage", returnedMessage.messages[0]);
         }
       }
     } catch (error: any) {

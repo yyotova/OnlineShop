@@ -1,4 +1,6 @@
+import { Dispatch } from "redux";
 import {
+  AppActions,
   DeleteCategoryRequest,
   DELETE_CATEGORY,
   SaveCategoryRequest,
@@ -7,8 +9,12 @@ import {
   SET_CATEGORIES,
   UpdateCategoryRequest,
   UPDATE_CATEGORY,
+  UPDATE_CATEGORY_FAILURE,
+  UPDATE_CATEGORY_SUCCESS,
 } from "../constants/action-types";
 import { CategoryType } from "../models/category-model";
+import { getStateType } from "../models/shared-types";
+import axios from "axios";
 
 const setCategories = (categories: CategoryType[]): SetCategoriesRequest => {
   return {
@@ -24,13 +30,6 @@ const addCategory = (category: CategoryType): SaveCategoryRequest => {
   };
 };
 
-const editCategory = (category: CategoryType): UpdateCategoryRequest => {
-  return {
-    type: UPDATE_CATEGORY,
-    payload: category,
-  };
-};
-
 const removeCategory = (categoryId: string): DeleteCategoryRequest => {
   return {
     type: DELETE_CATEGORY,
@@ -38,4 +37,32 @@ const removeCategory = (categoryId: string): DeleteCategoryRequest => {
   };
 };
 
-export { setCategories, addCategory, editCategory, removeCategory };
+export const updateCategory =
+  (category: CategoryType) =>
+  async (dispatch: Dispatch<AppActions>, getState: getStateType) => {
+    try {
+      dispatch({ type: UPDATE_CATEGORY, payload: category });
+      const {
+        userLogin: { userInfo },
+      } = getState();
+      if (userInfo) {
+        const {
+          data: { data: newCategory },
+        } = await axios.put(
+          `http://localhost:3030/api/categories/${category._id}`,
+          category,
+          {
+            headers: {
+              "x-auth": userInfo.token || "",
+            },
+          }
+        );
+        dispatch({ type: UPDATE_CATEGORY_SUCCESS, payload: newCategory });
+      }
+    } catch (err: any) {
+      console.log("action " + err);
+      dispatch({ type: UPDATE_CATEGORY_FAILURE, payload: err.errorMessage });
+    }
+  };
+
+export { setCategories, addCategory, removeCategory };

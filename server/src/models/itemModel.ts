@@ -8,7 +8,8 @@ const itemSchema = new mongoose.Schema(
     size: { type: Array, required: true, default: false },
     imageUrl: { type: String, required: true, default: false },
     itemsInStock: { type: String, required: true, default: 0 },
-    categories: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }]
+    categories: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category" }],
+    section: { type: mongoose.Schema.Types.ObjectId, ref: "Section" },
   },
   {
     timestamps: true,

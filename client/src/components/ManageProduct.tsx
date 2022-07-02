@@ -19,12 +19,13 @@ import { array, number, object, string } from "yup";
 import { LooseObject, ReduxState } from "../models/shared-types";
 import useStyles from "./styles";
 import { LoginActions } from "../models/user-types";
+import { SectionType } from "../models/section-model";
 
 interface EditProductParams {
   id: string;
 }
 
-interface CategoryOption {
+interface Option {
   value: number;
   label: string;
 }
@@ -48,6 +49,7 @@ const ManageProduct = () => {
   const { userInfo } = userLogin;
 
   const [categories, setCategories] = React.useState([]);
+  const [section, setSection] = React.useState("");
   const [sizes, setSizes] = React.useState([]);
   const allCategories = useSelector(
     (state: AppState) => state.allCategories.categories
@@ -55,9 +57,18 @@ const ManageProduct = () => {
   const allProducts = useSelector(
     (state: AppState) => state.allProducts.products
   );
+  const allSections: SectionType[] = useSelector(
+    (state: AppState) => state.allSections.sections
+  );
+
+  let secCounter = 1;
+  const allSectionOptions: Option[] = allSections.flatMap((c) => ({
+    value: secCounter++,
+    label: c.name,
+  }));
 
   let catCounter = 1;
-  const allCategoryOptions: CategoryOption[] = allCategories.flatMap((c) => ({
+  const allCategoryOptions: Option[] = allCategories.flatMap((c) => ({
     value: catCounter++,
     label: c.name,
   }));
@@ -86,6 +97,8 @@ const ManageProduct = () => {
       }
     }
 
+    const selectedSection = allSections.find((s) => s._id === item?.section);
+
     return {
       _id: item?._id || "",
       name: item?.name || "",
@@ -93,6 +106,7 @@ const ManageProduct = () => {
       price: item?.price || 0,
       imageUrl: item?.imageUrl || "",
       itemsInStock: item?.itemsInStock || 0,
+      section: selectedSection?.name || "",
       categories: item?.categories || [],
       size: item?.size || [],
     };
@@ -106,7 +120,7 @@ const ManageProduct = () => {
     }
   });
 
-  const initialCategoryOptions: CategoryOption[] = [];
+  const initialCategoryOptions: Option[] = [];
   initialCategories.forEach((cat) => {
     const option = allCategoryOptions.find((opt) => opt.label === cat.name);
     if (option) {
@@ -138,10 +152,11 @@ const ManageProduct = () => {
       <Formik
         initialValues={getInitialValues()}
         validationSchema={object({
-          name: string().required(),
-          description: string().required(),
+          name: string().required().trim(),
+          description: string().required().trim(),
           price: number().required(),
-          imageUrl: string().required(),
+          imageUrl: string().required().trim(),
+          section: string(),
           categories: array().required(),
           itemsInStock: number().required(),
           size: array().required(),
@@ -173,19 +188,22 @@ const ManageProduct = () => {
         onSubmit={(values) => {
           const result = {
             _id: values._id,
-            name: values.name,
-            description: values.description,
+            name: values.name.trim(),
+            description: values.description.trim(),
             price: +values.price,
-            imageUrl: values.imageUrl,
+            imageUrl: values.imageUrl.trim(),
             itemsInStock: +values.itemsInStock,
+            section: values.section,
             categories: values.categories,
             size: values.size,
           };
 
           result.size = sizes.flatMap((s: SizeOption) => s.label);
+          result.section =
+            allSections.find((s) => s.name === section)?._id || "";
 
           result.categories = [];
-          categories.forEach((selected: CategoryOption) => {
+          categories.forEach((selected: Option) => {
             const catObj = allCategories.find(
               (cat) => cat.name === selected.label
             );
@@ -318,6 +336,21 @@ const ManageProduct = () => {
                           error={!!errors.itemsInStock}
                           helperText={errors.itemsInStock}
                         />
+                      </div>
+
+                      <div>
+                        <Box m={1}>
+                          <h4>Sections:</h4>
+                          <div style={{ width: "350px" }}>
+                            <Select
+                              options={allSectionOptions}
+                              onChange={(event: any) => {
+                                setSection(event.label);
+                              }}
+                              defaultValue={allSectionOptions.find((s) => s.label === values.section)}
+                            ></Select>
+                          </div>
+                        </Box>
                       </div>
 
                       <div>

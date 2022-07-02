@@ -83,6 +83,7 @@ router.post("/manage-items", authenticate, isAdmin, async (req, res) => {
     size: reqData.size,
     imageUrl: reqData.imageUrl,
     itemsInStock: reqData.itemsInStock,
+    section: reqData.section,
     categories: reqData.categories,
   });
   const savedItem = await item.save();

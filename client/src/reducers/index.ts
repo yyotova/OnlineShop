@@ -15,10 +15,12 @@ import {
   orderListReducer,
 } from "./orderReducer";
 import { messageReducer } from "./messageReducer";
+import { sectionReducer } from "./sectionReducer";
 
 const reducers = combineReducers({
   allProducts: productReducer,
   allCategories: categoryReducer,
+  allSections: sectionReducer,
   userRegister: userRegisterReducer,
   userLogin: userLoginReducer,
   userCart: cartReducer,

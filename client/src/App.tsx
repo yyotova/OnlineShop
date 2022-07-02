@@ -13,13 +13,15 @@ import {
   fetchProducts,
   fetchUserCart,
 } from "./actions/requests";
+import { listSections } from "./actions/sectionActions";
 import { useDispatch, useSelector } from "react-redux";
 import UserManagement from "./components/UserManagement";
 import PrivateRoute from "./components/auth/PrivateRoute";
 import { ReduxState } from "./models/shared-types";
 import { LoginActions } from "./models/user-types";
 import OrdesManagement from "./components/OrdersManagement";
-// import { AppState } from "./store";
+import socketIOClient from "socket.io-client";
+import { ENDPOINT } from "./constants/global";
 
 function App() {
   const dispatch = useDispatch();
@@ -29,12 +31,17 @@ function App() {
 
   const { userInfo } = userLogin;
 
-  // const products = useSelector((state: AppState) => state.allProducts.products);
+  const socket = socketIOClient(ENDPOINT);
+  socket.on("message", (data) => {
+    console.log(data);
+  });
+  socket.emit("message", "", "hello there");
 
   useEffect(() => {
     fetchProducts(dispatch);
     fetchCategories(dispatch);
-    fetchUserCart(userInfo?._id, dispatch, userInfo);
+    fetchUserCart(userInfo?._id || "", dispatch, userInfo);
+    dispatch(listSections());
   }, [userInfo]);
 
   return (

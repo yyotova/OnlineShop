@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { DataGrid } from "@material-ui/data-grid";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCategory, saveCategory } from "../actions/requests";
+import { updateCategory } from "../actions/categoryActions";
 import { AppState } from "../store";
-import { updateCategory } from "../actions/requests";
 import { Box, Button, TextField } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Notification from "./Notification";
@@ -12,6 +12,7 @@ import { Formik } from "formik";
 import { object, string } from "yup";
 import useStyles from "./styles";
 import { LoginActions } from "../models/user-types";
+import { CategoryActions } from "../models/category-types";
 
 interface Row {
   id: string;
@@ -28,19 +29,35 @@ const CategoryView = () => {
 
   const { userInfo } = userLogin;
 
-  const allCategories = useSelector(
-    (state: AppState) => state.allCategories.categories
+  const categoryAction: CategoryActions = useSelector(
+    (state: AppState) => state.allCategories
   );
+  const { categories, error } = categoryAction;
 
   const [message, setMessage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleEditCommit = (e: any) => {
-    if (allCategories.find((c) => c.name === e.value && c._id !== e.id)) {
-    } else {
-      updateCategory({ _id: e.id, name: e.value }, dispatch, userInfo);
-      setMessage("Category name updated successfully!");
+  const invokeAlert = (value: string) => {
+    if (value.length !== 0) {
+      setMessage(value);
       setIsOpen(true);
+    }
+  };
+
+  const handleEditCommit = (e: any) => {
+    const isCategoryNotChanged = categories.find(
+      (c) => c.name === e.value.trim() && c._id === e.id
+    );
+    const existCategoryName = categories.find(
+      (c) => c.name === e.value.trim() && c._id !== e.id
+    );
+
+    if (existCategoryName) {
+      invokeAlert(`Category name {${e.value.trim()}} already exists!`);
+    } else if (!isCategoryNotChanged) {
+      dispatch(updateCategory({ _id: e.id, name: e.value.trim() }));
+      console.log("error" + error);
+      invokeAlert("Category name updated successfully!");
     }
   };
 
@@ -51,7 +68,7 @@ const CategoryView = () => {
   };
 
   const getRows = (): Row[] => {
-    const categoryObjects = allCategories.flatMap((category) => {
+    const categoryObjects = categories.flatMap((category) => {
       return { id: category._id, name: category.name };
     });
 
@@ -70,11 +87,16 @@ const CategoryView = () => {
   };
 
   const columns = [
-    { field: "name", headerName: "Category Name", width: 400, editable: true },
+    {
+      field: "name",
+      headerName: "Category Name",
+      width: 300,
+      editable: true,
+    },
     {
       field: "actions",
       headerName: "Actions",
-      width: 200,
+      width: 300,
       renderCell: (cellValues: any) => (
         <Button
           variant="outlined"
@@ -115,14 +137,18 @@ const CategoryView = () => {
         <Formik
           initialValues={{ name: "" }}
           validationSchema={object({
-            name: string().required(),
+            name: string()
+              .required("Required")
+              .trim()
+              .min(2, "Must be at least 2 characters")
+              .max(15, "Must be at most 15 characters"),
           })}
           validate={(values) => {
             let errors: LooseObject = {};
 
             if (values.name) {
-              const category = allCategories.find(
-                (c) => c.name === values.name
+              const category = categories.find(
+                (c) => c.name === values.name.trim()
               );
 
               if (category) {
@@ -135,7 +161,11 @@ const CategoryView = () => {
             return errors;
           }}
           onSubmit={(values) => {
-            saveCategory(dispatch, userInfo, { _id: "", name: values.name });
+            saveCategory(dispatch, userInfo, {
+              _id: "",
+              name: values.name.trim(),
+            });
+            values.name = "";
           }}
         >
           {({ values, errors, handleChange, handleSubmit }) => (
@@ -146,6 +176,7 @@ const CategoryView = () => {
               <Box alignSelf="center">
                 <TextField
                   name="name"
+                  value={values.name}
                   onChange={handleChange}
                   style={{ width: 250 }}
                   variant="standard"

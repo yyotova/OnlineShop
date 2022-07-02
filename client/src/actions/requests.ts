@@ -2,7 +2,6 @@ import { Dispatch } from "react";
 import axios from "axios";
 import {
   addCategory,
-  editCategory,
   removeCategory,
   setCategories,
 } from "./categoryActions";
@@ -46,27 +45,6 @@ export const saveCategory = async (
       })
       .then((response) => {
         dispatch(addCategory(response.data.data));
-      })
-      .catch((err) => {
-        console.error("Error ", err);
-      });
-  }
-};
-
-export const updateCategory = async (
-  category: CategoryType,
-  dispatch: Dispatch<any>,
-  userInfo: UserType | undefined
-) => {
-  if (userInfo) {
-    await axios
-      .put(`http://localhost:3030/api/categories/${category._id}`, category, {
-        headers: {
-          "x-auth": userInfo.token || "",
-        },
-      })
-      .then((response) => {
-        dispatch(editCategory(response.data.data));
       })
       .catch((err) => {
         console.error("Error ", err);

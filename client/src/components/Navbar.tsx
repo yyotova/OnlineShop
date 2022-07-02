@@ -19,10 +19,12 @@ import { LoginActions } from "../models/user-types";
 import { loginAction } from "../actions/userActions";
 import { AppState } from "../store";
 import { setUserCart } from "../actions/cartActions";
+import { ListItemButton, ListItem, List, ListItemText } from "@mui/material";
 
 const Navbar = () => {
   const history = useHistory();
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
+  const [womenAnchorEl, setWomenAnchorEl] = useState<Element | null>(null);
 
   const cart = useSelector((state: AppState) => state.userCart.cart);
 
@@ -35,6 +37,12 @@ const Navbar = () => {
     setAnchorEl(null);
     dispatch(loginAction("", ""));
     dispatch(setUserCart({ _id: "", userId: "", items: [] }));
+  };
+
+  const flexContainer = {
+    display: "flex",
+    flexDirection: "row",
+    padding: 0,
   };
 
   const { userInfo } = userLogin;
@@ -64,6 +72,45 @@ const Navbar = () => {
               DRESS IN STYLE
             </Typography>
           </Box>
+
+          <Box>
+            <List sx={flexContainer}>
+              {["Women", "Men"].map((item) => (
+                <ListItem key={item} disablePadding>
+                  <ListItemButton
+                    sx={{ textAlign: "center" }}
+                    onClick={(event) => setWomenAnchorEl(event.currentTarget)}
+                  >
+                    <ListItemText primary={item} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+          </Box>
+
+          <Menu
+            anchorEl={womenAnchorEl}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            open={!!womenAnchorEl}
+            onClose={() => setWomenAnchorEl(null)}
+          >
+            <MenuItem
+              onClick={() => setWomenAnchorEl(null)}
+              component={Link}
+              to="/manage-categories"
+            >
+              Manage Categories
+            </MenuItem>
+            <MenuItem onClick={logout}>Logout</MenuItem>
+          </Menu>
 
           <Box
             sx={{

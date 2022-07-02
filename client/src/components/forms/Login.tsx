@@ -1,14 +1,14 @@
-import React, { ReactElement, useEffect } from 'react';
-import { Button, Box, SnackbarContent } from '@material-ui/core';
-import { TextField } from 'formik-material-ui';
-import { Link, useHistory, useLocation } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { loginAction } from '../../actions/userActions';
-import { ReduxState } from '../../models/shared-types';
-import { Formik, Field, Form } from 'formik';
-import { string, object } from 'yup';
-import { LoginActions } from '../../models/user-types';
-import useStyles from '../styles';
+import React, { ReactElement, useEffect, useState } from "react";
+import { Button, Box, SnackbarContent } from "@material-ui/core";
+import { TextField } from "formik-material-ui";
+import { Link, useHistory, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { loginAction } from "../../actions/userActions";
+import { ReduxState } from "../../models/shared-types";
+import { Formik, Field, Form } from "formik";
+import { string, object } from "yup";
+import { LoginActions } from "../../models/user-types";
+import useStyles from "../styles";
 
 export default function Login(): ReactElement {
   const history = useHistory();
@@ -19,12 +19,16 @@ export default function Login(): ReactElement {
   );
   const { userInfo, error } = userLogging;
   const dispatch = useDispatch();
+  const [message, setMessage] = useState("");
 
   const location = useLocation();
-  const redirect = location.search ? location.search.split('=')[1] : '/products';
+  const redirect = location.search
+    ? location.search.split("=")[1]
+    : "/products";
 
   const handleClick = () => {
-    window.location.reload(false);
+    setMessage("");
+    window.location.reload();
   };
 
   const action = (
@@ -39,13 +43,14 @@ export default function Login(): ReactElement {
 
   return (
     <Formik
-      initialValues={{ email: '', password: '' }}
+      initialValues={{ email: "", password: "" }}
       validationSchema={object({
         email: string().email().required(),
         password: string().required(),
       })}
       onSubmit={({ email, password }) => {
         dispatch(loginAction(email, password));
+        setMessage(error || "");
       }}
     >
       {({ handleChange }) => (
@@ -75,25 +80,18 @@ export default function Login(): ReactElement {
             </div>
 
             <Box display="flex" justifyContent="center" margin="25px">
-              <Button
-                type="submit"
-                variant="contained"
-                className={classes.btn}
-              >
+              <Button type="submit" variant="contained" className={classes.btn}>
                 Log In
               </Button>
             </Box>
             <p>
-              Don't have an account yet?{' '}
-              <Link
-                to="register"
-                style={{ color: '#3686ad' }}
-              >
+              Don't have an account yet?{" "}
+              <Link to="register" style={{ color: "#3686ad" }}>
                 Register here
               </Link>
               .
             </p>
-            {error !== undefined && (
+            {message.length !== 0 && (
               <SnackbarContent message="Invalid Credentials!" action={action} />
             )}
           </Form>
