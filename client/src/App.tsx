@@ -20,6 +20,7 @@ import { ReduxState } from "./models/shared-types";
 import { LoginActions } from "./models/user-types";
 import OrdesManagement from "./components/OrdersManagement";
 import socketIOClient from "socket.io-client";
+import { AppState } from "./store";
 
 function App() {
   const ENDPOINT = "http://localhost:3030/";
@@ -34,12 +35,13 @@ function App() {
   socket.on("message", (data) => {
     console.log(data);
   });
-  socket.emit("message", "","hello there");
+  socket.emit("message", "", "hello there");
+  const products = useSelector((state: AppState) => state.allProducts.products);
 
   useEffect(() => {
-    fetchProducts(dispatch, userInfo);
-    fetchCategories(dispatch, userInfo);
-    fetchUserCart(userInfo?._id, dispatch, userInfo);
+    fetchProducts(dispatch);
+    fetchCategories(dispatch);
+    fetchUserCart(userInfo?._id || '', dispatch, userInfo);
   }, [userInfo]);
 
   return (

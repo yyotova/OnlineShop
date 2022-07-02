@@ -5,7 +5,6 @@ import {
   Button,
   Box,
   IconButton,
-  Avatar,
   Menu,
   MenuItem,
   Badge,
@@ -18,6 +17,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { ReduxState } from "../models/shared-types";
 import { LoginActions } from "../models/user-types";
 import { loginAction } from "../actions/userActions";
+import { AppState } from "../store";
 
 const Navbar = () => {
   const history = useHistory();
@@ -108,8 +108,8 @@ const Navbar = () => {
           onClose={() => setAnchorEl(null)}
         >
           {" "}
-          {userInfo?.isAdmin ? (
-            <>
+          {userInfo?.isAdmin && (
+            <div>
               <MenuItem
                 onClick={() => setAnchorEl(null)}
                 component={Link}
@@ -134,12 +134,11 @@ const Navbar = () => {
               <MenuItem component={Link} to="/users">
                 Users
               </MenuItem>
-            </>
-          ) :
-            <MenuItem onClick={logout}>Logout</MenuItem>
-          }
+            </div>
+          )}
+          <MenuItem onClick={logout}>Logout</MenuItem>
         </Menu>
-        {!userInfo?.isAdmin && (
+        {userInfo && !userInfo?.isAdmin && (
           <>
             <IconButton onClick={() => history.push("/cart")}>
               <Badge

@@ -25,8 +25,9 @@ import {
   updateOrder,
   deleteOrder,
 } from '../actions/orderActions';
-import { OrderItem, OrderCreate } from '../models/order-model';
+import { OrderCreate } from '../models/order-model';
 import moment from 'moment';
+import { AppState } from '../store';
 
 const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
@@ -58,7 +59,7 @@ const useStyles = makeStyles({
 
 export default function OrdesManagement(): ReactElement {
   const orderList: OrderCreate = useSelector(
-    (state: ReduxState) => state.listOrders
+    (state: AppState) => state.listOrders
   );
 
   const deletedOrder: OrderCreate = useSelector(

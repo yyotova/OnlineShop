@@ -14,7 +14,7 @@ import { isAdmin, authenticate } from "../middlewares/auth";
 
 const router = express.Router();
 
-router.get("/", authenticate, async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const categories = await Category.find();
     return res.status(200).json(categories);
