@@ -20,10 +20,10 @@ dotenv.config();
 const app = express();
 const serverPort = process.env.SERVER_PORT as any;
 const dbConnection = process.env.DB_CONNECTION as string;
-const socketio = new Server(server, { cors: { origin: "*" } });
 const server = app.listen(serverPort, () => {
   console.log(`Listening on port ${serverPort}`);
 });
+const socketio = new Server(server, { cors: { origin: "*" } });
 
 app.use(express.json());
 app.use(cors());
