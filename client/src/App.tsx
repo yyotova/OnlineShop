@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import ManageProduct from "./components/ManageProduct";
 import Navbar from "./components/Navbar";
@@ -19,9 +19,11 @@ import PrivateRoute from "./components/auth/PrivateRoute";
 import { ReduxState } from "./models/shared-types";
 import { LoginActions } from "./models/user-types";
 import OrdesManagement from "./components/OrdersManagement";
-// import { AppState } from "./store";
+import socketIOClient from "socket.io-client";
+import { AppState } from "./store";
 
 function App() {
+  const ENDPOINT = "http://localhost:3030/";
   const dispatch = useDispatch();
   const userLogin: LoginActions = useSelector(
     (state: ReduxState) => state.userLogin
@@ -29,12 +31,17 @@ function App() {
 
   const { userInfo } = userLogin;
 
-  // const products = useSelector((state: AppState) => state.allProducts.products);
+  const socket = socketIOClient(ENDPOINT);
+  socket.on("message", (data) => {
+    console.log(data);
+  });
+  socket.emit("message", "", "hello there");
+  const products = useSelector((state: AppState) => state.allProducts.products);
 
   useEffect(() => {
     fetchProducts(dispatch);
     fetchCategories(dispatch);
-    fetchUserCart(userInfo?._id, dispatch, userInfo);
+    fetchUserCart(userInfo?._id || '', dispatch, userInfo);
   }, [userInfo]);
 
   return (
