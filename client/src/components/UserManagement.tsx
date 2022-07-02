@@ -21,6 +21,8 @@ import {
 import { ReduxState } from '../models/shared-types';
 import { listUsers, deleteUser } from '../actions/userActions';
 import { UserListActions } from '../models/user-types';
+import { AppState } from '../store';
+import Loading from './Loading';
 
 const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
@@ -68,13 +70,13 @@ const useStyles = makeStyles({
 
 export default function UserManagement(): ReactElement {
   const usersList: UserListActions = useSelector(
-    (state: ReduxState) => state.userList
+    (state: AppState) => state.userList
   );
   const usersDelete: UserListActions = useSelector(
     (state: ReduxState) => state.userDelete
   );
 
-  const { userInfo } = usersList;
+  const { userInfo, loading, error } = usersList;
   const classes = useStyles();
   const dispatch = useDispatch();
 
@@ -86,8 +88,9 @@ export default function UserManagement(): ReactElement {
     dispatch(listUsers());
   }, [usersDelete.success]);
 
+
   return (
-    <>
+    <Loading loading={loading} error={error}>
       <Typography variant="h4">
         <Box
           display="flex"
@@ -172,6 +175,6 @@ export default function UserManagement(): ReactElement {
             </Box>
           </Grid>
         )}
-    </>
+    </Loading>
   );
 }
