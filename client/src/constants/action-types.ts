@@ -9,6 +9,7 @@ import {
   UserActions,
 } from "../models/user-types";
 import { Order } from "../models/order-model";
+import { SectionType } from "../models/section-model";
 
 export const SET_PRODUCTS = "SET_PRODUCTS";
 export const SAVE_PRODUCT = "SAVE_PRODUCT";
@@ -18,7 +19,13 @@ export const DELETE_PRODUCT = "DELETE_PRODUCT";
 export const SET_CATEGORIES = "SET_CATEGORIES";
 export const SAVE_CATEGORY = "SAVE_CATEGORY";
 export const UPDATE_CATEGORY = "UPDATE_CATEGORY";
+export const UPDATE_CATEGORY_FAILURE = "UPDATE_CATEGORY_FAILURE";
+export const UPDATE_CATEGORY_SUCCESS = "UPDATE_CATEGORY_SUCCESS";
 export const DELETE_CATEGORY = "DELETE_CATEGORY";
+
+export const LIST_SECTIONS_REQUEST = "LIST_SECTIONS_REQUEST";
+export const LIST_SECTIONS_SUCCESS = "LIST_SECTIONS_SUCCESS";
+export const LIST_SECTIONS_FAILURE = "LIST_SECTIONS_FAILURE";
 
 export const SET_USER_CART = "SET_USER_CART";
 export const SAVE_CART = "SAVE_CART";
@@ -45,19 +52,19 @@ export const USER_DELETE_REQUEST = "USER_DELETE_REQUEST";
 export const USER_DELETE_SUCCESS = "USER_DELETE_SUCCESS";
 export const USER_DELETE_FAILURE = "USER_DELETE_FAILURE";
 
-export const CREATE_ORDER_REQUEST = 'CREATE_ORDER_REQUEST';
-export const CREATE_ORDER_SUCCESS = 'CREATE_ORDER_SUCCESS';
-export const CREATE_ORDER_FAILURE = 'CREATE_ORDER_FAILURE';
-export const UPDATE_ORDER_REQUEST = 'UPDATE_ORDER_REQUEST';
-export const UPDATE_ORDER_SUCCESS = 'UPDATE_ORDER_SUCCESS';
-export const UPDATE_ORDER_FAILURE = 'UPDATE_ORDER_FAILURE';
-export const DELETE_ORDER_REQUEST = 'DELETE_ORDER_REQUEST';
-export const DELETE_ORDER_SUCCESS = 'DELETE_ORDER_SUCCESS';
-export const DELETE_ORDER_FAILURE = 'DELETE_ORDER_FAILURE';
+export const CREATE_ORDER_REQUEST = "CREATE_ORDER_REQUEST";
+export const CREATE_ORDER_SUCCESS = "CREATE_ORDER_SUCCESS";
+export const CREATE_ORDER_FAILURE = "CREATE_ORDER_FAILURE";
+export const UPDATE_ORDER_REQUEST = "UPDATE_ORDER_REQUEST";
+export const UPDATE_ORDER_SUCCESS = "UPDATE_ORDER_SUCCESS";
+export const UPDATE_ORDER_FAILURE = "UPDATE_ORDER_FAILURE";
+export const DELETE_ORDER_REQUEST = "DELETE_ORDER_REQUEST";
+export const DELETE_ORDER_SUCCESS = "DELETE_ORDER_SUCCESS";
+export const DELETE_ORDER_FAILURE = "DELETE_ORDER_FAILURE";
 
-export const LIST_ORDER_REQUEST = 'LIST_ORDER_REQUEST';
-export const LIST_ORDER_SUCCESS = 'LIST_ORDER_SUCCESS';
-export const LIST_ORDER_FAILURE = 'LIST_ORDER_FAILURE';
+export const LIST_ORDER_REQUEST = "LIST_ORDER_REQUEST";
+export const LIST_ORDER_SUCCESS = "LIST_ORDER_SUCCESS";
+export const LIST_ORDER_FAILURE = "LIST_ORDER_FAILURE";
 
 export interface UserListRequest {
   type: typeof USER_LIST_REQUEST;
@@ -108,6 +115,21 @@ export interface DeleteProductRequest {
   payload: string;
 }
 
+export interface ListSectionsRequest {
+  type: typeof LIST_SECTIONS_REQUEST;
+  payload: SectionType[];
+}
+
+export interface ListSectionsSuccess {
+  type: typeof LIST_SECTIONS_SUCCESS;
+  payload: SectionType[];
+}
+
+export interface ListSectionsFailure {
+  type: typeof LIST_SECTIONS_FAILURE;
+  payload: string;
+}
+
 export interface SetCategoriesRequest {
   type: typeof SET_CATEGORIES;
   payload: CategoryType[];
@@ -120,6 +142,16 @@ export interface SaveCategoryRequest {
 
 export interface UpdateCategoryRequest {
   type: typeof UPDATE_CATEGORY;
+  payload: CategoryType;
+}
+
+export interface UpdateCategoryFailure {
+  type: typeof UPDATE_CATEGORY_FAILURE;
+  payload: string;
+}
+
+export interface UpdateCategorySuccess {
+  type: typeof UPDATE_CATEGORY_SUCCESS;
   payload: CategoryType;
 }
 
@@ -241,7 +273,7 @@ export interface ListOrderFailure {
   payload: string;
 }
 
-export type OrderActionTypes = 
+export type OrderActionTypes =
   | CreateOrderRequest
   | CreateOrderSuccess
   | CreateOrderFailure
@@ -253,7 +285,7 @@ export type OrderActionTypes =
   | DeleteOrderFailure
   | ListOrderRequest
   | ListOrderSuccess
-  | ListOrderFailure
+  | ListOrderFailure;
 
 export type ProductActionTypes =
   | SetProductsRequest
@@ -265,7 +297,14 @@ export type CategoryActionTypes =
   | SetCategoriesRequest
   | SaveCategoryRequest
   | UpdateCategoryRequest
+  | UpdateCategoryFailure
+  | UpdateCategorySuccess
   | DeleteCategoryRequest;
+
+export type SectionActionTypes =
+  | ListSectionsRequest
+  | ListSectionsSuccess
+  | ListSectionsFailure;
 
 export type UserActionTypes =
   | UserRegisterRequest
@@ -289,6 +328,7 @@ export type CartActionTypes = SetUserCartRequest | UpdateUserCartRequest;
 export type AppActions =
   | ProductActionTypes
   | CategoryActionTypes
+  | SectionActionTypes
   | UserActionTypes
   | CartActionTypes
   | OrderActionTypes;

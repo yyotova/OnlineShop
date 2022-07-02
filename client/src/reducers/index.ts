@@ -8,11 +8,18 @@ import {
   usersListReducer,
   userDeleteReducer,
 } from "./userReducer";
-import { orderCreateReducer, orderUpdateReducer, orderDeleteReducer, orderListReducer } from "./orderReducer";
+import {
+  orderCreateReducer,
+  orderUpdateReducer,
+  orderDeleteReducer,
+  orderListReducer,
+} from "./orderReducer";
+import { sectionReducer } from "./sectionReducer";
 
 const reducers = combineReducers({
   allProducts: productReducer,
   allCategories: categoryReducer,
+  allSections: sectionReducer,
   userRegister: userRegisterReducer,
   userLogin: userLoginReducer,
   userCart: cartReducer,

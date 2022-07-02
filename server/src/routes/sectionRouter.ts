@@ -1,6 +1,6 @@
 import * as express from "express";
 import { IResponse } from "../types/Response";
-import { categoryObjectName } from "../utilities/constants/global";
+import { sectionObjectName } from "../utilities/constants/global";
 import { lowerCaseFirstLetter } from "../utilities/helperUtil";
 import {
   alreadyExist,
@@ -9,15 +9,15 @@ import {
   successByDeleting,
   successByUpdating,
 } from "../utilities/validations/messages";
-import Category from "../models/categoryModel";
+import Section from "../models/sectionModel";
 import { isAdmin, authenticate } from "../middlewares/auth";
 
 const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    const categories = await Category.find();
-    return res.status(200).json(categories);
+    const sections = await Section.find();
+    return res.status(200).json(sections);
   } catch (err) {
     return res.status(500).json(err);
   }
@@ -26,12 +26,12 @@ router.get("/", async (req, res) => {
 router.post("/", authenticate, isAdmin, async (req, res) => {
   try {
     const name = req.body.name as string;
-    const existingCategory = await Category.findOne({ name: name });
+    const existingSection = await Section.findOne({ name: name });
 
-    if (existingCategory) {
+    if (existingSection) {
       const returnedData: IResponse = {
         errorMessage: alreadyExist(
-          lowerCaseFirstLetter(categoryObjectName),
+          lowerCaseFirstLetter(sectionObjectName),
           "name",
           name
         ),
@@ -39,14 +39,14 @@ router.post("/", authenticate, isAdmin, async (req, res) => {
       return res.status(409).json(returnedData);
     }
 
-    const newCategory = new Category({
+    const newSection = new Section({
       name: name,
     });
 
-    const newlyCreatedCategory = await newCategory.save();
+    const newlyCreatedSection = await newSection.save();
     return res.status(201).json({
-      message: successByCreating(categoryObjectName),
-      data: newlyCreatedCategory,
+      message: successByCreating(sectionObjectName),
+      data: newlyCreatedSection,
     });
   } catch (err: any) {
     return res.status(500).json({ message: err.message });
@@ -55,59 +55,56 @@ router.post("/", authenticate, isAdmin, async (req, res) => {
 
 router.put("/:id", authenticate, isAdmin, async (req, res) => {
   try {
-    const categoryId = req.params.id;
+    const sectionId = req.params.id;
     const name = req.body.name as string;
-    let category = new Category({ name });
 
-    await category.validate();
-
-    const existingCategory = await Category.findOne({ name: name });
-    if (existingCategory && existingCategory._id.toString() !== categoryId) {
+    const existingSection = await Section.findOne({ name: name });
+    if (existingSection && existingSection._id.toString() !== sectionId) {
       const returnedData: IResponse = {
         errorMessage: alreadyExist(
-          lowerCaseFirstLetter(categoryObjectName),
+          lowerCaseFirstLetter(sectionObjectName),
           "name",
           name
         ),
       };
       return res.status(409).json(returnedData);
     } else {
-      const updatedCategory = await Category.findByIdAndUpdate(
-        categoryId,
+      const updatedSection = await Section.findByIdAndUpdate(
+        sectionId,
         { $set: req.body },
         { new: true }
       );
 
-      if (updatedCategory) {
+      if (updatedSection) {
         return res.status(200).json({
-          message: successByUpdating(categoryObjectName),
-          data: updatedCategory,
+          message: successByUpdating(sectionObjectName),
+          data: updatedSection,
         });
       }
 
       return res
         .status(404)
-        .json({ errorMessage: notExist(categoryObjectName, "id", categoryId) });
+        .json({ errorMessage: notExist(sectionObjectName, "id", sectionId) });
     }
   } catch (err: any) {
-    return res.status(500).json({ errorMessage: err.message });
+    return res.status(500).json(err.message);
   }
 });
 
 router.delete("/:id", authenticate, isAdmin, async (req, res) => {
   try {
-    const categoryId = req.params.id;
-    const deletedCategory = await Category.findByIdAndDelete(categoryId);
+    const sectionId = req.params.id;
+    const deletedSection = await Section.findByIdAndDelete(sectionId);
 
-    if (deletedCategory) {
+    if (deletedSection) {
       const returnedData: IResponse = {
-        message: successByDeleting(categoryObjectName),
+        message: successByDeleting(sectionObjectName),
       };
       return res.json(returnedData);
     }
 
     const returnedData: IResponse = {
-      errorMessage: notExist(categoryObjectName, "id", categoryId),
+      errorMessage: notExist(sectionObjectName, "id", sectionId),
     };
     return res.json(returnedData);
   } catch (err: any) {

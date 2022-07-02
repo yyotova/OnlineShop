@@ -1,19 +1,16 @@
 import express from "express";
-// import { Server } from "socket.io";
 import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import authRouter from "./routes/authRouter";
 import userRouter from "./routes/userRouter";
-import itemRoute from "./routes/itemRoute";
-import orderRoute from "./routes/orderRoute";
-import cartRoute from "./routes/cartRoute";
+import itemRouter from "./routes/itemRouter";
+import orderRouter from "./routes/orderRouter";
+import cartRouter from "./routes/cartRouter";
 import categoryRouter from "./routes/categoryRouter";
-import http from "http";
+import sectionRouter from "./routes/sectionRouter";
 import { Server } from "socket.io";
 import { formatMessage } from "./routes/chatRouter";
-
-const socket = require("socket.io");
 
 dotenv.config();
 
@@ -30,10 +27,11 @@ app.use(cors());
 
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
-app.use("/api/items", itemRoute);
-app.use("/api/orders", orderRoute);
-app.use("/api/cart", cartRoute);
+app.use("/api/items", itemRouter);
+app.use("/api/orders", orderRouter);
+app.use("/api/cart", cartRouter);
 app.use("/api/categories", categoryRouter);
+app.use("/api/sections", sectionRouter);
 
 socketio.on("connection", (socket) => {
   socket.emit("message", formatMessage("Ivan", "Welcome"));
