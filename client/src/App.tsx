@@ -52,8 +52,8 @@ function App() {
       <Switch>
         <Route exact path="/" component={Home} />
 
-        <Route path="/products" component={Products} />
-        <Route path="/products/:id" component={ProductView} />
+        <Route exact path="/products" component={Products} />
+        <Route exact path="/products/:id" component={ProductView} />
         <PrivateRoute
           exact
           path="/edit-products/:id"

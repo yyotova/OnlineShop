@@ -64,7 +64,7 @@ const Product = ({ product }: ProductProps) => {
             <Box m={1} display="flex" justifyContent="flex-end">
               <Link
                 to={{
-                  pathname: `${match.url}/${product._id}`,
+                  pathname: `/products/${product._id}`,
                   state: { selectedProduct: product },
                 }}
                 style={{
