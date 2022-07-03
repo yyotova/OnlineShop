@@ -25,7 +25,7 @@ interface EditProductParams {
   id: string;
 }
 
-interface Option {
+export interface Option {
   value: number;
   label: string;
 }
@@ -67,11 +67,33 @@ const ManageProduct = () => {
     label: c.name,
   }));
 
+  const ws = allSections.find((s) => s.name === "Women")?._id || "";
+  const ms = allSections.find((s) => s.name === "Men")?._id || "";
+
   let catCounter = 1;
-  const allCategoryOptions: Option[] = allCategories.flatMap((c) => ({
-    value: catCounter++,
-    label: c.name,
-  }));
+  const womenCategories = allCategories
+    .filter((c) => c.section === ws)
+    .flatMap((c) => ({
+      value: catCounter++,
+      label: c.name,
+    }));
+  const menCategories = allCategories
+    .filter((c) => c.section === ms)
+    .flatMap((c) => ({
+      value: catCounter++,
+      label: c.name,
+    }));
+
+  const p = params.id ? products.find((i) => i._id === params.id) : undefined;
+  const se = allSections.find((s) => s._id === p?.section)?.name || "";
+  const ses =
+    se === ""
+      ? [{ value: 0, label: "" }]
+      : se === "Women"
+      ? womenCategories
+      : menCategories;
+
+  const [allCategoryOptions, setAllCategoryOptions] = React.useState(ses);
 
   let sizeCounter = 1;
   const allSizeOptions: SizeOption[] = [
@@ -346,8 +368,15 @@ const ManageProduct = () => {
                               options={allSectionOptions}
                               onChange={(event: any) => {
                                 setSection(event.label);
+                                if (event.label === "Women") {
+                                  setAllCategoryOptions(womenCategories);
+                                } else {
+                                  setAllCategoryOptions(menCategories);
+                                }
                               }}
-                              defaultValue={allSectionOptions.find((s) => s.label === values.section)}
+                              defaultValue={allSectionOptions.find(
+                                (s) => s.label === values.section
+                              )}
                             ></Select>
                           </div>
                         </Box>

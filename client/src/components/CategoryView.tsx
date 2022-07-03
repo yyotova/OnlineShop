@@ -13,6 +13,9 @@ import { object, string } from "yup";
 import useStyles from "./styles";
 import { LoginActions } from "../models/user-types";
 import { CategoryActions } from "../models/category-types";
+import { SectionType } from "../models/section-model";
+import { Option } from "./ManageProduct";
+import Select from "react-select";
 
 interface Row {
   id: string;
@@ -32,10 +35,29 @@ const CategoryView = () => {
   const categoryAction: CategoryActions = useSelector(
     (state: AppState) => state.allCategories
   );
-  const { categories, error } = categoryAction;
+  let { categories, error } = categoryAction;
 
   const [message, setMessage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [section, setSection] = useState("");
+
+  const allSections: SectionType[] = useSelector(
+    (state: AppState) => state.allSections.sections
+  );
+
+  categories.flatMap((c) => {
+    const section = allSections.find((s) => s._id === c.section) || "None";
+    return { id: c._id, name: c.name, section: section };
+  });
+
+  let secCounter = 1;
+  const allSectionOptions: Option[] = [
+    ...allSections.flatMap((c) => ({
+      value: secCounter++,
+      label: c.name,
+    })),
+    { value: secCounter++, label: "None" },
+  ];
 
   const invokeAlert = (value: string) => {
     if (value.length !== 0) {
@@ -45,19 +67,22 @@ const CategoryView = () => {
   };
 
   const handleEditCommit = (e: any) => {
-    const isCategoryNotChanged = categories.find(
-      (c) => c.name === e.value.trim() && c._id === e.id
-    );
-    const existCategoryName = categories.find(
-      (c) => c.name === e.value.trim() && c._id !== e.id
-    );
+    if (e.field === "name") {
+      const isCategoryNotChanged = categories.find(
+        (c) => c.name === e.value.trim() && c._id === e.id
+      );
+      const existCategoryName = categories.find(
+        (c) => c.name === e.value.trim() && c._id !== e.id
+      );
 
-    if (existCategoryName) {
-      invokeAlert(`Category name {${e.value.trim()}} already exists!`);
-    } else if (!isCategoryNotChanged) {
-      dispatch(updateCategory({ _id: e.id, name: e.value.trim() }));
-      console.log("error" + error);
-      invokeAlert("Category name updated successfully!");
+      if (existCategoryName) {
+        invokeAlert(`Category name {${e.value.trim()}} already exists!`);
+      } else if (!isCategoryNotChanged) {
+        dispatch(
+          updateCategory({ _id: e.id, name: e.value.trim(), section: "" })
+        );
+        invokeAlert("Category name updated successfully!");
+      }
     }
   };
 
@@ -69,7 +94,10 @@ const CategoryView = () => {
 
   const getRows = (): Row[] => {
     const categoryObjects = categories.flatMap((category) => {
-      return { id: category._id, name: category.name };
+      const selected =
+        allSections.find((ss) => ss._id === category.section)?.name || "";
+
+      return { id: category._id, name: category.name, section: selected };
     });
 
     return categoryObjects.sort((a, b) => {
@@ -94,9 +122,16 @@ const CategoryView = () => {
       editable: true,
     },
     {
+      field: "section",
+      headerName: " Section",
+      editable: false,
+      type: "string",
+      width: 200,
+    },
+    {
       field: "actions",
       headerName: "Actions",
-      width: 300,
+      width: 200,
       renderCell: (cellValues: any) => (
         <Button
           variant="outlined"
@@ -111,6 +146,19 @@ const CategoryView = () => {
       ),
     },
   ];
+
+  const getInitialValues = () => {
+    return {
+      name: "",
+      section: "None",
+    };
+  };
+
+  const getDefaultSection = (values) => {
+    const selected =
+      allSections.find((ss) => ss._id === values.section)?.name || "";
+    return allSectionOptions.find((s) => s.label === selected);
+  };
 
   return (
     <div style={{ marginLeft: 100, marginRight: 100, height: 450 }}>
@@ -135,20 +183,21 @@ const CategoryView = () => {
         </div>
 
         <Formik
-          initialValues={{ name: "" }}
+          initialValues={getInitialValues()}
           validationSchema={object({
             name: string()
               .required("Required")
               .trim()
               .min(2, "Must be at least 2 characters")
               .max(15, "Must be at most 15 characters"),
+            section: string(),
           })}
           validate={(values) => {
             let errors: LooseObject = {};
 
             if (values.name) {
               const category = categories.find(
-                (c) => c.name === values.name.trim()
+                (c) => c.name === values.name.trim() && c.section === values.section
               );
 
               if (category) {
@@ -164,7 +213,12 @@ const CategoryView = () => {
             saveCategory(dispatch, userInfo, {
               _id: "",
               name: values.name.trim(),
+              section:
+                section === "None"
+                  ? ""
+                  : allSections.find((s) => s.name === section)?._id || "",
             });
+
             values.name = "";
           }}
         >
@@ -185,6 +239,20 @@ const CategoryView = () => {
                   helperText={errors.name}
                 />
               </Box>
+
+              <Box m={1}>
+                <h4>Sections:</h4>
+                <div style={{ width: "350px" }}>
+                  <Select
+                    options={allSectionOptions}
+                    onChange={(event: any) => {
+                      setSection(event.label);
+                    }}
+                    defaultValue={getDefaultSection(values)}
+                  ></Select>
+                </div>
+              </Box>
+
               <Box
                 display="flex"
                 justifyContent="center"

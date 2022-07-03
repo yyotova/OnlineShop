@@ -9,7 +9,11 @@ const categorySchema = new mongoose.Schema(
       minlength: [2, minLength("Category name", 2)],
       maxlength: [15, maxLength("Category name", 15)],
       trim: true,
-      unique: true,
+    },
+    section: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Section",
+      required: false,
     },
   },
   {

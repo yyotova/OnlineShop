@@ -26,7 +26,10 @@ router.get("/", async (req, res) => {
 router.post("/", authenticate, isAdmin, async (req, res) => {
   try {
     const name = req.body.name as string;
-    const existingCategory = await Category.findOne({ name: name });
+    const existingCategory = await Category.findOne({
+      name: name,
+      section: req.body.section === "" ? undefined : req.body.section,
+    });
 
     if (existingCategory) {
       const returnedData: IResponse = {
@@ -41,6 +44,7 @@ router.post("/", authenticate, isAdmin, async (req, res) => {
 
     const newCategory = new Category({
       name: name,
+      section: req.body.section === "" ? undefined : req.body.section,
     });
 
     const newlyCreatedCategory = await newCategory.save();
@@ -57,7 +61,7 @@ router.put("/:id", authenticate, isAdmin, async (req, res) => {
   try {
     const categoryId = req.params.id;
     const name = req.body.name as string;
-    let category = new Category({ name });
+    let category = new Category({ name, section: req.body.section });
 
     await category.validate();
 

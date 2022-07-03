@@ -20,13 +20,25 @@ import { loginAction } from "../actions/userActions";
 import { AppState } from "../store";
 import { setUserCart } from "../actions/cartActions";
 import { ListItemButton, ListItem, List, ListItemText } from "@mui/material";
+import { SectionType } from "../models/section-model";
 
 const Navbar = () => {
   const history = useHistory();
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
   const [womenAnchorEl, setWomenAnchorEl] = useState<Element | null>(null);
+  const [menAnchorEl, setMenAnchorEl] = useState<Element | null>(null);
 
   const cart = useSelector((state: AppState) => state.userCart.cart);
+
+  const sections = useSelector((state: AppState) => state.allSections.sections);
+
+  const womenSection: SectionType = sections.find(
+    (s) => s.name === "Women"
+  ) || { _id: "", name: "" };
+  const menSection: SectionType = sections.find((s) => s.name === "Men") || {
+    _id: "",
+    name: "",
+  };
 
   const userLogin: LoginActions = useSelector(
     (state: ReduxState) => state.userLogin
@@ -67,7 +79,7 @@ const Navbar = () => {
                 fontSize: "22px",
               }}
               component={Link}
-              to="/products"
+              to="/"
             >
               DRESS IN STYLE
             </Typography>
@@ -75,16 +87,23 @@ const Navbar = () => {
 
           <Box>
             <List sx={flexContainer}>
-              {["Women", "Men"].map((item) => (
-                <ListItem key={item} disablePadding>
-                  <ListItemButton
-                    sx={{ textAlign: "center" }}
-                    onClick={(event) => setWomenAnchorEl(event.currentTarget)}
-                  >
-                    <ListItemText primary={item} />
-                  </ListItemButton>
-                </ListItem>
-              ))}
+              <ListItem key={womenSection._id} disablePadding>
+                <ListItemButton
+                  sx={{ textAlign: "center" }}
+                  onClick={(event) => setWomenAnchorEl(event.currentTarget)}
+                >
+                  <ListItemText primary={womenSection.name} />
+                </ListItemButton>
+              </ListItem>
+
+              <ListItem key={menSection._id} disablePadding>
+                <ListItemButton
+                  sx={{ textAlign: "center" }}
+                  onClick={(event) => setMenAnchorEl(event.currentTarget)}
+                >
+                  <ListItemText primary={menSection.name} />
+                </ListItemButton>
+              </ListItem>
             </List>
           </Box>
 

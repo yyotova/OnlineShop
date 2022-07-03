@@ -8,6 +8,7 @@ import Register from "./components/forms/Register";
 import Login from "./components/forms/Login";
 import Cart from "./components/cart/Cart";
 import CategoryView from "./components/CategoryView";
+import Home from "./components/Home";
 import {
   fetchCategories,
   fetchProducts,
@@ -49,6 +50,7 @@ function App() {
       <Navbar />
 
       <Switch>
+        <Route exact path="/" component={Home} />
         <Route exact path="/products" component={Products} />
         <Route exact path="/products/:id" component={ProductView} />
         <PrivateRoute
@@ -67,7 +69,7 @@ function App() {
         <PrivateRoute exact path="/users" component={UserManagement} />
         <PrivateRoute exact path="/cart" component={Cart} />
         <PrivateRoute exact path="/orders" component={OrdesManagement} />
-        <Redirect to="/products" />
+        <Redirect to="/" />
       </Switch>
     </BrowserRouter>
   );
