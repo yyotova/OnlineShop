@@ -21,15 +21,34 @@ import { ENDPOINT } from "../../constants/global";
 import socketIOClient from "socket.io-client";
 import Select from "react-select";
 import { MessageModel } from "../../models/message-model";
+import { useLocation, useParams } from "react-router-dom";
 
 interface ReceiverType {
   label: string;
   value: string;
 }
+interface EditProductParams {
+  id: string;
+}
+
+interface Props {
+  catId: string;
+}
 
 const Products = () => {
   const classes = useStyles();
-  const products = useSelector((state: AppState) => state.allProducts.products);
+  const location = useLocation();
+  const data = location.state;
+
+  const products = useSelector(
+    (state: AppState) => state.allProducts.products
+  ).filter((p) => {
+    if (data) {
+      return p.categories.includes(data.catId);
+    } else {
+      return true;
+    }
+  });
 
   const userLogin: LoginActions = useSelector(
     (state: ReduxState) => state.userLogin

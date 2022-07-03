@@ -51,11 +51,12 @@ function App() {
 
       <Switch>
         <Route exact path="/" component={Home} />
-        <Route exact path="/products" component={Products} />
-        <Route exact path="/products/:id" component={ProductView} />
+       
+        <Route  path="/products" component={Products} />
+        <Route   path="/products/:id" component={ProductView} />
         <PrivateRoute
-          exact
-          path="/edit-products/:id"
+          
+          path="edit-products/:id"
           component={ManageProduct}
         />
         <PrivateRoute exact path="/manage-products" component={ManageProduct} />

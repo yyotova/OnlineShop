@@ -21,6 +21,7 @@ import { AppState } from "../store";
 import { setUserCart } from "../actions/cartActions";
 import { ListItemButton, ListItem, List, ListItemText } from "@mui/material";
 import { SectionType } from "../models/section-model";
+import { CategoryActions } from "../models/category-types";
 
 const Navbar = () => {
   const history = useHistory();
@@ -58,6 +59,19 @@ const Navbar = () => {
   };
 
   const { userInfo } = userLogin;
+
+  const categoryAction: CategoryActions = useSelector(
+    (state: AppState) => state.allCategories
+  );
+  const { categories } = categoryAction;
+
+  const allSections: SectionType[] = useSelector(
+    (state: AppState) => state.allSections.sections
+  );
+  const ws = allSections.find((s) => s.name === "Women")?._id || "";
+  const ms = allSections.find((s) => s.name === "Men")?._id || "";
+  const wCategories = categories.filter((c) => c.section === ws);
+  const mCategories = categories.filter((c) => c.section === ms);
 
   return (
     <AppBar position="sticky">
@@ -121,14 +135,40 @@ const Navbar = () => {
             open={!!womenAnchorEl}
             onClose={() => setWomenAnchorEl(null)}
           >
-            <MenuItem
-              onClick={() => setWomenAnchorEl(null)}
-              component={Link}
-              to="/manage-categories"
-            >
-              Manage Categories
-            </MenuItem>
-            <MenuItem onClick={logout}>Logout</MenuItem>
+            {wCategories.map((c) => (
+              <MenuItem
+                onClick={() => setWomenAnchorEl(null)}
+                component={Link}
+                to={{ pathname: `/products`, state: { catId: c._id } }}
+              >
+                {c.name}
+              </MenuItem>
+            ))}
+          </Menu>
+
+          <Menu
+            anchorEl={menAnchorEl}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            open={!!menAnchorEl}
+            onClose={() => setMenAnchorEl(null)}
+          >
+            {mCategories.map((c) => (
+              <MenuItem
+                onClick={() => setMenAnchorEl(null)}
+                component={Link}
+                to={{ pathname: `/products`, state: { catId: c._id } }}
+              >
+                {c.name}
+              </MenuItem>
+            ))}
           </Menu>
 
           <Box
