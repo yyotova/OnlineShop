@@ -51,12 +51,12 @@ function App() {
 
       <Switch>
         <Route exact path="/" component={Home} />
-       
-        <Route  path="/products" component={Products} />
-        <Route   path="/products/:id" component={ProductView} />
+
+        <Route path="/products" component={Products} />
+        <Route path="/products/:id" component={ProductView} />
         <PrivateRoute
-          
-          path="edit-products/:id"
+          exact
+          path="/edit-products/:id"
           component={ManageProduct}
         />
         <PrivateRoute exact path="/manage-products" component={ManageProduct} />
@@ -70,7 +70,6 @@ function App() {
         <PrivateRoute exact path="/users" component={UserManagement} />
         <PrivateRoute exact path="/cart" component={Cart} />
         <PrivateRoute exact path="/orders" component={OrdesManagement} />
-        <Redirect to="/" />
       </Switch>
     </BrowserRouter>
   );
